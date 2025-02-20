@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "BudgetSolution": {
+      "commandName": "Project"
+    },
+    "Container (Dockerfile)": {
+      "commandName": "Docker"
+    }
+  }
+}
