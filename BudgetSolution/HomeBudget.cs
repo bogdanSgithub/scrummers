@@ -123,7 +123,7 @@ namespace Budget
         /// </param>
         /// <example>
         /// <code>
-        /// HomeBudget myBudget = new HomeBudget("C:\\Users\\studentID\\Downloads\\BudgetSolution\\BudgetSolution\\test.budget");
+        /// HomeBudget myBudget = new HomeBudget("C:\\Users\\studentID\\Desktop\\Scrummers\\BudgetSolution\\test.budget");
         /// </code>
         /// </example>
         public HomeBudget(String budgetFileName)

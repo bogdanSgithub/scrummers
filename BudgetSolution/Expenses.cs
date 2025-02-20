@@ -58,7 +58,7 @@ namespace Budget
         /// <example>
         /// <code>
         /// Expenses expenses = new Expenses();
-        /// expenses.ReadFromFile("C:\\Users\\studentID\\Downloads\\BudgetSolution\\BudgetSolution\\test_expenses.exps");
+        /// expenses.ReadFromFile("C:\\Users\\studentID\\Desktop\\Scrummers\\BudgetSolution\\test_expenses.exps");
         /// </code>
         /// </example>
         public void ReadFromFile(String filepath = null)
@@ -108,7 +108,7 @@ namespace Budget
         /// <example>
         /// <code>
         /// Expenses expenses = new Expenses();
-        /// expenses.SaveToFile("C:\\Users\\studentID\\Downloads\\BudgetSolution\\BudgetSolution\\test_expenses.exps");
+        /// expenses.SaveToFile("C:\\Users\\studentID\\Desktop\\Scrummers\\BudgetSolution\\test_expenses.exps");
         /// </code>
         /// </example>
         public void SaveToFile(String filepath = null)

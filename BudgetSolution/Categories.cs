@@ -100,7 +100,7 @@ namespace Budget
         /// <example>
         /// <code>
         /// Categories categories = new Categories();
-        /// categories.ReadFromFile("C:\\Users\\studentID\\Downloads\\BudgetSolution\\BudgetSolution\\test_categories.cats");
+        /// categories.ReadFromFile("C:\\Users\\studentID\\Desktop\\Scrummers\\BudgetSolution\\test_categories.cats");
         /// </code>
         /// </example>
         public void ReadFromFile(String filepath = null)
@@ -145,7 +145,7 @@ namespace Budget
         /// <example>
         /// <code>
         /// Categories categories = new Categories();
-        /// categories.SaveToFile("C:\\Users\\studentID\\Downloads\\BudgetSolution\\BudgetSolution\\test_categories.cats");
+        /// categories.SaveToFile("C:\\Users\\studentID\\Desktop\\Scrummers\\BudgetSolution\\test_categories.cats");
         /// </code>
         /// </example>
         public void SaveToFile(String filepath = null)
