@@ -1,0 +1,7 @@
+_site
+api
+articles
+docfx.json
+toc.yml
+/**/bin/
+index.md
