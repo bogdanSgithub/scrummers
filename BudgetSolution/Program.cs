@@ -21,12 +21,21 @@ namespace BudgetSolution
 
         public Program()
         {
+            TestDatabase();
+            /*
             homeBudget = new HomeBudget(budgetFile);
             if (GetParameters())
             {
                 GetMethodChoice();
                 CallReport();
-            }
+            }*/
+        }
+
+        public void TestDatabase()
+        {
+            string filename = "..\\..\\..\\testDBInput.db";
+            Database.newDatabase(filename);
+            Database.existingDatabase(filename);
         }
 
         public DateTime? GetValidDate(string message)

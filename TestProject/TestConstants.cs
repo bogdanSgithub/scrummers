@@ -9,6 +9,12 @@ namespace BudgetCodeTests
 {
     public class TestConstants
     {
+        static public String GetSolutionDir()
+        {
+
+            // this is valid for C# .Net Foundation (not for C# .Net Core)
+            return Path.GetFullPath(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "..\\..\\..\\"));
+        }
 
         private static Expense expense1 = new Expense(1, new DateTime(2018, 1, 10), 10, 12, "hat (on credit)");
         private static BudgetItem budgetItem1 = new BudgetItem
