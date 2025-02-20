@@ -51,12 +51,13 @@ namespace Budget
             }
 
             existingDatabase(filename);
+            CreateDatabase();
         }
 
-       // ===================================================================
-       // open an existing database
-       // ===================================================================
-       public static void existingDatabase(string filename)
+        // ===================================================================
+        // open an existing database
+        // ===================================================================
+        public static void existingDatabase(string filename)
         {
 
             CloseDatabaseAndReleaseFile();
@@ -72,6 +73,36 @@ namespace Budget
 
         }
 
+        private static void CreateDatabase()
+        {
+            List<String> tables = new List<String>() { "categoryTypes", "expenses", "categories" };
+
+            SQLiteCommand cmd = new SQLiteCommand(_connection);
+
+            // catType
+            cmd.CommandText = "DROP TABLE IF EXISTS categoryTypes";
+            cmd.ExecuteNonQuery();
+
+            cmd.CommandText = @"CREATE TABLE categoryTypes(Id INTEGER PRIMARY KEY,
+            Description TEXT)";
+            cmd.ExecuteNonQuery();
+
+            // cats
+            cmd.CommandText = "DROP TABLE IF EXISTS categories";
+            cmd.ExecuteNonQuery();
+
+            cmd.CommandText = @"CREATE TABLE categories(Id INTEGER PRIMARY KEY,
+            Description TEXT, TypeId INTEGER, FOREIGN KEY(TypeId) REFERENCES categoryTypes(Id))";
+            cmd.ExecuteNonQuery();
+
+            // exps
+            cmd.CommandText = "DROP TABLE IF EXISTS expenses";
+            cmd.ExecuteNonQuery();
+
+            cmd.CommandText = @"CREATE TABLE expenses(Id INTEGER PRIMARY KEY,
+            CategoryId INTEGER, Amount DECIMAL(10,2), Date date, Description TEXT, FOREIGN KEY(CategoryId) REFERENCES categories(Id))";
+            cmd.ExecuteNonQuery();
+        }
        // ===================================================================
        // close existing database, wait for garbage collector to
        // release the lock before continuing

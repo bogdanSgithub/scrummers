@@ -32,10 +32,10 @@ namespace BudgetSolution
         }
 
         public void TestDatabase()
-        {
+        {   
             string filename = "..\\..\\..\\testDBInput.db";
             Database.newDatabase(filename);
-            Database.existingDatabase(filename);
+            //Database.existingDatabase(filename);
         }
 
         public DateTime? GetValidDate(string message)
