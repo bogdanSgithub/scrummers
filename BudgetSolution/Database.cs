@@ -70,7 +70,9 @@ namespace Budget
 
             _connection = new SQLiteConnection($@"URI=file:{filename}");
             _connection.Open();
-
+            SQLiteCommand cmd = new SQLiteCommand(_connection);
+            cmd.CommandText = "PRAGMA foreign_keys = ON;";
+            cmd.ExecuteNonQuery();
         }
 
         private static void CreateDatabase()
