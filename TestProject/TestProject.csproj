@@ -19,6 +19,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\BudgetSolution\BudgetSolution.csproj" />
+    <ProjectReference Include="..\DatabaseTest\DatabaseTest.csproj" />
   </ItemGroup>
 
   <ItemGroup>
