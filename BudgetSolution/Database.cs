@@ -68,11 +68,8 @@ namespace Budget
                 throw new FileNotFoundException("database file doesn't exist");
             }
 
-            _connection = new SQLiteConnection($@"URI=file:{filename}");
+            _connection = new SQLiteConnection($@"URI=file:{filename};Foreign Keys=1");
             _connection.Open();
-            SQLiteCommand cmd = new SQLiteCommand(_connection);
-            cmd.CommandText = "PRAGMA foreign_keys = ON;";
-            cmd.ExecuteNonQuery();
         }
 
         private static void CreateDatabase()
