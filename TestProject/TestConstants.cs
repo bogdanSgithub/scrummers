@@ -12,6 +12,15 @@ namespace BudgetCodeTests
     public class TestConstants
     {
 
+        static public String GetSolutionDir()
+        {
+
+            // this is valid for C# .Net Foundation (not for C# .Net Core)
+            return Path.GetFullPath(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "..\\..\\..\\"));
+        }
+
+        // source taken from: https://www.dotnetperls.com/file-equals
+
         private static Expense expense1 = new Expense(1, new DateTime(2018, 1, 10), 10, 12, "hat (on credit)");
         private static BudgetItem budgetItem1 = new BudgetItem
         {
@@ -325,15 +334,6 @@ namespace BudgetCodeTests
 
             return list;
         }
-
-        static public String GetSolutionDir()
-        {
-
-            // this is valid for C# .Net Foundation (not for C# .Net Core)
-            return Path.GetFullPath(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "..\\..\\..\\"));
-        }
-
-        // source taken from: https://www.dotnetperls.com/file-equals
 
         static public bool FileEquals(string path1, string path2)
         {
