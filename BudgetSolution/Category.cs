@@ -21,21 +21,34 @@ namespace Budget
     /// </summary>
     public class Category
     {
+        private int _id ;
+        private string _description;
+        private CategoryType _type;  
+
         // ====================================================================
         // Properties
         // ====================================================================
         /// <summary>
         /// Integer that represents the unique identifier of the category.
         /// </summary>
-        public int Id { get; set; }
+        public int Id
+        {
+            get { return _id; }
+        }
         /// <summary>
         /// String that gives a description of the Category.
         /// </summary>
-        public String Description { get; set; }
+        public String Description
+        {
+            get { return _description; }
+        }
         /// <summary>
         /// Enum representing the Category Type of this category
         /// </summary>
-        public CategoryType Type { get; set; }
+        public CategoryType Type
+        {
+            get { return _type; }
+        }
         /// <summary>
         /// Enum representing the possible types of categories
         /// </summary>
@@ -63,9 +76,9 @@ namespace Budget
         /// </example>
         public Category(int id, String description, CategoryType type = CategoryType.Expense)
         {
-            this.Id = id;
-            this.Description = description;
-            this.Type = type;
+            _id = id;
+            _description = description;
+            _type = type;
         }
 
         // ====================================================================
@@ -83,9 +96,9 @@ namespace Budget
         /// </example>
         public Category(Category category)
         {
-            this.Id = category.Id;
-            this.Description = category.Description;
-            this.Type = category.Type;
+            _id = category.Id;
+            _description = category.Description;
+            _type = category.Type;
         }
         // ====================================================================
         // String version of object
