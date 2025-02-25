@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.IO;
 using System.Xml;
+using System.Data.SQLite;
 
 // ============================================================================
 // (c) Sandy Bultena 2018
@@ -82,6 +83,16 @@ namespace Budget
                 throw new Exception("Cannot find category with id " + i.ToString());
             }
             return c;
+        }
+
+        public Categories(SQLiteConnection conn, bool newDB)
+        {
+
+        }
+
+        public void UpdateProperties(int id, string newDescr, Category.CategoryType type)
+        {
+
         }
 
         // ====================================================================
