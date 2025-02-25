@@ -85,111 +85,34 @@ namespace Budget
             return c;
         }
 
+        private void PopulateCategoriesList(SQLiteConnection conn)
+        {
+            SQLiteCommand cmd = new SQLiteCommand(conn);
+
+            cmd.CommandText = "SELECT Id, Description, TypeId FROM categories;";
+            SQLiteDataReader rdr = cmd.ExecuteReader();
+
+            while (rdr.Read())
+            {
+                _Cats.Add(new Category(rdr.GetInt32(0), rdr.GetString(1), (Category.CategoryType)rdr.GetInt32(2)));
+            }
+        } 
+
         public Categories(SQLiteConnection conn, bool newDB)
         {
-
+            if (newDB)
+            {
+                Database.newDatabase("default.db");
+            }
+            else
+            {
+                PopulateCategoriesList(conn);
+            }
         }
 
         public void UpdateProperties(int id, string newDescr, Category.CategoryType type)
         {
 
-        }
-
-        // ====================================================================
-        // populate categories from a file
-        // if filepath is not specified, read/save in AppData file
-        // Throws System.IO.FileNotFoundException if file does not exist
-        // Throws System.Exception if cannot read the file correctly (parsing XML)
-        // ====================================================================
-        /// <summary>
-        /// Populates the Categories list by reading from the specified file and also saves the filename and directory name.
-        /// If no filepath is provided, the default file in the AppData directory is used.
-        /// </summary>
-        /// <param name="filepath">The path to the file from which categories will be read. If null, defaults to the AppData file.</param>
-        /// <exception cref="System.IO.FileNotFoundException">Thrown by <see cref="BudgetFiles.VerifyReadFromFileName"/> if the specified file does not exist.</exception>
-        /// <exception cref="System.Exception">Thrown if the file cannot be read correctly, such as if there is an issue with XML parsing.</exception>
-        /// <example>
-        /// <code>
-        /// Categories categories = new Categories();
-        /// categories.ReadFromFile("C:\\Users\\studentID\\Desktop\\Scrummers\\BudgetSolution\\test_categories.cats");
-        /// </code>
-        /// </example>
-        public void ReadFromFile(String filepath = null)
-        {
-
-            // ---------------------------------------------------------------
-            // reading from file resets all the current categories,
-            // ---------------------------------------------------------------
-            _Cats.Clear();
-
-            // ---------------------------------------------------------------
-            // reset default dir/filename to null 
-            // ... filepath may not be valid, 
-            // ---------------------------------------------------------------
-            _DirName = null;
-            _FileName = null;
-
-            // ---------------------------------------------------------------
-            // get filepath name (throws exception if it doesn't exist)
-            // ---------------------------------------------------------------
-            filepath = BudgetFiles.VerifyReadFromFileName(filepath, DefaultFileName);
-
-            // ---------------------------------------------------------------
-            // If file exists, read it
-            // ---------------------------------------------------------------
-            _ReadXMLFile(filepath);
-            _DirName = Path.GetDirectoryName(filepath);
-            _FileName = Path.GetFileName(filepath);
-        }
-
-        // ====================================================================
-        // save to a file
-        // if filepath is not specified, read/save in AppData file
-        // ====================================================================
-        /// <summary>
-        /// Saves the current categories to the specified file and also saves the filename and directory name.
-        /// If no filepath is provided, the default file in the AppData directory is used.
-        /// </summary>
-        /// <param name="filepath">The path to the file where categories will be saved. If null, defaults to the last read file or AppData file.</param>
-        /// <exception cref="System.IO.FileNotFoundException">Thrown by <see cref="BudgetFiles.VerifyWriteToFileName"/> if the specified file does not exist or cannot be accessed for writing.</exception>
-        /// <exception cref="System.Exception">Thrown if the file cannot be saved correctly, such as if there is an issue with XML writing.</exception>
-        /// <example>
-        /// <code>
-        /// Categories categories = new Categories();
-        /// categories.SaveToFile("C:\\Users\\studentID\\Desktop\\Scrummers\\BudgetSolution\\test_categories.cats");
-        /// </code>
-        /// </example>
-        public void SaveToFile(String filepath = null)
-        {
-            // ---------------------------------------------------------------
-            // if file path not specified, set to last read file
-            // ---------------------------------------------------------------
-            if (filepath == null && DirName != null && FileName != null)
-            {
-                filepath = DirName + "\\" + FileName;
-            }
-
-            // ---------------------------------------------------------------
-            // just in case filepath doesn't exist, reset path info
-            // ---------------------------------------------------------------
-            _DirName = null;
-            _FileName = null;
-
-            // ---------------------------------------------------------------
-            // get filepath name (throws exception if it doesn't exist)
-            // ---------------------------------------------------------------
-            filepath = BudgetFiles.VerifyWriteToFileName(filepath, DefaultFileName);
-
-            // ---------------------------------------------------------------
-            // save as XML
-            // ---------------------------------------------------------------
-            _WriteXMLFile(filepath);
-
-            // ----------------------------------------------------------------
-            // save filename info for later use
-            // ----------------------------------------------------------------
-            _DirName = Path.GetDirectoryName(filepath);
-            _FileName = Path.GetFileName(filepath);
         }
 
         // ====================================================================
@@ -260,7 +183,19 @@ namespace Budget
                 new_num = (from c in _Cats select c.Id).Max();
                 new_num++;
             }
-            _Cats.Add(new Category(new_num, desc, type));
+            Category newCategory = new Category(new_num, desc, type);
+            _Cats.Add(newCategory);
+            InsertIntoDB(newCategory);
+            PopulateCategoriesList(Database.dbConnection);
+        }
+
+        private void InsertIntoDB(Category category)
+        {
+            SQLiteCommand cmd = new SQLiteCommand(Database.dbConnection);
+
+            string stuff = $"INSERT INTO categories (Id, Description, TypeId) VALUES({category.Id}, '{category.Description}', {(int)category.Type});";
+            cmd.CommandText = $"INSERT INTO categories (Id, Description, TypeId) VALUES({category.Id}, '{category.Description}', {(int)category.Type});";
+            cmd.ExecuteNonQuery();
         }
 
         // ====================================================================
@@ -305,7 +240,8 @@ namespace Budget
         /// </code>
         /// </example>
         public List<Category> List()
-        {
+        {   
+
             List<Category> newList = new List<Category>();
             foreach (Category category in _Cats)
             {
@@ -313,97 +249,6 @@ namespace Budget
             }
             return newList;
         }
-
-        // ====================================================================
-        // read from an XML file and add categories to our categories list 
-        // ====================================================================
-        private void _ReadXMLFile(String filepath)
-        {
-
-            // ---------------------------------------------------------------
-            // read the categories from the xml file, and add to this instance
-            // ---------------------------------------------------------------
-            try
-            {
-                XmlDocument doc = new XmlDocument();
-                doc.Load(filepath);
-
-                foreach (XmlNode category in doc.DocumentElement.ChildNodes)
-                {
-                    String id = (((XmlElement)category).GetAttributeNode("ID")).InnerText;
-                    String typestring = (((XmlElement)category).GetAttributeNode("type")).InnerText;
-                    String desc = ((XmlElement)category).InnerText;
-
-                    Category.CategoryType type;
-                    switch (typestring.ToLower())
-                    {
-                        case "income":
-                            type = Category.CategoryType.Income;
-                            break;
-                        case "expense":
-                            type = Category.CategoryType.Expense;
-                            break;
-                        case "credit":
-                            type = Category.CategoryType.Credit;
-                            break;
-                        case "savings":
-                            type = Category.CategoryType.Savings;
-                            break;
-                        default:
-                            type = Category.CategoryType.Expense;
-                            break;
-                    }
-                    this.Add(new Category(int.Parse(id), desc, type));
-                }
-
-            }
-            catch (Exception e)
-            {
-                throw new Exception("ReadXMLFile: Reading XML " + e.Message);
-            }
-
-        }
-
-
-        // ====================================================================
-        // write all categories in our list to XML file
-        // ====================================================================
-        private void _WriteXMLFile(String filepath)
-        {
-            try
-            {
-                // create top level element of categories
-                XmlDocument doc = new XmlDocument();
-                doc.LoadXml("<Categories></Categories>");
-
-                // foreach Category, create an new xml element
-                foreach (Category cat in _Cats)
-                {
-                    XmlElement ele = doc.CreateElement("Category");
-                    XmlAttribute attr = doc.CreateAttribute("ID");
-                    attr.Value = cat.Id.ToString();
-                    ele.SetAttributeNode(attr);
-                    XmlAttribute type = doc.CreateAttribute("type");
-                    type.Value = cat.Type.ToString();
-                    ele.SetAttributeNode(type);
-
-                    XmlText text = doc.CreateTextNode(cat.Description);
-                    doc.DocumentElement.AppendChild(ele);
-                    doc.DocumentElement.LastChild.AppendChild(text);
-
-                }
-
-                // write the xml to FilePath
-                doc.Save(filepath);
-
-            }
-            catch (Exception e)
-            {
-                throw new Exception("_WriteXMLFile: Reading XML " + e.Message);
-            }
-
-        }
-
     }
 }
 
