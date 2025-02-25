@@ -11,6 +11,8 @@ namespace BudgetCodeTests
     [Collection("Sequential")]
     public class TestDatabase
     {
+
+
         [Fact]
         public void SQLite_TestNewDatabase_TablesCreated_newDBDoesNotExist()
         {
