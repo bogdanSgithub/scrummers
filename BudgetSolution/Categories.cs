@@ -94,7 +94,9 @@ namespace Budget
 
             while (rdr.Read())
             {
-                _Cats.Add(new Category(rdr.GetInt32(0), rdr.GetString(1), (Category.CategoryType)rdr.GetInt32(2)));
+                Category category = new Category(rdr.GetInt32(0), rdr.GetString(1), (Category.CategoryType)rdr.GetInt32(2));
+                if (!_Cats.Contains(category))
+                    _Cats.Add(category);
             }
         } 
 
@@ -103,6 +105,7 @@ namespace Budget
             if (newDB)
             {
                 Database.newDatabase("default.db");
+                SetCategoriesToDefaults();
             }
             else
             {
@@ -113,6 +116,27 @@ namespace Budget
         public void UpdateProperties(int id, string newDescr, Category.CategoryType type)
         {
 
+        }
+
+        private void ClearDBCategories()
+        {
+            SQLiteCommand cmd = new SQLiteCommand(Database.dbConnection);
+
+            string query = $"DELETE FROM categories;";
+            cmd.CommandText = query;
+            cmd.ExecuteNonQuery();
+        }
+
+        private void SetInitialCategoryTypes()
+        {
+            SQLiteCommand cmd = new SQLiteCommand(Database.dbConnection);
+            // add initial categoryTypes
+            foreach (Category.CategoryType type in Enum.GetValues(typeof(Category.CategoryType)))
+            {
+                string query = $"INSERT INTO categoryTypes (Id, Description) VALUES({(int)type + 1}, '{type}');";
+                cmd.CommandText = query;
+                cmd.ExecuteNonQuery();
+            }
         }
 
         // ====================================================================
@@ -133,6 +157,8 @@ namespace Budget
             // reset any current categories,
             // ---------------------------------------------------------------
             _Cats.Clear();
+            ClearDBCategories();
+            SetInitialCategoryTypes();
 
             // ---------------------------------------------------------------
             // Add Defaults
@@ -186,15 +212,18 @@ namespace Budget
             Category newCategory = new Category(new_num, desc, type);
             _Cats.Add(newCategory);
             InsertIntoDB(newCategory);
-            PopulateCategoriesList(Database.dbConnection);
         }
 
         private void InsertIntoDB(Category category)
         {
             SQLiteCommand cmd = new SQLiteCommand(Database.dbConnection);
 
-            string stuff = $"INSERT INTO categories (Id, Description, TypeId) VALUES({category.Id}, '{category.Description}', {(int)category.Type});";
-            cmd.CommandText = $"INSERT INTO categories (Id, Description, TypeId) VALUES({category.Id}, '{category.Description}', {(int)category.Type});";
+            string query = $"INSERT INTO categories (Id, Description, TypeId) VALUES(@id, @description, @type);";
+            cmd.CommandText = query;
+            cmd.Parameters.AddWithValue("@id", category.Id);
+            cmd.Parameters.AddWithValue("@description", category.Description);
+            cmd.Parameters.AddWithValue("@type", (int)category.Type + 1);
+            cmd.Prepare();
             cmd.ExecuteNonQuery();
         }
 
