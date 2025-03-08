@@ -87,6 +87,7 @@ namespace Budget
 
         private void PopulateCategoriesList(SQLiteConnection conn)
         {
+            _Cats.Clear();
             SQLiteCommand cmd = new SQLiteCommand(conn);
 
             cmd.CommandText = "SELECT Id, Description, TypeId FROM categories;";
@@ -94,7 +95,7 @@ namespace Budget
 
             while (rdr.Read())
             {
-                Category category = new Category(rdr.GetInt32(0), rdr.GetString(1), (Category.CategoryType)rdr.GetInt32(2));
+                Category category = new Category(rdr.GetInt32(0), rdr.GetString(1), (Category.CategoryType)rdr.GetInt32(2) - 1);
                 if (!_Cats.Contains(category))
                     _Cats.Add(category);
             }
@@ -105,6 +106,7 @@ namespace Budget
             if (newDB)
             {
                 Database.newDatabase("default.db");
+                SetInitialCategoryTypes();
                 SetCategoriesToDefaults();
             }
             else
@@ -115,7 +117,16 @@ namespace Budget
 
         public void UpdateProperties(int id, string newDescr, Category.CategoryType type)
         {
+            SQLiteCommand cmd = new SQLiteCommand(Database.dbConnection);
 
+            cmd.CommandText = $"UPDATE categories SET Id = @id, Description = @description, TypeId = @type WHERE Id = @id;";
+            cmd.Parameters.AddWithValue("@id", id);
+            cmd.Parameters.AddWithValue("@description", newDescr);
+            cmd.Parameters.AddWithValue("@type", (int)type + 1);
+            cmd.Prepare();
+            cmd.ExecuteNonQuery();
+
+            PopulateCategoriesList(Database.dbConnection);
         }
 
         private void ClearDBCategories()
@@ -158,7 +169,6 @@ namespace Budget
             // ---------------------------------------------------------------
             _Cats.Clear();
             ClearDBCategories();
-            SetInitialCategoryTypes();
 
             // ---------------------------------------------------------------
             // Add Defaults
@@ -247,7 +257,17 @@ namespace Budget
         {
             int i = _Cats.FindIndex(x => x.Id == Id);
             if (i != -1)
+            {
                 _Cats.RemoveAt(i);
+
+
+                SQLiteCommand cmd = new SQLiteCommand(Database.dbConnection);
+                cmd.CommandText = $"DELETE FROM categories WHERE Id = @id;";
+                cmd.Parameters.AddWithValue("@id", Id);
+                cmd.Prepare();
+                cmd.ExecuteNonQuery();
+            }
+
         }
 
         // ====================================================================

@@ -460,9 +460,9 @@ namespace Budget
                     ExpenseID = e.ExpId,
                     ShortDescription = e.Description,
                     Date = e.Date,
-                    Amount = -e.Amount,
+                    Amount = e.Amount,
                     Category = e.Category,
-                    Balance = total
+                    Balance = -total
                 });
             }
 
