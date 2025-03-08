@@ -43,13 +43,7 @@ namespace Budget
         {
             // If there was a database open before, close it and release the lock
             CloseDatabaseAndReleaseFile();
-
-            // your code
-            if (!File.Exists(filename))
-            {
-                SQLiteConnection.CreateFile(filename);
-            }
-
+            SQLiteConnection.CreateFile(filename);
             existingDatabase(filename);
             CreateDatabase();
         }
