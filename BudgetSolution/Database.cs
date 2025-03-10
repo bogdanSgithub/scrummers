@@ -33,6 +33,9 @@ namespace Budget
     public static class Database
     {
 
+        /// <summary>
+        /// Connection to the SQLite Database. Readonly
+        /// </summary>
         public static SQLiteConnection dbConnection { get { return _connection; } }
         private static SQLiteConnection _connection;
 
@@ -118,6 +121,9 @@ namespace Budget
         // close existing database, wait for garbage collector to
         // release the lock before continuing
         // ===================================================================
+        /// <summary>
+        /// It closes the connection the database and waits for the garbage collector to remove the lock from the database file.
+        /// </summary>
         static public void CloseDatabaseAndReleaseFile()
         {
             if (Database.dbConnection != null)
