@@ -26,37 +26,6 @@ namespace Budget
     /// </summary>
     public class Categories
     {
-        private static String DefaultFileName = "budgetCategories.txt";
-        private string _FileName;
-        private string _DirName;
-
-        // ====================================================================
-        // Properties
-        // ====================================================================
-        /// <summary>
-        /// string FileName representing the name of the file where the categories are saved
-        /// </summary>
-        public String FileName { get { return _FileName; } }
-        /// <description>
-        /// string directory name representing the name of the directory where the categories files is
-        /// </description>
-        public String DirName { get { return _DirName; } }
-
-        // ====================================================================
-        // Constructor
-        // ====================================================================
-        /// <summary>
-        /// Default Constructor that calls the SetCategoriesToDefaults
-        /// </summary>
-        /// <example>
-        /// <code>
-        /// Categories categories = new Categories();
-        /// </code>
-        /// </example>
-        public Categories()
-        {
-            SetCategoriesToDefaults();
-        }
 
         // ====================================================================
         // get a specific category from the list where the id is the one specified
