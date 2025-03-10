@@ -22,19 +22,16 @@ namespace Budget
     //        - etc
     // ====================================================================
     /// <summary>
-    /// Object that has a list of categories
+    /// Object that implements all operations for the categories database.
     /// </summary>
     public class Categories
     {
 
-        // ====================================================================
-        // get a specific category from the list where the id is the one specified
-        // ====================================================================
         /// <summary>
-        /// Given an int id, it looks for and returns the corresponding Category in the Categories list that has that id.
+        /// Given an int id, it looks for and returns the corresponding Category in the database that has that id.
         /// </summary>
         /// <param name="i">the id of the wanted category</param>
-        /// <returns>Returns the Category</returns>
+        /// <returns>The matching category.</returns>
         /// <exception cref="Exception">Thrown if there isn't a Category that has that id.</exception>
         /// <example>
         /// <code>
@@ -46,13 +43,17 @@ namespace Budget
         /// </example>
         public Category GetCategoryFromId(int i)
         {
+            //select the matching category
             SQLiteCommand cmd = new SQLiteCommand(Database.dbConnection);
             cmd.CommandText = "SELECT Id, Description, TypeId FROM categories WHERE Id = @id;";
             cmd.Parameters.AddWithValue("@id", i);
+
+
             SQLiteDataReader rdr = cmd.ExecuteReader();
 
             Category category = null;
 
+            //change the fields of the category if a match is found
             while (rdr.Read())
             {
                 category = new Category(rdr.GetInt32(0), rdr.GetString(1), (Category.CategoryType)rdr.GetInt32(2) - 1);
@@ -62,10 +63,15 @@ namespace Budget
             {
                 throw new Exception("Cannot find category with id " + i.ToString());
             }
+
             return category;
         }
 
-        public Categories(SQLiteConnection conn, bool newDB)
+        /// <summary>
+        /// Constructor that initializes the database.
+        /// </summary>
+        /// <param name="newDB">A flag that represents if a new database should be created or not.</param>
+        public Categories(bool newDB)
         {
             if (newDB)
             {
@@ -75,6 +81,21 @@ namespace Budget
             }
         }
 
+        /// <summary>
+        /// Updates a matching category within the database.
+        /// </summary>
+        /// <param name="id">The ID of the category to update.</param>
+        /// <param name="newDescr">The new description of the category.</param>
+        /// <param name="type">The new type of the category.</param>
+        /// <example>
+        /// <code>
+        /// //Initialize categories, sets categories to defaults.
+        /// Categories example = new Categories(Database.dbConnection);
+        /// 
+        /// //The first category will have the new fields.
+        /// example.UpdateProperties(1, "New Description", Category.CategoryType.Income);
+        /// </code>
+        /// </example>
         public void UpdateProperties(int id, string newDescr, Category.CategoryType type)
         {
             SQLiteCommand cmd = new SQLiteCommand(Database.dbConnection);
@@ -99,6 +120,7 @@ namespace Budget
         private void SetInitialCategoryTypes()
         {
             SQLiteCommand cmd = new SQLiteCommand(Database.dbConnection);
+
             // add initial categoryTypes
             foreach (Category.CategoryType type in Enum.GetValues(typeof(Category.CategoryType)))
             {
@@ -112,7 +134,7 @@ namespace Budget
         // set categories to default
         // ====================================================================
         /// <summary>
-        /// Resets the current categories and populates the list with some default Category objects.
+        /// Resets the current categories and populates the database with some default Category objects.
         /// </summary>
         /// <example>
         /// <code>
@@ -149,7 +171,7 @@ namespace Budget
         }
 
         /// <summary>
-        /// Adds a new category with the specified description and type to the category list.
+        /// Adds a new category with the specified description and type to the category database.
         /// If there are existing categories, the new category is assigned a unique ID, which is 1 bigger than the highest existing ID.
         /// </summary>
         /// <param name="desc">The description of the category being added.</param>
@@ -194,8 +216,8 @@ namespace Budget
         // ====================================================================
 
         /// <summary>
-        /// Tries to remove the category with the specified ID from the category list.
-        /// If there isn't a Category in the list with the given ID then it isn't removed.
+        /// Tries to remove the category with the specified ID from the category database.
+        /// If there isn't a Category in the database with the given ID then it isn't removed.
         /// </summary>
         /// <param name="Id">The ID of the category to be deleted.</param>
         /// <example>
@@ -216,13 +238,11 @@ namespace Budget
 
         // ====================================================================
         // Return list of categories
-        // Note:  make new copy of list, so user cannot modify what is part of
-        //        this instance
         // ====================================================================
         /// <summary>
-        /// Returns a new list containing copies of all categories in the category list.
+        /// Returns a new list containing copies of all categories in the category database.
         /// </summary>
-        /// <returns>A new list of categories, where each category is a copy of the Category objects in the Categories object's list.</returns>
+        /// <returns>A new list of categories, where each category is a copy of the Category objects in the database.</returns>
         /// <example>
         /// <code>
         /// Categories categories = new Categories();
