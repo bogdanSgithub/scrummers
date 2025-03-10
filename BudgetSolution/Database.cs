@@ -39,6 +39,15 @@ namespace Budget
         // ===================================================================
         // create and open a new database
         // ===================================================================
+        /// <summary>
+        /// Creates a new .db file with the provided filename. Creates the tables with the foreign keys.
+        /// </summary>
+        /// <param name="filename">The Filename of the database.</param>
+        /// <example>
+        /// <code>
+        /// Database.newDatabase("newDatabase");
+        /// </code>
+        /// </example>
         public static void newDatabase(string filename)
         {
             // If there was a database open before, close it and release the lock
@@ -51,12 +60,20 @@ namespace Budget
         // ===================================================================
         // open an existing database
         // ===================================================================
+        /// 
+        /// <summary>
+        /// Sets the connection to the provided database filename. Sets foreign keys on. If the filename doesn't exist, it throws an FileNotFoundException.
+        /// </summary>
+        /// <param name="filename">The Filename of the database.</param>
+        /// <example>
+        /// <code>
+        /// Database.existingDatabase("existingDatabase");
+        /// </code>
+        /// </example>
         public static void existingDatabase(string filename)
         {
-
             CloseDatabaseAndReleaseFile();
 
-            // your code
             if (!File.Exists(filename))
             {
                 throw new FileNotFoundException("database file doesn't exist");
@@ -66,13 +83,14 @@ namespace Budget
             _connection.Open();
         }
 
+        // ===================================================================
+        // Creates the default tables in the database with the foreign keys.
+        // ===================================================================
         private static void CreateDatabase()
-        {
-            List<String> tables = new List<String>() { "categoryTypes", "expenses", "categories" };
-
+        {   
             SQLiteCommand cmd = new SQLiteCommand(_connection);
 
-            // catType
+            // categoryTypes
             cmd.CommandText = "DROP TABLE IF EXISTS categoryTypes";
             cmd.ExecuteNonQuery();
 
@@ -80,7 +98,7 @@ namespace Budget
             Description TEXT)";
             cmd.ExecuteNonQuery();
 
-            // cats
+            // categories
             cmd.CommandText = "DROP TABLE IF EXISTS categories";
             cmd.ExecuteNonQuery();
 
@@ -88,7 +106,7 @@ namespace Budget
             Description TEXT, TypeId INTEGER, FOREIGN KEY(TypeId) REFERENCES categoryTypes(Id))";
             cmd.ExecuteNonQuery();
 
-            // exps
+            // expenses
             cmd.CommandText = "DROP TABLE IF EXISTS expenses";
             cmd.ExecuteNonQuery();
 
@@ -96,10 +114,10 @@ namespace Budget
             CategoryId INTEGER, Amount DECIMAL(10,2), Date date, Description TEXT, FOREIGN KEY(CategoryId) REFERENCES categories(Id))";
             cmd.ExecuteNonQuery();
         }
-       // ===================================================================
-       // close existing database, wait for garbage collector to
-       // release the lock before continuing
-       // ===================================================================
+        // ===================================================================
+        // close existing database, wait for garbage collector to
+        // release the lock before continuing
+        // ===================================================================
         static public void CloseDatabaseAndReleaseFile()
         {
             if (Database.dbConnection != null)
