@@ -71,7 +71,7 @@ namespace Budget
         /// Constructor that initializes the database.
         /// </summary>
         /// <param name="newDB">A flag that represents if a new database should be created or not.</param>
-        public Categories(bool newDB)
+        public Categories(SQLiteConnection conn, bool newDB)
         {
             if (newDB)
             {
@@ -80,7 +80,6 @@ namespace Budget
                 SetCategoriesToDefaults();
             }
         }
-
         /// <summary>
         /// Updates a matching category within the database.
         /// </summary>
