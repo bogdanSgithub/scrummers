@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.IO;
 using System.Xml;
 using System.Data.SQLite;
+using System.Xml.Linq;
 
 // ============================================================================
 // (c) Sandy Bultena 2018
@@ -26,7 +27,6 @@ namespace Budget
     public class Categories
     {
         private static String DefaultFileName = "budgetCategories.txt";
-        private List<Category> _Cats = new List<Category>();
         private string _FileName;
         private string _DirName;
 
@@ -77,29 +77,24 @@ namespace Budget
         /// </example>
         public Category GetCategoryFromId(int i)
         {
-            Category c = _Cats.Find(x => x.Id == i);
-            if (c == null)
-            {
-                throw new Exception("Cannot find category with id " + i.ToString());
-            }
-            return c;
-        }
-
-        private void PopulateCategoriesList(SQLiteConnection conn)
-        {
-            _Cats.Clear();
-            SQLiteCommand cmd = new SQLiteCommand(conn);
-
-            cmd.CommandText = "SELECT Id, Description, TypeId FROM categories;";
+            SQLiteCommand cmd = new SQLiteCommand(Database.dbConnection);
+            cmd.CommandText = "SELECT Id, Description, TypeId FROM categories WHERE Id = @id;";
+            cmd.Parameters.AddWithValue("@id", i);
             SQLiteDataReader rdr = cmd.ExecuteReader();
+
+            Category category = null;
 
             while (rdr.Read())
             {
-                Category category = new Category(rdr.GetInt32(0), rdr.GetString(1), (Category.CategoryType)rdr.GetInt32(2) - 1);
-                if (!_Cats.Contains(category))
-                    _Cats.Add(category);
+                category = new Category(rdr.GetInt32(0), rdr.GetString(1), (Category.CategoryType)rdr.GetInt32(2) - 1);
             }
-        } 
+
+            if (category == null)
+            {
+                throw new Exception("Cannot find category with id " + i.ToString());
+            }
+            return category;
+        }
 
         public Categories(SQLiteConnection conn, bool newDB)
         {
@@ -108,10 +103,6 @@ namespace Budget
                 Database.newDatabase("default.db");
                 SetInitialCategoryTypes();
                 SetCategoriesToDefaults();
-            }
-            else
-            {
-                PopulateCategoriesList(conn);
             }
         }
 
@@ -125,8 +116,6 @@ namespace Budget
             cmd.Parameters.AddWithValue("@type", (int)type + 1);
             cmd.Prepare();
             cmd.ExecuteNonQuery();
-
-            PopulateCategoriesList(Database.dbConnection);
         }
 
         private void ClearDBCategories()
@@ -167,7 +156,6 @@ namespace Budget
             // ---------------------------------------------------------------
             // reset any current categories,
             // ---------------------------------------------------------------
-            _Cats.Clear();
             ClearDBCategories();
 
             // ---------------------------------------------------------------
@@ -191,14 +179,6 @@ namespace Budget
             Add("Income", Category.CategoryType.Income);
         }
 
-        // ====================================================================
-        // Add category
-        // ====================================================================
-        private void Add(Category cat)
-        {
-            _Cats.Add(cat);
-        }
-
         /// <summary>
         /// Adds a new category with the specified description and type to the category list.
         /// If there are existing categories, the new category is assigned a unique ID, which is 1 bigger than the highest existing ID.
@@ -213,14 +193,17 @@ namespace Budget
         /// </example>
         public void Add(String desc, Category.CategoryType type)
         {
-            int new_num = 1;
-            if (_Cats.Count > 0)
-            {
-                new_num = (from c in _Cats select c.Id).Max();
-                new_num++;
-            }
-            Category newCategory = new Category(new_num, desc, type);
-            _Cats.Add(newCategory);
+            int newID = 0;
+
+            SQLiteCommand cmd = new SQLiteCommand(Database.dbConnection);
+
+            cmd.CommandText = "SELECT MAX(Id) FROM categories;";
+            object result = cmd.ExecuteScalar();
+
+            if (result != DBNull.Value) 
+                newID = int.Parse(result.ToString());
+
+            Category newCategory = new Category(newID + 1, desc, type);
             InsertIntoDB(newCategory);
         }
 
@@ -255,19 +238,11 @@ namespace Budget
         /// </example>
         public void Delete(int Id)
         {
-            int i = _Cats.FindIndex(x => x.Id == Id);
-            if (i != -1)
-            {
-                _Cats.RemoveAt(i);
-
-
-                SQLiteCommand cmd = new SQLiteCommand(Database.dbConnection);
-                cmd.CommandText = $"DELETE FROM categories WHERE Id = @id;";
-                cmd.Parameters.AddWithValue("@id", Id);
-                cmd.Prepare();
-                cmd.ExecuteNonQuery();
-            }
-
+            SQLiteCommand cmd = new SQLiteCommand(Database.dbConnection);
+            cmd.CommandText = $"DELETE FROM categories WHERE Id = @id;";
+            cmd.Parameters.AddWithValue("@id", Id);
+            cmd.Prepare();
+            cmd.ExecuteNonQuery();
         }
 
         // ====================================================================
@@ -289,14 +264,18 @@ namespace Budget
         /// </code>
         /// </example>
         public List<Category> List()
-        {   
+        {
+            SQLiteCommand cmd = new SQLiteCommand(Database.dbConnection);
+            cmd.CommandText = "SELECT Id, Description, TypeId FROM categories;";
+            SQLiteDataReader rdr = cmd.ExecuteReader();
+            List<Category> categoryList = new List<Category>();
 
-            List<Category> newList = new List<Category>();
-            foreach (Category category in _Cats)
+            while (rdr.Read())
             {
-                newList.Add(new Category(category));
+                categoryList.Add(new Category(rdr.GetInt32(0), rdr.GetString(1), (Category.CategoryType)rdr.GetInt32(2) - 1));
             }
-            return newList;
+
+            return categoryList;
         }
     }
 }
