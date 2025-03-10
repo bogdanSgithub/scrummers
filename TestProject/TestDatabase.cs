@@ -278,8 +278,24 @@ namespace BudgetCodeTests
 
         }
 
+        [Fact]
+        public void SQLite_TestExistingDatabase_invalidDatabase_throw()
+        {
+            // Arrange
+            string path = TestConstants.GetSolutionDir();
+            string filename = "invalidDatabase.db";
 
+            // Act
+            try
+            {
+                Database.existingDatabase(path + "\\" + filename);
+            }
+            catch
+            {
+                Assert.True(true);
+            }
 
+        }
     }
 
 

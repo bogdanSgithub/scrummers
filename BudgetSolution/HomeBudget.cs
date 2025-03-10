@@ -109,7 +109,7 @@ namespace Budget
         /// </example>
         public HomeBudget()
         {
-            _categories = new Categories();
+            _categories = new Categories(Database.dbConnection, false);
             _expenses = new Expenses();
         }
 
@@ -128,7 +128,7 @@ namespace Budget
         /// </example>
         public HomeBudget(String budgetFileName)
         {
-            _categories = new Categories();
+            _categories = new Categories(Database.dbConnection, false);
             _expenses = new Expenses();
             ReadFromFile(budgetFileName);
         }

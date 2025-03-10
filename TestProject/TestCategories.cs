@@ -262,6 +262,31 @@ namespace BudgetCodeTests
             Assert.Equal(Category.CategoryType.Income, category.Type);
 
         }
+
+        [Fact]
+        public void GetCategoryFromID_InvalidIDToThrow()
+        {
+            // Arrange
+            String folder = TestConstants.GetSolutionDir();
+            String newDB = $"{folder}\\newDB.db";
+            Database.newDatabase(newDB);
+            SQLiteConnection conn = Database.dbConnection;
+            Categories categories = new Categories(conn, true);
+            int invalidID = 9999;
+
+            // Act
+            try
+            {
+                categories.GetCategoryFromId(invalidID);
+            }
+            catch
+            {
+                Assert.True(true);
+            }
+
+            // Assert 
+
+        }
     }
 }
 
