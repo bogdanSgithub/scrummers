@@ -2,6 +2,8 @@
 using System;
 using System.Runtime.CompilerServices;
 
+// docfx "C:\Users\2276038\Source\Repos\scrummers\BudgetSolution\docfx.json" --serve
+
 namespace BudgetSolution
 {
     internal class Program
