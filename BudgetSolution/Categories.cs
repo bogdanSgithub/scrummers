@@ -76,8 +76,8 @@ namespace Budget
             if (newDB)
             {
                 Database.newDatabase("default.db");
-                SetInitialCategoryTypes();
-                SetCategoriesToDefaults();
+                Database.SetInitialCategoryTypes();
+                Database.SetCategoriesToDefaults();
             }
         }
         /// <summary>
@@ -99,74 +99,12 @@ namespace Budget
         {
             SQLiteCommand cmd = new SQLiteCommand(Database.dbConnection);
 
-            cmd.CommandText = $"UPDATE categories SET Id = @id, Description = @description, TypeId = @type WHERE Id = @id;";
+            cmd.CommandText = $"UPDATE categories SET Description = @description, TypeId = @type WHERE Id = @id;";
             cmd.Parameters.AddWithValue("@id", id);
             cmd.Parameters.AddWithValue("@description", newDescr);
             cmd.Parameters.AddWithValue("@type", (int)type + 1);
             cmd.Prepare();
             cmd.ExecuteNonQuery();
-        }
-
-        private void ClearDBCategories()
-        {
-            SQLiteCommand cmd = new SQLiteCommand(Database.dbConnection);
-
-            string query = $"DELETE FROM categories;";
-            cmd.CommandText = query;
-            cmd.ExecuteNonQuery();
-        }
-
-        private void SetInitialCategoryTypes()
-        {
-            SQLiteCommand cmd = new SQLiteCommand(Database.dbConnection);
-
-            // add initial categoryTypes
-            foreach (Category.CategoryType type in Enum.GetValues(typeof(Category.CategoryType)))
-            {
-                string query = $"INSERT INTO categoryTypes (Id, Description) VALUES({(int)type + 1}, '{type}');";
-                cmd.CommandText = query;
-                cmd.ExecuteNonQuery();
-            }
-        }
-
-        // ====================================================================
-        // set categories to default
-        // ====================================================================
-        /// <summary>
-        /// Resets the current categories and populates the database with some default Category objects.
-        /// </summary>
-        /// <example>
-        /// <code>
-        /// Categories categories = new Categories();
-        /// categories.SetCategoriesToDefaults();
-        /// </code>
-        /// </example>
-        public void SetCategoriesToDefaults()
-        {
-            // ---------------------------------------------------------------
-            // reset any current categories,
-            // ---------------------------------------------------------------
-            ClearDBCategories();
-
-            // ---------------------------------------------------------------
-            // Add Defaults
-            // ---------------------------------------------------------------
-            Add("Utilities", Category.CategoryType.Expense);
-            Add("Rent", Category.CategoryType.Expense);
-            Add("Food", Category.CategoryType.Expense);
-            Add("Entertainment", Category.CategoryType.Expense);
-            Add("Education", Category.CategoryType.Expense);
-            Add("Miscellaneous", Category.CategoryType.Expense);
-            Add("Medical Expenses", Category.CategoryType.Expense);
-            Add("Vacation", Category.CategoryType.Expense);
-            Add("Credit Card", Category.CategoryType.Credit);
-            Add("Clothes", Category.CategoryType.Expense);
-            Add("Gifts", Category.CategoryType.Expense);
-            Add("Insurance", Category.CategoryType.Expense);
-            Add("Transportation", Category.CategoryType.Expense);
-            Add("Eating Out", Category.CategoryType.Expense);
-            Add("Savings", Category.CategoryType.Savings);
-            Add("Income", Category.CategoryType.Income);
         }
 
         /// <summary>

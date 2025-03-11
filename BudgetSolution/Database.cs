@@ -57,7 +57,7 @@ namespace Budget
             CloseDatabaseAndReleaseFile();
             SQLiteConnection.CreateFile(filename);
             existingDatabase(filename);
-            CreateDatabase();
+            CreateDatabaseTables();
         }
 
         // ===================================================================
@@ -89,7 +89,7 @@ namespace Budget
         // ===================================================================
         // Creates the default tables in the database with the foreign keys.
         // ===================================================================
-        private static void CreateDatabase()
+        private static void CreateDatabaseTables()
         {   
             SQLiteCommand cmd = new SQLiteCommand(_connection);
 
@@ -117,6 +117,69 @@ namespace Budget
             CategoryId INTEGER, Amount DECIMAL(10,2), Date date, Description TEXT, FOREIGN KEY(CategoryId) REFERENCES categories(Id))";
             cmd.ExecuteNonQuery();
         }
+
+        public static void ClearDBTable(string table)
+        {
+            List<string> tables = new List<string>{ "categories", "categoryTypes", "expenses" };
+            if (!tables.Contains(table))
+                throw new ArgumentException("Invalid table");
+
+            SQLiteCommand cmd = new SQLiteCommand(dbConnection);
+
+            cmd.CommandText = $"DELETE FROM {table};";
+            cmd.ExecuteNonQuery();
+        }
+
+        public static void SetInitialCategoryTypes()
+        {
+            SQLiteCommand cmd = new SQLiteCommand(dbConnection);
+
+            // add initial categoryTypes
+            foreach (Category.CategoryType type in Enum.GetValues(typeof(Category.CategoryType)))
+            {
+                string query = $"INSERT INTO categoryTypes (Id, Description) VALUES({(int)type + 1}, '{type}');";
+                cmd.CommandText = query;
+                cmd.ExecuteNonQuery();
+            }
+        }
+
+        public static void SetCategoriesToDefaults()
+        {
+            // ---------------------------------------------------------------
+            // reset any current categories,
+            // ---------------------------------------------------------------
+            ClearDBTable("categories");
+
+            // ---------------------------------------------------------------
+            // Add Defaults
+            // ---------------------------------------------------------------
+            SQLiteCommand cmd = new SQLiteCommand(_connection);
+            string[] statements = { 
+                "INSERT INTO categories (Id, Description, TypeId) VALUES(1, 'Utilities', 2);",
+                "INSERT INTO categories (Id, Description, TypeId) VALUES(2, 'Rent', 2);",
+                "INSERT INTO categories (Id, Description, TypeId) VALUES(3, 'Food', 2);",
+                "INSERT INTO categories (Id, Description, TypeId) VALUES(4, 'Entertainment', 2);",
+                "INSERT INTO categories (Id, Description, TypeId) VALUES(5, 'Education', 2);",
+                "INSERT INTO categories (Id, Description, TypeId) VALUES(6, 'Miscellaneous', 2);",
+                "INSERT INTO categories (Id, Description, TypeId) VALUES(7, 'Medical Expenses', 2);",
+                "INSERT INTO categories (Id, Description, TypeId) VALUES(8, 'Vacation', 2);",
+                "INSERT INTO categories (Id, Description, TypeId) VALUES(9, 'Credit Card', 3);",
+                "INSERT INTO categories (Id, Description, TypeId) VALUES(10, 'Clothes', 2);",
+                "INSERT INTO categories (Id, Description, TypeId) VALUES(11, 'Gifts', 2);",
+                "INSERT INTO categories (Id, Description, TypeId) VALUES(12, 'Insurance', 2);",
+                "INSERT INTO categories (Id, Description, TypeId) VALUES(13, 'Transportation', 2);",
+                "INSERT INTO categories (Id, Description, TypeId) VALUES(14, 'Eating Out', 2);",
+                "INSERT INTO categories (Id, Description, TypeId) VALUES(15, 'Savings', 4);",
+                "INSERT INTO categories (Id, Description, TypeId) VALUES(16, 'Income', 1);"
+            }; 
+
+            foreach (string statement in statements)
+            {
+                cmd.CommandText = statement;
+                cmd.ExecuteNonQuery();
+            }
+        }
+
         // ===================================================================
         // close existing database, wait for garbage collector to
         // release the lock before continuing

@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.IO;
 using System.Xml;
 using System.Globalization;
+using System.Data.SQLite;
 
 // ============================================================================
 // (c) Sandy Bultena 2018
@@ -26,9 +27,17 @@ namespace Budget
     public class Expenses
     {
         private static String DefaultFileName = "budget.txt";
-        private List<Expense> _Expenses = new List<Expense>();
+        //private List<Expense> _Expenses = new List<Expense>();
         private string _FileName;
         private string _DirName;
+
+        public Expenses()
+        {   
+            if (Database.dbConnection is null)
+            {
+                Database.newDatabase("default.db");
+            }
+        }
 
         // ====================================================================
         // Properties
@@ -68,7 +77,7 @@ namespace Budget
             // reading from file resets all the current expenses,
             // so clear out any old definitions
             // ---------------------------------------------------------------
-            _Expenses.Clear();
+            ClearDBExpenses();
 
             // ---------------------------------------------------------------
             // reset default dir/filename to null 
@@ -92,6 +101,15 @@ namespace Budget
             // ----------------------------------------------------------------
             _DirName = Path.GetDirectoryName(filepath);
             _FileName = Path.GetFileName(filepath);
+        }
+
+        private void ClearDBExpenses()
+        {
+            SQLiteCommand cmd = new SQLiteCommand(Database.dbConnection);
+
+            string query = $"DELETE FROM expenses;";
+            cmd.CommandText = query;
+            cmd.ExecuteNonQuery();
         }
 
         // ====================================================================
@@ -151,7 +169,7 @@ namespace Budget
         // ====================================================================
         private void Add(Expense exp)
         {
-            _Expenses.Add(exp);
+            //_Expenses.Add(exp);
         }
 
         /// <summary>
@@ -171,17 +189,46 @@ namespace Budget
         /// </example>
         public void Add(DateTime date, int category, Double amount, String description)
         {
-            int new_id = 1;
+            int newID = 0;
 
-            // if we already have expenses, set ID to max
-            if (_Expenses.Count > 0)
-            {
-                new_id = (from e in _Expenses select e.Id).Max();
-                new_id++;
-            }
+            SQLiteCommand cmd = new SQLiteCommand(Database.dbConnection);
 
-            _Expenses.Add(new Expense(new_id, date, category, amount, description));
+            cmd.CommandText = "SELECT MAX(Id) FROM expenses;";
+            object result = cmd.ExecuteScalar();
 
+            if (result != DBNull.Value)
+                newID = int.Parse(result.ToString());
+
+            Expense newExpense = new Expense(newID + 1, date, category, amount, description);
+            InsertIntoDB(newExpense);
+        }
+        private void InsertIntoDB(Expense expense)
+        {
+            SQLiteCommand cmd = new SQLiteCommand(Database.dbConnection);
+            string query = $"INSERT INTO expenses (Id, CategoryId, Amount, Date, Description) VALUES(@id, @categoryId, @amount, @date, @description);";
+            cmd.CommandText = query;
+            cmd.Parameters.AddWithValue("@id", expense.Id);
+            cmd.Parameters.AddWithValue("@categoryId", expense.Category);
+            cmd.Parameters.AddWithValue("@amount", expense.Amount);
+            cmd.Parameters.AddWithValue("@date", expense.Date);
+            cmd.Parameters.AddWithValue("@description", expense.Description);
+
+            cmd.Prepare();
+            cmd.ExecuteNonQuery();
+        }
+
+        public void UpdateProperties(int id, DateTime newDate, int newCategory, Double newAmount, String newDescription)
+        {
+            SQLiteCommand cmd = new SQLiteCommand(Database.dbConnection);
+
+            cmd.CommandText = $"UPDATE expenses SET CategoryId = @categoryId, Description = @description, Amount = @amount, Date = @date WHERE Id = @id;";
+            cmd.Parameters.AddWithValue("@id", id);
+            cmd.Parameters.AddWithValue("@categoryId", newCategory);
+            cmd.Parameters.AddWithValue("@amount", newAmount);
+            cmd.Parameters.AddWithValue("@date", newDate);
+            cmd.Parameters.AddWithValue("@description", newDescription);
+            cmd.Prepare();
+            cmd.ExecuteNonQuery();
         }
 
         // ====================================================================
@@ -201,10 +248,11 @@ namespace Budget
         /// </example>
         public void Delete(int Id)
         {
-            int i = _Expenses.FindIndex(x => x.Id == Id);
-            if (i != -1)
-                _Expenses.RemoveAt(i);
-
+            SQLiteCommand cmd = new SQLiteCommand(Database.dbConnection);
+            cmd.CommandText = $"DELETE FROM expenses WHERE Id = @id;";
+            cmd.Parameters.AddWithValue("@id", Id);
+            cmd.Prepare();
+            cmd.ExecuteNonQuery();
         }
 
         // ====================================================================
@@ -223,16 +271,22 @@ namespace Budget
         /// foreach (Expense e in expenses.List()) {
         ///    Console.WriteLine(e);
         /// }
+        /// Id INTEGER PRIMARY KEY,
         /// </code>
         /// </example>
         public List<Expense> List()
         {
-            List<Expense> newList = new List<Expense>();
-            foreach (Expense expense in _Expenses)
+            SQLiteCommand cmd = new SQLiteCommand(Database.dbConnection);
+            cmd.CommandText = "SELECT Id, CategoryId, Amount, Date, Description FROM expenses;";
+            SQLiteDataReader rdr = cmd.ExecuteReader();
+            List<Expense> expenseList = new List<Expense>();
+
+            while (rdr.Read())
             {
-                newList.Add(new Expense(expense));
+                expenseList.Add(new Expense(rdr.GetInt32(0), rdr.GetDateTime(3), rdr.GetInt32(1), rdr.GetDouble(2), rdr.GetString(4)));
             }
-            return newList;
+
+            return expenseList;
         }
 
 
@@ -308,7 +362,7 @@ namespace Budget
                 doc.LoadXml("<Expenses></Expenses>");
 
                 // foreach Category, create an new xml element
-                foreach (Expense exp in _Expenses)
+                foreach (Expense exp in List())
                 {
                     // main element 'Expense' with attribute ID
                     XmlElement ele = doc.CreateElement("Expense");

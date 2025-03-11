@@ -228,7 +228,7 @@ namespace BudgetCodeTests
             Assert.NotEqual(originalList.Count, categories.List().Count);
 
             // Act
-            categories.SetCategoriesToDefaults();
+            Database.SetCategoriesToDefaults();
 
             // Assert
             Assert.Equal(originalList.Count, categories.List().Count);
