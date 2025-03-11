@@ -34,15 +34,15 @@ namespace Budget
         /// <summary>
         /// Double that represents the amount of the expense
         /// </summary>
-        public Double Amount { get; set; }
+        public Double Amount { get; }
         /// <summary>
         /// String that represents the description of the expense
         /// </summary>
-        public String Description { get; set; }
+        public String Description { get; }
         /// <summary>
         /// Integer that represents the category of the expense
         /// </summary>
-        public int Category { get; set; }
+        public int Category { get; }
 
         // ====================================================================
         // Constructor

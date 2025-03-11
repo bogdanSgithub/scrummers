@@ -38,7 +38,6 @@ namespace BudgetCodeTests
         [Fact]
         public void ExpenseCopyConstructoryIsDeepCopy()
         {
-
             // Arrange
             DateTime now = DateTime.Now;
             double amount = 24.55;
@@ -49,12 +48,11 @@ namespace BudgetCodeTests
 
             // Act
             Expense copy = new Expense(expense);
-            copy.Amount = expense.Amount + 15;
+     
 
             // Assert 
             Assert.Equal(id, expense.Id);
-            Assert.NotEqual(amount, copy.Amount);
-            Assert.Equal(expense.Amount + 15, copy.Amount);
+            Assert.Equal(expense.Amount, copy.Amount);
             Assert.Equal(descr, expense.Description);
             Assert.Equal(category, expense.Category);
             Assert.Equal(now, expense.Date);
@@ -64,7 +62,7 @@ namespace BudgetCodeTests
         // ========================================================================
 
         [Fact]
-        public void ExpenseObjectGetSetProperties()
+        public void ExpenseObjectGetProperties()
         {
             // question - why cannot I not change the date of an expense.  What if I got the date wrong?
 
@@ -80,17 +78,12 @@ namespace BudgetCodeTests
 
             Expense expense = new Expense(id, now, category, amount, descr);
 
-            // Act
-            expense.Amount = newAmount;
-            expense.Category = newCategory;
-            expense.Description = newDescr;
-
             // Assert 
             Assert.True(typeof(Expense).GetProperty("Date").CanWrite == false);
             Assert.True(typeof(Expense).GetProperty("Id").CanWrite == false);
-            Assert.Equal(newAmount, expense.Amount);
-            Assert.Equal(newDescr, expense.Description);
-            Assert.Equal(newCategory, expense.Category);
+            Assert.Equal(amount, expense.Amount);
+            Assert.Equal(descr, expense.Description);
+            Assert.Equal(category, expense.Category);
         }
 
 
