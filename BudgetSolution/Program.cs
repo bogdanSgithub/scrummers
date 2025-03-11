@@ -23,7 +23,7 @@ namespace BudgetSolution
 
         public Program()
         {
-            TestDatabase();
+            Mileston3Demo();
             /*
             homeBudget = new HomeBudget(budgetFile);
             if (GetParameters())
@@ -33,11 +33,48 @@ namespace BudgetSolution
             }*/
         }
 
-        public void TestDatabase()
+        public void Mileston3Demo()
         {   
-            string filename = "..\\..\\..\\testDBInput.db";
+            string filename = "..\\..\\..\\demoMilestone3.db";
             Database.newDatabase(filename);
             //Database.existingDatabase(filename);
+            Categories categories = new Categories(Database.dbConnection, true);
+       
+            Console.WriteLine("Milestone 3 Demo");
+            Console.WriteLine("What do you wish to do?");
+            Console.WriteLine("1) Create Category\n2) Read Categories\n3) Update Category\n4) Delete Category");
+            Console.WriteLine("Your Choice (ex: 1 ): ");
+            int choice = Convert.ToInt32(Console.ReadLine());
+
+            Console.Clear();
+
+            Console.WriteLine("Current categories");
+            foreach (Category category in categories.List())
+            {
+                Console.WriteLine($"{category.Id}, {category.Description}, {category.Type}");
+            }
+            Console.WriteLine();
+            switch (choice)
+            {
+                case 1:
+                    categories.Add("New Category", Category.CategoryType.Income);
+                    break;
+                case 2:
+                    break;
+
+                case 3:
+                    categories.UpdateProperties(16, "Updated Category", Category.CategoryType.Savings);
+                    break;
+                case 4:
+                    categories.Delete(16);
+                    break;
+            }
+
+            Console.WriteLine("Final categories");
+            foreach (Category category in categories.List())
+            {
+                Console.WriteLine($"{category.Id}, {category.Description}, {category.Type}");
+            }
         }
 
         public DateTime? GetValidDate(string message)
@@ -79,7 +116,6 @@ namespace BudgetSolution
             Console.WriteLine("i) GetBudgetItems\nii) GetBudgetItemsByMonth\niii) GetBudgetItemsByCategory\niv) GetBudgetDictionaryByCategoryAndMonth");
             Console.WriteLine("Your Choice (ex: ii ): ");
             chosenReport = Console.ReadLine();
-
         }
 
         public void CallReport()
