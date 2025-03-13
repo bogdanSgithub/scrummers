@@ -188,21 +188,22 @@ namespace BudgetCodeTests
             Expenses expenses = new Expenses();
             DateTime date = DateTime.Now;
             string descr = "";
-
+            bool isThrow = false;
             try
             {
                 expenses.Add(date, 1, 10, descr);
             }
             catch
             {
-                Assert.True(true);
+                isThrow = true;
             }
+            Assert.True(isThrow);
         }
 
         // ========================================================================
 
         [Fact]
-        public void ExpensesMethod_UpdateCategory()
+        public void ExpensesMethod_UpdateValid()
         {
             // Arrange
             String folder = TestConstants.GetSolutionDir();
@@ -227,6 +228,39 @@ namespace BudgetCodeTests
             Assert.Equal(newDescr, expense.Description);
             Assert.Equal(newCategory, expense.Category);
             Assert.Equal(newAmount, expense.Amount);
+        }
+
+        [Fact]
+        public void ExpensesMethod_UpdateInvalidThrow()
+        {
+            // Arrange
+            String folder = TestConstants.GetSolutionDir();
+            String newDB = $"{folder}\\newDB.db";
+            Database.newDatabase(newDB);
+            SQLiteConnection conn = Database.dbConnection;
+            Expenses expenses = new Expenses();
+            expenses.Add(DateTime.Now, 2, 10, "Old Description");
+
+            String newDescr = "New Description";
+            DateTime newDate = DateTime.Now;
+            int id = 1;
+            int invalidCategory = 99999999;
+            int newAmount = 20;
+
+            bool isThrown = false;
+
+            // Act
+            try
+            {
+                expenses.UpdateProperties(id, newDate, invalidCategory, newAmount, newDescr);
+            }
+            catch (Exception ex)
+            {
+                isThrown = true;
+            }
+
+            // Assert 
+            Assert.True(isThrown);
         }
 
         [Fact]
