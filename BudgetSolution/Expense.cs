@@ -64,6 +64,9 @@ namespace Budget
         /// </example>
         public Expense(int id, DateTime date, int category, Double amount, String description)
         {
+            if (String.IsNullOrEmpty(description))
+                throw new ArgumentNullException("description cannot be empty");
+
             this.Id = id;
             this.Date = date;
             this.Category = category;
