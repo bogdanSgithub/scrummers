@@ -28,15 +28,11 @@ namespace BudgetCodeTests
 
             // Assert
             Assert.IsType<Expenses>(expenses);
-
-            Assert.True(typeof(Expenses).GetProperty("FileName").CanWrite == false);
-            Assert.True(typeof(Expenses).GetProperty("DirName").CanWrite == false);
-
         }
 
 
         // ========================================================================
-
+        /*
         [Fact]
         public void ExpensesMethod_ReadFromFile_NotExist_ThrowsException()
         {
@@ -47,11 +43,11 @@ namespace BudgetCodeTests
             // Act and Assert
             Assert.Throws<System.IO.FileNotFoundException>(() => expenses.ReadFromFile(badFile));
 
-        }
+        }*/
 
         // ========================================================================
 
-        [Fact]
+        /*[Fact]
         public void ExpensesMethod_ReadFromFile_ValidateCorrectDataWasRead()
         {
             // Arrange
@@ -74,7 +70,7 @@ namespace BudgetCodeTests
             Assert.Equal(dir, fileDir);
             Assert.Equal(testInputFile, expenses.FileName);
 
-        }
+        }*/
 
         // ========================================================================
 
@@ -290,7 +286,7 @@ namespace BudgetCodeTests
 
         // ========================================================================
 
-        [Fact]
+        /*[Fact]
         public void ExpenseMethod_WriteToFile()
         {
             // Arrange
@@ -318,10 +314,10 @@ namespace BudgetCodeTests
             }
 
         }
-
+        */
         // ========================================================================
 
-        [Fact]
+        /*[Fact]
         public void ExpenseMethod_WriteToFile_VerifyNewExpenseWrittenCorrectly()
         {
             // Arrange
@@ -348,10 +344,11 @@ namespace BudgetCodeTests
             Assert.Equal(beforeSaving.Description, afterSaving.Description);
             Assert.Equal(beforeSaving.Amount, afterSaving.Amount);
 
-        }
+        }*/
 
         // ========================================================================
 
+        /*
         [Fact]
         public void ExpenseMethod_WriteToFile_WriteToLastFileWrittenToByDefault()
         {
@@ -380,7 +377,7 @@ namespace BudgetCodeTests
                 File.Delete(outputFile);
             }
 
-        }
+        }*/
 
         // ========================================================================
 

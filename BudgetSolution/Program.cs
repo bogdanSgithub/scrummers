@@ -37,10 +37,11 @@ namespace BudgetSolution
         {   
             string filename = "..\\..\\..\\plzWork.db";
             Database.existingDatabase(filename);
-            Categories categories = new Categories(Database.dbConnection, false);
-            foreach (Category category in categories.List())
+            Expenses expenses = new Expenses();
+            expenses.Add(DateTime.Now, 2, 10, "Old Description");
+            foreach (Expense expense in expenses.List())
             {
-                Console.WriteLine(category);
+                Console.WriteLine(expense);
             }
             //Database.existingDatabase(filename);
         }
