@@ -35,8 +35,13 @@ namespace BudgetSolution
 
         public void TestDatabase()
         {   
-            string filename = "..\\..\\..\\testDBInput.db";
-            Database.newDatabase(filename);
+            string filename = "..\\..\\..\\plzWork.db";
+            Database.existingDatabase(filename);
+            Categories categories = new Categories(Database.dbConnection, false);
+            foreach (Category category in categories.List())
+            {
+                Console.WriteLine(category);
+            }
             //Database.existingDatabase(filename);
         }
 

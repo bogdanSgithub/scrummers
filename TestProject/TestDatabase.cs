@@ -45,34 +45,34 @@ namespace BudgetCodeTests
 
         }
 
+        //DEPRECATED
+        //[Fact]
+        //public void SQLite_TestNewDatabase_newDBDoesExist_shouldHaveNoData()
+        //{
+        //    // Arrange
+        //    string path = TestConstants.GetSolutionDir();
+        //    string filename = "newdb.db";
+        //    List<String> tables = new List<String>() { "categoryTypes", "expenses", "categories" };
 
-        [Fact]
-        public void SQLite_TestNewDatabase_newDBDoesExist_shouldHaveNoData()
-        {
-            // Arrange
-            string path = TestConstants.GetSolutionDir();
-            string filename = "newdb.db";
-            List<String> tables = new List<String>() { "categoryTypes", "expenses", "categories" };
+        //    // open, add some stuff to the database directly, then
+        //    // close it.
+        //    Database.newDatabase(TestConstants.GetSolutionDir() + "\\" + filename);
+        //    var cmd = new SQLiteCommand(Database.dbConnection);
 
-            // open, add some stuff to the database directly, then
-            // close it.
-            Database.newDatabase(TestConstants.GetSolutionDir() + "\\" + filename);
-            var cmd = new SQLiteCommand(Database.dbConnection);
-
-            cmd.CommandText = "INSERT INTO categoryTypes(Description) VALUES('Whatever')";
-            cmd.ExecuteNonQuery();
-            cmd.Dispose();
+        //    cmd.CommandText = "INSERT INTO categoryTypes(Description) VALUES('Whatever')";
+        //    cmd.ExecuteNonQuery();
+        //    cmd.Dispose();
 
 
-            // Act
-            Database.newDatabase(TestConstants.GetSolutionDir() + "\\" + filename);
+        //    // Act
+        //    Database.newDatabase(TestConstants.GetSolutionDir() + "\\" + filename);
 
-            // Assert
-            cmd = new SQLiteCommand("Select * from categoryTypes", Database.dbConnection);
-            SQLiteDataReader rdr = cmd.ExecuteReader();
-            Assert.False(rdr.HasRows, "There is data in the new databse");
+        //    // Assert
+        //    cmd = new SQLiteCommand("Select * from categoryTypes", Database.dbConnection);
+        //    SQLiteDataReader rdr = cmd.ExecuteReader();
+        //    Assert.False(rdr.HasRows, "There is data in the new databse");
 
-        }
+        //}
 
         [Fact]
         public void SQLite_TestNewDatabase_ForeignKeyConstraintsEnabled()

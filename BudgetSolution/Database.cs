@@ -58,6 +58,8 @@ namespace Budget
             SQLiteConnection.CreateFile(filename);
             existingDatabase(filename);
             CreateDatabaseTables();
+            SetInitialCategoryTypes();
+            SetCategoriesToDefaults();
         }
 
         // ===================================================================

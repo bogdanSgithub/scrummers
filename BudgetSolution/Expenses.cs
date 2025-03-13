@@ -77,7 +77,7 @@ namespace Budget
             // reading from file resets all the current expenses,
             // so clear out any old definitions
             // ---------------------------------------------------------------
-            ClearDBExpenses();
+            Database.ClearDBTable("expenses");
 
             // ---------------------------------------------------------------
             // reset default dir/filename to null 
@@ -101,15 +101,6 @@ namespace Budget
             // ----------------------------------------------------------------
             _DirName = Path.GetDirectoryName(filepath);
             _FileName = Path.GetFileName(filepath);
-        }
-
-        private void ClearDBExpenses()
-        {
-            SQLiteCommand cmd = new SQLiteCommand(Database.dbConnection);
-
-            string query = $"DELETE FROM expenses;";
-            cmd.CommandText = query;
-            cmd.ExecuteNonQuery();
         }
 
         // ====================================================================
@@ -170,6 +161,32 @@ namespace Budget
         private void Add(Expense exp)
         {
             //_Expenses.Add(exp);
+        }
+
+        public Expense GetExpenseFromId(int i)
+        {
+            //select the matching category
+            SQLiteCommand cmd = new SQLiteCommand(Database.dbConnection);
+            cmd.CommandText = "SELECT Id, CategoryId, Amount, Date, Description FROM expenses WHERE Id = @id;";
+            cmd.Parameters.AddWithValue("@id", i);
+
+
+            SQLiteDataReader rdr = cmd.ExecuteReader();
+
+            Expense expense = null;
+
+            //change the fields of the category if a match is found
+            while (rdr.Read())
+            {
+                expense = new Expense(new Expense(rdr.GetInt32(0), rdr.GetDateTime(3), rdr.GetInt32(1), rdr.GetDouble(2), rdr.GetString(4)));
+            }
+
+            if (expense == null)
+            {
+                throw new Exception("Cannot find expense with id " + i.ToString());
+            }
+
+            return expense;
         }
 
         /// <summary>

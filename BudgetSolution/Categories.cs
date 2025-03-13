@@ -76,8 +76,6 @@ namespace Budget
             if (newDB)
             {
                 Database.newDatabase("default.db");
-                Database.SetInitialCategoryTypes();
-                Database.SetCategoriesToDefaults();
             }
         }
         /// <summary>
