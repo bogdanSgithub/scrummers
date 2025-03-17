@@ -95,24 +95,7 @@ namespace Budget
         /// Stores the Expenses of the Budget
         /// </summary>
         public Expenses expenses { get { return _expenses; } }
-
-        // -------------------------------------------------------------------
-        // Constructor (new... default categories, no expenses)
-        // -------------------------------------------------------------------
-        /// <summary>
-        /// Default Constructor. Sets the Categories and Expenses using their default constructors.
-        /// </summary>
-        /// <example>
-        /// <code>
-        /// HomeBudget homeBudget = new HomeBudget();
-        /// </code>
-        /// </example>
-        public HomeBudget()
-        {
-            _categories = new Categories(Database.dbConnection, false);
-            _expenses = new Expenses();
-        }
-
+        
         // -------------------------------------------------------------------
         // Constructor (existing budget ... must specify file)
         // -------------------------------------------------------------------
@@ -126,13 +109,6 @@ namespace Budget
         /// HomeBudget myBudget = new HomeBudget("C:\\Users\\studentID\\Desktop\\Scrummers\\BudgetSolution\\test.budget");
         /// </code>
         /// </example>
-        public HomeBudget(String budgetFileName)
-        {
-            _categories = new Categories(Database.dbConnection, false);
-            _expenses = new Expenses();
-            ReadFromFile(budgetFileName);
-        }
-
         public HomeBudget(String databaseFile, String expensesXMLFile, bool newDB = false)
         {
             // if database exists, and user doesn't want a new database, open existing DB
