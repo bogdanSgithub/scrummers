@@ -109,7 +109,7 @@ namespace Budget
         /// HomeBudget myBudget = new HomeBudget("C:\\Users\\studentID\\Desktop\\Scrummers\\BudgetSolution\\test.budget");
         /// </code>
         /// </example>
-        public HomeBudget(String databaseFile, String expensesXMLFile, bool newDB = false)
+        public HomeBudget(String databaseFile, bool newDB = false)
         {
             // if database exists, and user doesn't want a new database, open existing DB
             if (!newDB && File.Exists(databaseFile))
