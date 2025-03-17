@@ -77,6 +77,9 @@ namespace Budget
         /// </example>
         public void Add(DateTime date, int category, Double amount, String description)
         {
+            if (!Database.IsValidIdInTable(category, "categories"))
+                throw new ArgumentException("Invalid categoryId.");
+
             int newID = 0;
 
             SQLiteCommand cmd = new SQLiteCommand(Database.dbConnection);
@@ -107,6 +110,9 @@ namespace Budget
 
         public void UpdateProperties(int id, DateTime newDate, int newCategory, Double newAmount, String newDescription)
         {
+            if (!Database.IsValidIdInTable(newCategory, "categories"))
+                throw new ArgumentException("Invalid categoryId.");
+
             SQLiteCommand cmd = new SQLiteCommand(Database.dbConnection);
 
             cmd.CommandText = $"UPDATE expenses SET CategoryId = @categoryId, Description = @description, Amount = @amount, Date = @date WHERE Id = @id;";

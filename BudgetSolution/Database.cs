@@ -38,6 +38,7 @@ namespace Budget
         /// </summary>
         public static SQLiteConnection dbConnection { get { return _connection; } }
         private static SQLiteConnection _connection;
+        private static List<string> _tables = new List<string> { "categories", "categoryTypes", "expenses" };
 
         // ===================================================================
         // create and open a new database
@@ -122,8 +123,7 @@ namespace Budget
 
         public static void ClearDBTable(string table)
         {
-            List<string> tables = new List<string>{ "categories", "categoryTypes", "expenses" };
-            if (!tables.Contains(table))
+            if (!_tables.Contains(table))
                 throw new ArgumentException("Invalid table");
 
             SQLiteCommand cmd = new SQLiteCommand(dbConnection);
@@ -132,6 +132,9 @@ namespace Budget
             cmd.ExecuteNonQuery();
         }
 
+        /// <summary>
+        /// Inserts the default category types 
+        /// </summary>
         public static void SetInitialCategoryTypes()
         {
             SQLiteCommand cmd = new SQLiteCommand(dbConnection);
@@ -145,6 +148,9 @@ namespace Budget
             }
         }
 
+        /// <summary>
+        /// Clears the categories table and then adds the default categories to it.
+        /// </summary>
         public static void SetCategoriesToDefaults()
         {
             // ---------------------------------------------------------------
@@ -202,6 +208,29 @@ namespace Budget
                 GC.Collect();
                 GC.WaitForPendingFinalizers();
             }
+        }
+
+        /// <summary>
+        /// Given an int id and string table name, checks to see if there is a row with that id in the given table.
+        /// Makes sure the given table is valid. Returns if there was a row in the table with that id.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="table"></param>
+        /// <returns></returns>
+        static public bool IsValidIdInTable(int id, string table)
+        {
+            if (!_tables.Contains(table))
+                throw new ArgumentException("Not a valid table");
+
+            SQLiteCommand cmd = new SQLiteCommand(dbConnection);
+
+            // is still safe because we check initially if it's a valid table
+            cmd.CommandText = $"SELECT COUNT(Id) FROM {table} WHERE Id = @id;";
+            cmd.Parameters.AddWithValue("@id", id);
+            cmd.Prepare();
+            object result = cmd.ExecuteScalar();
+
+            return int.Parse(result.ToString()) == 1;
         }
     }
 
