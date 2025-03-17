@@ -132,6 +132,9 @@ namespace Budget
             cmd.ExecuteNonQuery();
         }
 
+        /// <summary>
+        /// Inserts the default category types 
+        /// </summary>
         public static void SetInitialCategoryTypes()
         {
             SQLiteCommand cmd = new SQLiteCommand(dbConnection);
@@ -145,6 +148,9 @@ namespace Budget
             }
         }
 
+        /// <summary>
+        /// Clears the categories table and then adds the default categories to it.
+        /// </summary>
         public static void SetCategoriesToDefaults()
         {
             // ---------------------------------------------------------------
@@ -211,7 +217,7 @@ namespace Budget
         /// <param name="id"></param>
         /// <param name="table"></param>
         /// <returns></returns>
-        static public bool CheckValidRow(int id, string table)
+        static public bool IsValidIdInTable(int id, string table)
         {
             if (!_tables.Contains(table))
                 throw new ArgumentException("Not a valid table");

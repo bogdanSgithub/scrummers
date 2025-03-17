@@ -279,7 +279,7 @@ namespace BudgetCodeTests
         }
 
         [Fact]
-        public void SQLite_TestCheckValidRow()
+        public void SQLite_TestIsValidIdInTable()
         {
             // Arrange
             string path = TestConstants.GetSolutionDir();
@@ -288,9 +288,9 @@ namespace BudgetCodeTests
             // Act
             // by calling newDatabase, we add the default 4 categoryTypes and also add the 16 default categories, i am just checking that the method works
             Database.newDatabase(path + "\\" + filename);
-            bool validCategories = Database.CheckValidRow(1, "categories");
-            bool validCategoryTypes = Database.CheckValidRow(1, "categoryTypes");
-            bool invalidCategories = Database.CheckValidRow(999999999, "categories");
+            bool validCategories = Database.IsValidIdInTable(1, "categories");
+            bool validCategoryTypes = Database.IsValidIdInTable(1, "categoryTypes");
+            bool invalidCategories = Database.IsValidIdInTable(999999999, "categories");
 
             Assert.True(validCategories);
             Assert.True(validCategoryTypes);
@@ -298,7 +298,7 @@ namespace BudgetCodeTests
         }
 
         [Fact]
-        public void SQLite_TestCheckValidRowValid()
+        public void SQLite_TestInvalidDatabaseThrow()
         {
             // Arrange
             string path = TestConstants.GetSolutionDir();
