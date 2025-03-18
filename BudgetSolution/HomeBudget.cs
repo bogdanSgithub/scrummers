@@ -44,8 +44,6 @@ namespace Budget
     /// </example>
     public class HomeBudget
     {
-        private string _FileName;
-        private string _DirName;
         private Categories _categories;
         private Expenses _expenses;
 
