@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.IO;
 using System.Dynamic;
+using System.Data.SQLite;
 
 // ============================================================================
 // (c) Sandy Bultena 2018
@@ -252,10 +253,26 @@ namespace Budget
             Start = Start ?? new DateTime(1900, 1, 1);
             End = End ?? new DateTime(2500, 1, 1);
 
-            var query = from c in _categories.List()
-                        join e in _expenses.List() on c.Id equals e.Category
-                        where e.Date >= Start && e.Date <= End
-                        select new { CatId = c.Id, ExpId = e.Id, e.Date, Category = c.Description, e.Description, e.Amount };
+            SQLiteCommand cmd = new SQLiteCommand(Database.dbConnection);
+
+            if (!FilterFlag)
+            {
+                cmd.CommandText = "SELECT e.Id, e.CategoryId, e.Description, e.Date, e.Amount, c.Description FROM categories c, expenses e WHERE e.CategoryId = c.Id AND e.Date > @start AND e.Date < @end ORDER BY e.Date;";
+
+
+                cmd.Parameters.AddWithValue("@start", Start);
+                cmd.Parameters.AddWithValue("@end", End);
+            }
+            else
+            {
+                cmd.CommandText = "SELECT e.Id, e.CategoryId, e.Description, e.Date, e.Amount, c.Description FROM categories c, expenses e WHERE e.CategoryId = c.Id AND e.CategoryId = @filteredID AND e.Date > @start AND e.Date < @end ORDER BY e.Date;";
+
+                cmd.Parameters.AddWithValue("@start", Start);
+                cmd.Parameters.AddWithValue("@end", End);
+                cmd.Parameters.AddWithValue("@filteredID", CategoryID);
+            }
+
+            SQLiteDataReader rdr = cmd.ExecuteReader();
 
             // ------------------------------------------------------------------------
             // create a BudgetItem list with totals,
@@ -263,24 +280,26 @@ namespace Budget
             List<BudgetItem> items = new List<BudgetItem>();
             Double total = 0;
 
-            foreach (var e in query.OrderBy(q => q.Date))
+            while (rdr.Read())
             {
-                // filter out unwanted categories if filter flag is on
-                if (FilterFlag && CategoryID != e.CatId)
-                {
-                    continue;
-                }
+                // set fields from database to variables to increase clarity
+                int expID = rdr.GetInt32(0);
+                int dbCatID = rdr.GetInt32(1);
+                string itemDescription = rdr.GetString(2);
+                DateTime date = rdr.GetDateTime(3);
+                double amount = rdr.GetDouble(4);
+                string categoryDescription = rdr.GetString(5);
 
                 // keep track of running totals
-                total = total - e.Amount;
+                total = total - amount;
                 items.Add(new BudgetItem
                 {
-                    CategoryID = e.CatId,
-                    ExpenseID = e.ExpId,
-                    ShortDescription = e.Description,
-                    Date = e.Date,
-                    Amount = e.Amount,
-                    Category = e.Category,
+                    CategoryID = dbCatID,
+                    ExpenseID = expID,
+                    ShortDescription = itemDescription,
+                    Date = date,
+                    Amount = amount,
+                    Category = categoryDescription,
                     Balance = -total
                 });
             }
