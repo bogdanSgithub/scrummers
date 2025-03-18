@@ -45,8 +45,6 @@ namespace Budget
     /// </example>
     public class HomeBudget
     {
-        private string _FileName;
-        private string _DirName;
         private Categories _categories;
         private Expenses _expenses;
 
@@ -55,37 +53,6 @@ namespace Budget
         // ===================================================================
 
         // Properties (location of files etc)
-        /// <summary>
-        /// Stores the Budget File Name.
-        /// </summary>
-        /// <return>
-        /// It returns a string representing the budget File Name or null if it's not set.
-        /// </return>
-        public String FileName { get { return _FileName; } }
-        /// <summary>
-        /// Stores the the name of the Directory.
-        /// </summary>
-        /// <return>
-        /// Returns a string representing the directory Name or null if it's not set.
-        /// </return>
-        public String DirName { get { return _DirName; } }
-        /// <summary>
-        /// Stores the Directory name + File name together.
-        /// </summary>
-        public String PathName
-        {
-            get
-            {
-                if (_FileName != null && _DirName != null)
-                {
-                    return Path.GetFullPath(_DirName + "\\" + _FileName);
-                }
-                else
-                {
-                    return null;
-                }
-            }
-        }
 
         // Properties (categories and expenses object)
         /// <summary>
@@ -96,8 +63,21 @@ namespace Budget
         /// Stores the Expenses of the Budget
         /// </summary>
         public Expenses expenses { get { return _expenses; } }
-
-        public HomeBudget(String databaseFile, String expensesXMLFile, bool newDB = false)
+        
+        // -------------------------------------------------------------------
+        // Constructor (existing budget ... must specify file)
+        // -------------------------------------------------------------------
+        /// <summary>
+        /// Constructor that takes in the budget File Name and uses that file to set the Categories and Expenses.
+        /// </summary>
+        /// <param name="budgetFileName"> string which represents the name of the budget file
+        /// </param>
+        /// <example>
+        /// <code>
+        /// HomeBudget myBudget = new HomeBudget("C:\\Users\\studentID\\Desktop\\Scrummers\\BudgetSolution\\test.budget");
+        /// </code>
+        /// </example>
+        public HomeBudget(String databaseFile, bool newDB = false)
         {
             // if database exists, and user doesn't want a new database, open existing DB
             if (!newDB && File.Exists(databaseFile))
