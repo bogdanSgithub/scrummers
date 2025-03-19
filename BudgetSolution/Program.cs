@@ -48,7 +48,7 @@ namespace BudgetSolution
             //{
             //    Console.WriteLine($"{c.CategoryID}, {c.Category}");
             //}
-
+            /*
             // Arrange
             string folder = TestConstants.GetSolutionDir();
             string inFile = TestConstants.GetSolutionDir() + "\\" + TestConstants.testExpensesInputFile;
@@ -71,7 +71,7 @@ namespace BudgetSolution
                 Console.WriteLine($"{budgetItem.CategoryID} + {expense.Category}");
                 Console.WriteLine($"{budgetItem.Amount} + {expense.Amount}");
                 Console.WriteLine($"{budgetItem.ShortDescription} + {expense.Description}");
-            }
+            }*/
         }
 
         public DateTime? GetValidDate(string message)
