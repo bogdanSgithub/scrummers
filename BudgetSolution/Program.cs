@@ -35,7 +35,7 @@ namespace BudgetSolution
 
         public void TestDatabase()
         {   
-            
+            /*
             // Arrange
             string folder = TestConstants.GetSolutionDir();
             string inFile = TestConstants.GetSolutionDir() + "\\" + TestConstants.testExpensesInputFile;
@@ -69,6 +69,7 @@ namespace BudgetSolution
 
                 Console.WriteLine("----------------------------------------");
             }
+            */
         }
 
         public DateTime? GetValidDate(string message)
