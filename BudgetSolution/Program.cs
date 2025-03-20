@@ -34,44 +34,42 @@ namespace BudgetSolution
         }
 
         public void TestDatabase()
-        {
-            //string filename = "..\\..\\..\\plzWork.db";
-            //Database.existingDatabase(filename);
-            //Expenses expenses = new Expenses();
-            //expenses.Add(DateTime.Now, 9, 10, "Old Description");
-
-            //HomeBudget hb = new HomeBudget("..\\..\\..\\plzWork.db", "C:\\Users\\Asus\\Source\\Repos\\scrummers\\TestProject\\test_expenses.exps");
-
-            //List<BudgetItem> items = hb.GetBudgetItems(null, null, true, 9);
-
-            //foreach (var c in items)
-            //{
-            //    Console.WriteLine($"{c.CategoryID}, {c.Category}");
-            //}
-
+        {   
+            /*
             // Arrange
             string folder = TestConstants.GetSolutionDir();
             string inFile = TestConstants.GetSolutionDir() + "\\" + TestConstants.testExpensesInputFile;
             String goodDB = $"{folder}\\{TestConstants.testDBInputFile}";
             String messyDB = $"{folder}\\messy.db";
-            HomeBudget homeBudget = new HomeBudget(messyDB, inFile, false);
+            HomeBudget homeBudget = new HomeBudget(messyDB, false);
             List<Expense> listExpenses = TestConstants.filteredbyYear2018();
             List<Category> listCategories = homeBudget.categories.List();
 
             // Act
-            List<BudgetItem> budgetItems = homeBudget.GetBudgetItems(new DateTime(2018, 1, 1), new DateTime(2018, 12, 31), false, 0);
+            List<BudgetItem> budgetItems = homeBudget.GetBudgetItems(null, null, false, 0);
 
-            // Assert
-            Console.WriteLine($"{listExpenses.Count} + {budgetItems.Count}");
-            foreach (Expense expense in listExpenses)
+            Console.WriteLine(budgetItems.Count);
+            
+            List<BudgetItemsByMonth> budgetItemsByMonths = homeBudget.GetBudgetItemsByMonth(null, null, false, 0);
+
+            foreach (var budgetItemsByMonth in budgetItemsByMonths)
             {
-                BudgetItem budgetItem = budgetItems.Find(b => b.ExpenseID == expense.Id);
-                Category category = listCategories.Find(c => c.Id == expense.Category);
-                Console.WriteLine($"{budgetItem.Category} + {category.Description}");
-                Console.WriteLine($"{budgetItem.CategoryID} + {expense.Category}");
-                Console.WriteLine($"{budgetItem.Amount} + {expense.Amount}");
-                Console.WriteLine($"{budgetItem.ShortDescription} + {expense.Description}");
+                Console.WriteLine($"Month: {budgetItemsByMonth.Month}");
+                Console.WriteLine($"Total: {budgetItemsByMonth.Total:C}");
+                Console.WriteLine("Details:");
+                foreach (var bi in budgetItemsByMonth.Details)
+                {
+                    Console.WriteLine(
+                        String.Format("{0} {1,-20} {2,8:C} {3,12:C}",
+                        bi.Date.ToString("yyyy/MMM/dd"),
+                        bi.ShortDescription,
+                        bi.Amount, bi.Balance)
+                    );
+                }
+
+                Console.WriteLine("----------------------------------------");
             }
+            */
         }
 
         public DateTime? GetValidDate(string message)
