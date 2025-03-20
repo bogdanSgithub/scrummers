@@ -89,7 +89,6 @@ namespace Budget
             else
             {
                 Database.newDatabase(databaseFile);
-                newDB = true;
             }
 
             // create the category object
