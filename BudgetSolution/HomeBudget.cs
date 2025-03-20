@@ -255,22 +255,11 @@ namespace Budget
 
             SQLiteCommand cmd = new SQLiteCommand(Database.dbConnection);
 
-            if (!FilterFlag)
-            {
-                cmd.CommandText = "SELECT e.Id, e.CategoryId, e.Description, e.Date, e.Amount, c.Description FROM categories c, expenses e WHERE e.CategoryId = c.Id AND e.Date > @start AND e.Date < @end ORDER BY e.Date;";
+            cmd.CommandText = $"SELECT e.Id, e.CategoryId, e.Description, e.Date, e.Amount, c.Description FROM categories c, expenses e WHERE e.CategoryId = c.Id AND e.Date > @start AND e.Date < @end {(FilterFlag ? "AND e.CategoryId = @filteredID": "")} ORDER BY e.Date;";
 
-
-                cmd.Parameters.AddWithValue("@start", Start);
-                cmd.Parameters.AddWithValue("@end", End);
-            }
-            else
-            {
-                cmd.CommandText = "SELECT e.Id, e.CategoryId, e.Description, e.Date, e.Amount, c.Description FROM categories c, expenses e WHERE e.CategoryId = c.Id AND e.CategoryId = @filteredID AND e.Date > @start AND e.Date < @end ORDER BY e.Date;";
-
-                cmd.Parameters.AddWithValue("@start", Start);
-                cmd.Parameters.AddWithValue("@end", End);
-                cmd.Parameters.AddWithValue("@filteredID", CategoryID);
-            }
+            cmd.Parameters.AddWithValue("@start", Start);
+            cmd.Parameters.AddWithValue("@end", End);
+            cmd.Parameters.AddWithValue("@filteredID", CategoryID);
 
             SQLiteDataReader rdr = cmd.ExecuteReader();
 
@@ -376,7 +365,94 @@ namespace Budget
         /// </code>
         /// </example>
         public List<BudgetItemsByMonth> GetBudgetItemsByMonth(DateTime? Start, DateTime? End, bool FilterFlag, int CategoryID)
-        {
+        {   
+            /*
+            // ------------------------------------------------------------------------
+            // return joined list within time frame
+            // ------------------------------------------------------------------------
+            Start = Start ?? new DateTime(1900, 1, 1);
+            End = End ?? new DateTime(2500, 1, 1);
+
+            SQLiteCommand cmd = new SQLiteCommand(Database.dbConnection);
+
+            if (!FilterFlag)
+            {
+                cmd.CommandText = "SELECT strftime('%Y/%m', e.Date) AS MonthYear, SUM(e.Amount) FROM categories c, expenses e WHERE e.CategoryId =c.Id AND e.Date > @start AND e.Date < @end GROUP BY MonthYear ORDER BY e.Date;";
+
+                cmd.Parameters.AddWithValue("@start", Start);
+                cmd.Parameters.AddWithValue("@end", End);
+            }
+            else
+            {
+                cmd.CommandText = "SELECT e.Id, e.CategoryId, e.Description, e.Date, e.Amount, c.Description FROM categories c, expenses e WHERE e.CategoryId = c.Id AND e.CategoryId = @filteredID AND e.Date > @start AND e.Date < @end ORDER BY e.Date;";
+
+                cmd.Parameters.AddWithValue("@start", Start);
+                cmd.Parameters.AddWithValue("@end", End);
+                cmd.Parameters.AddWithValue("@filteredID", CategoryID);
+            }
+
+            SQLiteDataReader rdr = cmd.ExecuteReader();
+
+            // ------------------------------------------------------------------------
+            // create a BudgetItem list with totals,
+            // ------------------------------------------------------------------------
+            List<BudgetItemsByMonth> items = new List<BudgetItemsByMonth>();
+            
+            while (rdr.Read())
+            {
+                // set fields from database to variables to increase clarity
+                string month = rdr.GetString(0);
+                double total = rdr.GetDouble(1);
+
+                items.Add(new BudgetItemsByMonth
+                {   
+                    Month = month,
+                    Total = total,
+                    Details = new List<BudgetItem>()
+                });
+            }
+
+            foreach (BudgetItemsByMonth b in items)
+            {
+                if (!FilterFlag)
+                {
+                    cmd.CommandText = "SELECT e.Id, e.CategoryId, e.Description, e.Date, e.Amount, c.Description, strftime('%Y/%m', e.Date) AS MonthYear FROM categories c, expenses e WHERE e.CategoryId = c.Id AND e.Date > @start AND e.Date < @end AND MonthYear = @monthYear ORDER BY e.Date;";
+
+                    cmd.Parameters.AddWithValue("@start", Start);
+                    cmd.Parameters.AddWithValue("@end", End);
+                    cmd.Parameters.AddWithValue("@monthYear", End);
+                }
+                else
+                {
+                    cmd.CommandText = "SELECT e.Id, e.CategoryId, e.Description, e.Date, e.Amount, c.Description FROM categories c, expenses e WHERE e.CategoryId = c.Id AND e.CategoryId = @filteredID AND e.Date > @start AND e.Date < @end ORDER BY e.Date;";
+
+                    cmd.Parameters.AddWithValue("@start", Start);
+                    cmd.Parameters.AddWithValue("@end", End);
+                    cmd.Parameters.AddWithValue("@filteredID", CategoryID);
+                }
+
+                SQLiteDataReader rdr2 = cmd.ExecuteReader();
+
+                while (rdr.Read())
+                {
+                    // set fields from database to variables to increase clarity
+                    string month = rdr.GetString(0);
+                    double total = rdr.GetDouble(1);
+
+                    items.Add(new BudgetItemsByMonth
+                    {
+                        Month = month,
+                        Total = total,
+                        Details = new List<BudgetItem>()
+                    });
+                }
+            }
+
+
+            return items;
+
+            string queryToGetMonthsAndTotals = "SELECT strftime('%Y/%m', e.Date) AS MonthYear, SUM(e.Amount) FROM categories c, expenses e WHERE e.CategoryId =c.Id GROUP BY MonthYear ORDER BY e.Date;"
+            */
             // -----------------------------------------------------------------------
             // get all items first
             // -----------------------------------------------------------------------
@@ -410,7 +486,7 @@ namespace Budget
                     Total = total
                 });
             }
-
+            
             return summary;
         }
 
