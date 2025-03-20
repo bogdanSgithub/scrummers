@@ -365,8 +365,8 @@ namespace Budget
         /// </code>
         /// </example>
         public List<BudgetItemsByMonth> GetBudgetItemsByMonth(DateTime? Start, DateTime? End, bool FilterFlag, int CategoryID)
-        {   
-            /*
+        {
+            
             // ------------------------------------------------------------------------
             // return joined list within time frame
             // ------------------------------------------------------------------------
@@ -374,120 +374,63 @@ namespace Budget
             End = End ?? new DateTime(2500, 1, 1);
 
             SQLiteCommand cmd = new SQLiteCommand(Database.dbConnection);
+            
+            cmd.CommandText = $"SELECT e.Id, e.CategoryId, e.Description, e.Date, e.Amount, c.Description, strftime('%Y/%m', e.Date) AS MonthYear FROM categories c, expenses e WHERE e.CategoryId = c.Id AND e.Date > @start AND e.Date < @end {(FilterFlag ? "AND e.CategoryId = @filteredID" : "")} ORDER BY e.Date;";
 
-            if (!FilterFlag)
-            {
-                cmd.CommandText = "SELECT strftime('%Y/%m', e.Date) AS MonthYear, SUM(e.Amount) FROM categories c, expenses e WHERE e.CategoryId =c.Id AND e.Date > @start AND e.Date < @end GROUP BY MonthYear ORDER BY e.Date;";
-
-                cmd.Parameters.AddWithValue("@start", Start);
-                cmd.Parameters.AddWithValue("@end", End);
-            }
-            else
-            {
-                cmd.CommandText = "SELECT e.Id, e.CategoryId, e.Description, e.Date, e.Amount, c.Description FROM categories c, expenses e WHERE e.CategoryId = c.Id AND e.CategoryId = @filteredID AND e.Date > @start AND e.Date < @end ORDER BY e.Date;";
-
-                cmd.Parameters.AddWithValue("@start", Start);
-                cmd.Parameters.AddWithValue("@end", End);
-                cmd.Parameters.AddWithValue("@filteredID", CategoryID);
-            }
+            cmd.Parameters.AddWithValue("@start", Start);
+            cmd.Parameters.AddWithValue("@end", End);
+            cmd.Parameters.AddWithValue("@filteredID", CategoryID);
 
             SQLiteDataReader rdr = cmd.ExecuteReader();
 
             // ------------------------------------------------------------------------
             // create a BudgetItem list with totals,
             // ------------------------------------------------------------------------
-            List<BudgetItemsByMonth> items = new List<BudgetItemsByMonth>();
-            
+            List<BudgetItemsByMonth> listBudgetItemsByMonth = new List<BudgetItemsByMonth>();
+            BudgetItemsByMonth budgetItemsByMonth = new BudgetItemsByMonth();
+            string previousMonth = "";
             while (rdr.Read())
-            {
+            {  
                 // set fields from database to variables to increase clarity
-                string month = rdr.GetString(0);
-                double total = rdr.GetDouble(1);
+                int expID = rdr.GetInt32(0);
+                int dbCatID = rdr.GetInt32(1);
+                string itemDescription = rdr.GetString(2);
+                DateTime date = rdr.GetDateTime(3);
+                double amount = rdr.GetDouble(4);
+                string categoryDescription = rdr.GetString(5);
+                string currentMonth = rdr.GetString(6);
 
-                items.Add(new BudgetItemsByMonth
-                {   
-                    Month = month,
-                    Total = total,
-                    Details = new List<BudgetItem>()
-                });
-            }
-
-            foreach (BudgetItemsByMonth b in items)
-            {
-                if (!FilterFlag)
+                // 
+                if (previousMonth != currentMonth)
                 {
-                    cmd.CommandText = "SELECT e.Id, e.CategoryId, e.Description, e.Date, e.Amount, c.Description, strftime('%Y/%m', e.Date) AS MonthYear FROM categories c, expenses e WHERE e.CategoryId = c.Id AND e.Date > @start AND e.Date < @end AND MonthYear = @monthYear ORDER BY e.Date;";
+                    if (previousMonth != "")
+                        listBudgetItemsByMonth.Add(budgetItemsByMonth);
 
-                    cmd.Parameters.AddWithValue("@start", Start);
-                    cmd.Parameters.AddWithValue("@end", End);
-                    cmd.Parameters.AddWithValue("@monthYear", End);
-                }
-                else
-                {
-                    cmd.CommandText = "SELECT e.Id, e.CategoryId, e.Description, e.Date, e.Amount, c.Description FROM categories c, expenses e WHERE e.CategoryId = c.Id AND e.CategoryId = @filteredID AND e.Date > @start AND e.Date < @end ORDER BY e.Date;";
-
-                    cmd.Parameters.AddWithValue("@start", Start);
-                    cmd.Parameters.AddWithValue("@end", End);
-                    cmd.Parameters.AddWithValue("@filteredID", CategoryID);
-                }
-
-                SQLiteDataReader rdr2 = cmd.ExecuteReader();
-
-                while (rdr.Read())
-                {
-                    // set fields from database to variables to increase clarity
-                    string month = rdr.GetString(0);
-                    double total = rdr.GetDouble(1);
-
-                    items.Add(new BudgetItemsByMonth
+                    budgetItemsByMonth = new BudgetItemsByMonth
                     {
-                        Month = month,
-                        Total = total,
+                        Month = currentMonth,
+                        Total = 0,
                         Details = new List<BudgetItem>()
+                    };
+                    previousMonth = currentMonth;
+                }
+
+                budgetItemsByMonth.Total += amount;
+                budgetItemsByMonth.Details.Add(new BudgetItem
+                    {
+                        CategoryID = dbCatID,
+                        ExpenseID = expID,
+                        ShortDescription = itemDescription,
+                        Date = date,
+                        Amount = amount,
+                        Category = categoryDescription,
+                        Balance = -budgetItemsByMonth.Total
                     });
-                }
             }
 
+            listBudgetItemsByMonth.Add(budgetItemsByMonth);
 
-            return items;
-
-            string queryToGetMonthsAndTotals = "SELECT strftime('%Y/%m', e.Date) AS MonthYear, SUM(e.Amount) FROM categories c, expenses e WHERE e.CategoryId =c.Id GROUP BY MonthYear ORDER BY e.Date;"
-            */
-            // -----------------------------------------------------------------------
-            // get all items first
-            // -----------------------------------------------------------------------
-            List<BudgetItem> items = GetBudgetItems(Start, End, FilterFlag, CategoryID);
-
-            // -----------------------------------------------------------------------
-            // Group by year/month
-            // -----------------------------------------------------------------------
-            var GroupedByMonth = items.GroupBy(c => c.Date.Year.ToString("D4") + "/" + c.Date.Month.ToString("D2"));
-
-            // -----------------------------------------------------------------------
-            // create new list
-            // -----------------------------------------------------------------------
-            var summary = new List<BudgetItemsByMonth>();
-            foreach (var MonthGroup in GroupedByMonth)
-            {
-                // calculate total for this month, and create list of details
-                double total = 0;
-                var details = new List<BudgetItem>();
-                foreach (var item in MonthGroup)
-                {
-                    total = total + item.Amount;
-                    details.Add(item);
-                }
-
-                // Add new BudgetItemsByMonth to our list
-                summary.Add(new BudgetItemsByMonth
-                {
-                    Month = MonthGroup.Key,
-                    Details = details,
-                    Total = total
-                });
-            }
-            
-            return summary;
+            return listBudgetItemsByMonth;
         }
 
         // ============================================================================

@@ -35,6 +35,7 @@ namespace BudgetSolution
 
         public void TestDatabase()
         {   
+            
             // Arrange
             string folder = TestConstants.GetSolutionDir();
             string inFile = TestConstants.GetSolutionDir() + "\\" + TestConstants.testExpensesInputFile;
@@ -45,7 +46,10 @@ namespace BudgetSolution
             List<Category> listCategories = homeBudget.categories.List();
 
             // Act
-            List<BudgetItem> budgetItems = homeBudget.GetBudgetItems(new DateTime(2018, 1, 1), new DateTime(2018, 12, 31), false, 0);
+            List<BudgetItem> budgetItems = homeBudget.GetBudgetItems(null, null, false, 0);
+
+            Console.WriteLine(budgetItems.Count);
+            
             List<BudgetItemsByMonth> budgetItemsByMonths = homeBudget.GetBudgetItemsByMonth(null, null, false, 0);
 
             foreach (var budgetItemsByMonth in budgetItemsByMonths)
@@ -65,19 +69,6 @@ namespace BudgetSolution
 
                 Console.WriteLine("----------------------------------------");
             }
-
-            // Assert
-            /*
-            Console.WriteLine($"{listExpenses.Count} + {budgetItems.Count}");
-            foreach (Expense expense in listExpenses)
-            {
-                BudgetItem budgetItem = budgetItems.Find(b => b.ExpenseID == expense.Id);
-                Category category = listCategories.Find(c => c.Id == expense.Category);
-                Console.WriteLine($"{budgetItem.Category} + {category.Description}");
-                Console.WriteLine($"{budgetItem.CategoryID} + {expense.Category}");
-                Console.WriteLine($"{budgetItem.Amount} + {expense.Amount}");
-                Console.WriteLine($"{budgetItem.ShortDescription} + {expense.Description}");
-            }*/
         }
 
         public DateTime? GetValidDate(string message)
