@@ -1,194 +1,303 @@
-﻿using Budget;
-using System;
-using System.Runtime.CompilerServices;
+﻿using System.Globalization;
 
-// docfx "C:\Users\2276038\Source\Repos\scrummers\BudgetSolution\docfx.json" --serve
-
-namespace BudgetSolution
+namespace Budget
 {
     internal class Program
     {
-        string budgetFile = Path.GetFullPath(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "..\\..\\..\\")) + "\\" + "test.budget";
-        DateTime? Start;
-        DateTime? End;
-        bool FilterFlag;
-        int CategoryID;
-        string chosenReport;
-        HomeBudget homeBudget;
-
         static void Main(string[] args)
         {
-            Program program = new Program();
-        }
+            HomeBudget budget = new HomeBudget("test.db", true);
+            const int BudgetItems = 1, BudgetItemsMonth = 2, BudgetItemsCategory = 3, BudgetItemCategoryMonth = 4, Exit = 5;
+            int userInput = 0;
 
-        public Program()
-        {
-            TestDatabase();
-            /*
-            homeBudget = new HomeBudget(budgetFile);
-            if (GetParameters())
+            while (userInput != Exit)
             {
-                GetMethodChoice();
-                CallReport();
-            }*/
-        }
+                Console.WriteLine("Welcome to the budget testing app. Please choose one of the below options:\n\n1. Get Budget Items.\n2. Get Budget Items by Month.\n3. Get Budget Items by Category.\n4. Get Budget Items by Category and Month.\n5. Exit\n\nPlease enter your choice: ");
 
-        public void TestDatabase()
-        {   
-            /*
-            // Arrange
-            string folder = TestConstants.GetSolutionDir();
-            string inFile = TestConstants.GetSolutionDir() + "\\" + TestConstants.testExpensesInputFile;
-            String goodDB = $"{folder}\\{TestConstants.testDBInputFile}";
-            String messyDB = $"{folder}\\messy.db";
-            HomeBudget homeBudget = new HomeBudget(messyDB, false);
-            List<Expense> listExpenses = TestConstants.filteredbyYear2018();
-            List<Category> listCategories = homeBudget.categories.List();
+                userInput = GetIntInput(Exit, BudgetItems);
 
-            // Act
-            List<BudgetItem> budgetItems = homeBudget.GetBudgetItems(null, null, false, 0);
-
-            Console.WriteLine(budgetItems.Count);
-            
-            List<BudgetItemsByMonth> budgetItemsByMonths = homeBudget.GetBudgetItemsByMonth(null, null, false, 0);
-
-            foreach (var budgetItemsByMonth in budgetItemsByMonths)
-            {
-                Console.WriteLine($"Month: {budgetItemsByMonth.Month}");
-                Console.WriteLine($"Total: {budgetItemsByMonth.Total:C}");
-                Console.WriteLine("Details:");
-                foreach (var bi in budgetItemsByMonth.Details)
+                switch (userInput)
                 {
-                    Console.WriteLine(
-                        String.Format("{0} {1,-20} {2,8:C} {3,12:C}",
-                        bi.Date.ToString("yyyy/MMM/dd"),
-                        bi.ShortDescription,
-                        bi.Amount, bi.Balance)
-                    );
+                    case BudgetItems:
+                        GetBudgetItemsTable(budget);
+                        break;
+
+                    case BudgetItemsMonth:
+                        GetBudgetItemsMonthTable(budget);
+                        break;
+
+                    case BudgetItemsCategory:
+                        GetBudgetItemsCategoryTable(budget);
+                        break;
+
+                    case BudgetItemCategoryMonth:
+                        GetBudgetItemCategoryMonthTable(budget);
+                        break;
+
+                    case Exit:
+                        Environment.Exit(0);
+                        break;
+
+                }
+            }
+
+
+        }
+
+        static void GetBudgetItemCategoryMonthTable(HomeBudget budget)
+        {
+            const int StringSpacing = -20;
+            const int IntSpacing = -10;
+
+            DateTime? startDate = null;
+            DateTime? endDate = null;
+            bool filterFlag = false;
+            int categoryID = 0;
+
+            GetUserOptions(ref startDate, ref endDate, ref filterFlag, ref categoryID);
+
+            List<Dictionary<string, object>> items = budget.GetBudgetDictionaryByCategoryAndMonth(startDate, endDate, filterFlag, categoryID);
+
+            Dictionary<string, object> totalDict = items[items.Count - 1];
+
+            items.Remove(totalDict);
+
+            Console.Clear();
+
+            Console.WriteLine("=========================================================================");
+            Console.WriteLine("|   Amount   |         Date         | Expense ID |     Description      |");
+            Console.WriteLine("=========================================================================");
+
+
+            foreach (Dictionary<string, object> item in items)
+            {
+                string category = "";
+
+                foreach (string key in totalDict.Keys)
+                {
+                    if (item.ContainsKey(key))
+                        category = key;
                 }
 
-                Console.WriteLine("----------------------------------------");
+                Console.WriteLine($"Month: {item["Month"]}, Category: {category}");
+
+                Console.WriteLine("=========================================================================");
+                foreach (BudgetItem budgetItem in item[$"details:{category}"] as List<BudgetItem>)
+                {
+                    Console.WriteLine($"| {budgetItem.Amount,IntSpacing} | {budgetItem.Date.ToString("yyyy/MM/dd"),StringSpacing} | {budgetItem.ExpenseID,IntSpacing} | {budgetItem.ShortDescription,StringSpacing} |");
+                }
+                Console.WriteLine("=========================================================================");
+
             }
-            */
+
+            Console.WriteLine("Press any key to continue.");
+
+            Console.ReadKey();
+
+            Console.Clear();
         }
 
-        public DateTime? GetValidDate(string message)
+        static void GetBudgetItemsTable(HomeBudget budget)
         {
-            DateTime? validDate = null;
-            Console.WriteLine(message);
+            DateTime? startDate = null;
+            DateTime? endDate = null;
+            bool filterFlag = false;
+            int categoryID = 0;
+
+            GetUserOptions(ref startDate, ref endDate, ref filterFlag, ref categoryID);
+
+            List<BudgetItem> items = budget.GetBudgetItems(startDate, endDate, filterFlag, categoryID);
+
+            DisplayItems(items);
+        }
+
+        static void GetBudgetItemsMonthTable(HomeBudget budget)
+        {
+            DateTime? startDate = null;
+            DateTime? endDate = null;
+            bool filterFlag = false;
+            int categoryID = 0;
+
+            GetUserOptions(ref startDate, ref endDate, ref filterFlag, ref categoryID);
+
+            List<BudgetItemsByMonth> items = budget.GetBudgetItemsByMonth(startDate, endDate, filterFlag, categoryID);
+
+            DisplayItemsByMonthTable(items);
+        }
+
+        static void GetBudgetItemsCategoryTable(HomeBudget budget)
+        {
+            DateTime? startDate = null;
+            DateTime? endDate = null;
+            bool filterFlag = false;
+            int categoryID = 0;
+
+            GetUserOptions(ref startDate, ref endDate, ref filterFlag, ref categoryID);
+
+            List<BudgetItemsByCategory> items = budget.GetBudgetItemsByCategory(startDate, endDate, filterFlag, categoryID);
+
+            DisplayItemsByCategoryTable(items);
+        }
+
+        static void DisplayItemsByCategoryTable(List<BudgetItemsByCategory> items)
+        {
+            const int StringSpacing = -20;
+            const int IntSpacing = -10;
+            Console.Clear();
+
+            Console.WriteLine("================================================================================================");
+            Console.WriteLine("|       Category       |   Amount   |         Date         | Expense ID |     Description      |");
+            Console.WriteLine("================================================================================================");
+
+            foreach (BudgetItemsByCategory item in items)
+            {
+                Console.WriteLine();
+                Console.WriteLine($"For {item.Category}, Total: {item.Total}");
+                Console.WriteLine();
+
+                Console.WriteLine("================================================================================================");
+                foreach (BudgetItem budgetItem in item.Details)
+                {
+                    Console.WriteLine($"| {budgetItem.Category,StringSpacing} | {budgetItem.Amount,IntSpacing} | {budgetItem.Date.ToString("yyyy/MM/dd"),StringSpacing} | {budgetItem.ExpenseID,IntSpacing} | {budgetItem.ShortDescription,StringSpacing} |");
+
+                }
+                Console.WriteLine("================================================================================================");
+
+            }
+
+            Console.WriteLine("Press enter to continue.");
+
+            Console.ReadKey();
+
+            Console.Clear();
+        }
+
+        static void DisplayItemsByMonthTable(List<BudgetItemsByMonth> items)
+        {
+            const int StringSpacing = -20;
+            const int IntSpacing = -10;
+            Console.Clear();
+
+            Console.WriteLine("================================================================================================");
+            Console.WriteLine("|       Category       |   Amount   |         Date         | Expense ID |     Description      |");
+            Console.WriteLine("================================================================================================");
+
+            foreach (BudgetItemsByMonth item in items)
+            {
+                Console.WriteLine();
+                Console.WriteLine($"For {item.Month}, Total: {item.Total}");
+                Console.WriteLine();
+
+                Console.WriteLine("================================================================================================");
+                foreach (BudgetItem budgetItem in item.Details)
+                {
+                    Console.WriteLine($"| {budgetItem.Category,StringSpacing} | {budgetItem.Amount,IntSpacing} | {budgetItem.Date.ToString("yyyy/MM/dd"),StringSpacing} | {budgetItem.ExpenseID,IntSpacing} | {budgetItem.ShortDescription,StringSpacing} |");
+
+                }
+                Console.WriteLine("================================================================================================");
+
+            }
+
+            Console.WriteLine("Press enter to continue.");
+
+            Console.ReadKey();
+
+            Console.Clear();
+        }
+
+        static void GetUserOptions(ref DateTime? startDate, ref DateTime? endDate, ref bool filterFlag, ref int categoryID)
+        {
+            Console.Clear();
+
+            Console.WriteLine("What date should the budget items start from? (YYYY/MM/DD) (leave empty if you don't want to filter by date): ");
+
+            startDate = GetValidDate();
+
+            if (startDate.HasValue)
+            {
+                Console.WriteLine("What date should the budget items end from? (YYYY/MM/DD): ");
+
+                endDate = GetValidDate();
+            }
+
+            Console.WriteLine("Do you want to only see a single category (true/false)?: ");
+
+            filterFlag = GetFlag();
+
+            if (filterFlag)
+            {
+                Console.WriteLine("What is the ID of the category you want to see?: ");
+
+                categoryID = GetIntInput();
+            }
+        }
+
+        static void DisplayItems(List<BudgetItem> items)
+        {
+            const int StringSpacing = -20;
+            const int IntSpacing = -10;
+            Console.Clear();
+
+            Console.WriteLine("================================================================================================");
+            Console.WriteLine("|       Category       |   Amount   |         Date         | Expense ID |     Description      |");
+            Console.WriteLine("================================================================================================");
+
+            foreach (BudgetItem item in items)
+            {
+                Console.WriteLine($"| {item.Category,StringSpacing} | {item.Amount,IntSpacing} | {item.Date.ToString("yyyy/MM/dd"),StringSpacing} | {item.ExpenseID,IntSpacing} | {item.ShortDescription,StringSpacing} |");
+            }
+
+            Console.WriteLine("================================================================================================");
+
+            Console.WriteLine("Press enter to continue.");
+
+            Console.ReadKey();
+
+            Console.Clear();
+        }
+
+        static bool GetFlag()
+        {
+            bool flag = false;
+
+            while (!bool.TryParse(Console.ReadLine(), out flag))
+            {
+                Console.WriteLine("Invalid format for flag. (true/false) Please try again: ");
+            }
+
+            return flag;
+        }
+
+        static DateTime? GetValidDate()
+        {
+            DateTime date;
             string input = Console.ReadLine();
-            if (!string.IsNullOrEmpty(input) && DateTime.TryParse(input, out DateTime result))
-                validDate = result;
-            return validDate;
+
+            while (!DateTime.TryParse(input, out date))
+            {
+                if (string.IsNullOrEmpty(input))
+                {
+                    return null;
+                }
+
+                Console.WriteLine("Date format invalid. (MM-DD-YYYY) Please try again: ");
+
+                input = Console.ReadLine();
+            }
+
+            return date;
         }
 
-        public bool GetParameters()
+        static int GetIntInput(int upperLimit = int.MaxValue, int lowerLimit = int.MinValue)
         {
-            bool isValid = true;
+            int userInput;
 
-            Start = GetValidDate("Provide Start Date: ");
-            End = GetValidDate("Provide End Date: ");
-
-            try
+            while (!int.TryParse(Console.ReadLine(), out userInput) || userInput > upperLimit || userInput < lowerLimit)
             {
-                Console.WriteLine("Provide Filter Flag: ");
-                FilterFlag = bool.Parse(Console.ReadLine());
-
-                Console.WriteLine("Provide CategoryID: ");
-                CategoryID = int.Parse(Console.ReadLine());
+                Console.WriteLine("Please provide a valid integer greater than 0: ");
             }
-            catch (Exception e)
-            {
-                Console.WriteLine(e.Message);
-                isValid = false;
-            }
-            return isValid;
-        }
 
-        public void GetMethodChoice()
-        {
-            Console.WriteLine("Which Report do you wish to have?");
-            Console.WriteLine("i) GetBudgetItems\nii) GetBudgetItemsByMonth\niii) GetBudgetItemsByCategory\niv) GetBudgetDictionaryByCategoryAndMonth");
-            Console.WriteLine("Your Choice (ex: ii ): ");
-            chosenReport = Console.ReadLine();
-
-        }
-
-        public void CallReport()
-        {
-            switch (chosenReport)
-            {
-                case "i":
-                    var budgetItems = homeBudget.GetBudgetItems(Start, End, FilterFlag, CategoryID);
-                    foreach (var bi in budgetItems)
-                        Console.WriteLine(String.Format("{0} {1,-20} {2,8:C} {3,12:C}", bi.Date.ToString("yyyy/MMM/dd"), bi.ShortDescription, bi.Amount, bi.Balance));
-
-                    break;
-                case "ii":
-                    var budgetItemsByMonths = homeBudget.GetBudgetItemsByMonth(Start, End, FilterFlag, CategoryID);
-                    foreach (var budgetItemsByMonth in budgetItemsByMonths)
-                    {
-                        Console.WriteLine($"Month: {budgetItemsByMonth.Month}");
-                        Console.WriteLine($"Total: {budgetItemsByMonth.Total:C}");
-                        Console.WriteLine("Details:");
-                        foreach (var bi in budgetItemsByMonth.Details)
-                        {
-                            Console.WriteLine(
-                                String.Format("{0} {1,-20} {2,8:C} {3,12:C}",
-                                bi.Date.ToString("yyyy/MMM/dd"),
-                                bi.ShortDescription,
-                                bi.Amount, bi.Balance)
-                            );
-                        }
-
-                        Console.WriteLine("----------------------------------------");
-                    }
-                    break;
-                case "iii":
-                    var budgetItemsByCategories = homeBudget.GetBudgetItemsByCategory(Start, End, FilterFlag, CategoryID);
-                    foreach (var budgetItemsByCategory in budgetItemsByCategories)
-                    {
-                        Console.WriteLine($"Category: {budgetItemsByCategory.Category}");
-                        Console.WriteLine($"Total: {budgetItemsByCategory.Total:C}");
-                        Console.WriteLine("Details:");
-                        foreach (var bi in budgetItemsByCategory.Details)
-                        {
-                            Console.WriteLine(
-                                String.Format("{0} {1,-20} {2,8:C} {3,12:C}",
-                                bi.Date.ToString("yyyy/MMM/dd"),
-                                bi.ShortDescription,
-                                bi.Amount, bi.Balance)
-                            );
-                        }
-                        Console.WriteLine("----------------------------------------");
-                    }
-                    break;
-                case "iv":
-                    List<Dictionary<string, object>> budgetData = homeBudget.GetBudgetDictionaryByCategoryAndMonth(Start, End, FilterFlag, CategoryID);
-                    foreach (var monthRecord in budgetData)
-                    {
-                        Console.WriteLine($"Month: {monthRecord["Month"]}");
-
-                        foreach (var key in monthRecord.Keys)
-                        {
-                            if (key.StartsWith("details:"))
-                            {
-                                var categoryItems = monthRecord[key] as List<BudgetItem>;
-                                Console.WriteLine($"Category Items: {key}");
-                                foreach (var bi in categoryItems)
-                                {
-                                    Console.WriteLine(
-                                          String.Format("{0} {1,-20} {2,8:C} {3,12:C}",
-                                          bi.Date.ToString("yyyy/MMM/dd"),
-                                          bi.ShortDescription,
-                                          bi.Amount, bi.Balance)
-                                      );
-                                }
-                            }
-                        }
-                    }
-                    break;
-            }
+            return userInput;
         }
     }
 }
