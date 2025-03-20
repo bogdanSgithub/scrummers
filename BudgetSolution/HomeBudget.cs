@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.IO;
 using System.Dynamic;
+using System.Data.SQLite;
 
 // ============================================================================
 // (c) Sandy Bultena 2018
@@ -483,40 +484,43 @@ namespace Budget
 
         public List<BudgetItemsByCategory> GetBudgetItemsByCategory(DateTime? Start, DateTime? End, bool FilterFlag, int CategoryID)
         {
-            // -----------------------------------------------------------------------
-            // get all items first
-            // -----------------------------------------------------------------------
-            List<BudgetItem> items = GetBudgetItems(Start, End, FilterFlag, CategoryID);
+            // ------------------------------------------------------------------------
+            // return joined list within time frame
+            // ------------------------------------------------------------------------
+            Start = Start ?? new DateTime(1900, 1, 1);
+            End = End ?? new DateTime(2500, 1, 1);
 
-            // -----------------------------------------------------------------------
-            // Group by Category
-            // -----------------------------------------------------------------------
-            var GroupedByCategory = items.GroupBy(c => c.Category);
+            SQLiteCommand cmd = new SQLiteCommand(Database.dbConnection);
 
-            // -----------------------------------------------------------------------
-            // create new list
-            // -----------------------------------------------------------------------
-            var summary = new List<BudgetItemsByCategory>();
-            foreach (var CategoryGroup in GroupedByCategory.OrderBy(g => g.Key))
+            
+            cmd.CommandText = "SELECT e.Id, e.CategoryId, e.Description, e.Date, e.Amount, c.Description FROM categories c, expenses e WHERE e.CategoryId = c.Id AND e.Date > @start AND e.Date < @end ORDER BY e.CategoryId, e.Date;";
+
+            cmd.Parameters.AddWithValue("@start", Start);
+            cmd.Parameters.AddWithValue("@end", End);
+
+            SQLiteDataReader rdr = cmd.ExecuteReader();
+
+            // ------------------------------------------------------------------------
+            // create a BudgetItem list with totals,
+            // ------------------------------------------------------------------------
+            List<BudgetItemsByCategory> items = new List<BudgetItemsByCategory>();
+            Double total = 0;
+
+            while (rdr.Read())
             {
-                // calculate total for this category, and create list of details
-                double total = 0;
-                var details = new List<BudgetItem>();
-                foreach (var item in CategoryGroup)
-                {
-                    total = total + item.Amount;
-                    details.Add(item);
-                }
+                // set fields from database to variables to increase clarity
+                int expID = rdr.GetInt32(0);
+                int dbCatID = rdr.GetInt32(1);
+                string itemDescription = rdr.GetString(2);
+                DateTime date = rdr.GetDateTime(3);
+                double amount = rdr.GetDouble(4);
+                string categoryDescription = rdr.GetString(5);
 
-                // Add new BudgetItemsByCategory to our list
-                summary.Add(new BudgetItemsByCategory
-                {
-                    Category = CategoryGroup.Key,
-                    Details = details,
-                    Total = total
-                });
+                // keep track of running totals
+                if (CategoryID == 0) { }
             }
-            return summary;
+
+            return items;
         }
 
 
