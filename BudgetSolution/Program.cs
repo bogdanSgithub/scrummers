@@ -6,7 +6,7 @@ namespace Budget
     {
         static void Main(string[] args)
         {
-            HomeBudget budget = new HomeBudget("test.budget");
+            HomeBudget budget = new HomeBudget("test.db", true);
             const int BudgetItems = 1, BudgetItemsMonth = 2, BudgetItemsCategory = 3, BudgetItemCategoryMonth = 4, Exit = 5;
             int userInput = 0;
 
