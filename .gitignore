@@ -406,5 +406,4 @@ FodyWeavers.xsd
 
 # JetBrains Rider
 *.sln.iml
-/BudgetSolution/lol.cs
-/BudgetSolution/TestConstants.cs
+**/*.db
