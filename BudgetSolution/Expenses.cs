@@ -18,22 +18,37 @@ namespace Budget
     // ====================================================================
     // CLASS: expenses
     //        - A collection of expense items,
-    //        - Read / write to file
+    //        - Read / write to database
     //        - etc
     // ====================================================================
     /// <summary>
-    /// Object that has a list of expenses
+    /// Object that allows the user to interact with the expense database.
     /// </summary>
     public class Expenses
     {
         public Expenses()
         {   
+            // make a default database if no connection was made
             if (Database.dbConnection is null)
             {
                 Database.newDatabase("default.db");
             }
         }
 
+        /// <summary>
+        /// Gets the expense that matches the passed the id from the database. Throws if the id doesnt have any matches.
+        /// </summary>
+        /// <param name="i">The ID to find a match for.</param>
+        /// <returns>The matching expense, if found inside the database.</returns>
+        /// <exception cref="Exception"></exception>
+        /// <example>
+        /// <code>
+        /// Expenses expenses = new Expenses();
+        /// 
+        /// //e will contain the matching expense from the database.
+        /// Expense e = expenses.GetExpenseFromId(1);
+        /// </code>
+        /// </example>
         public Expense GetExpenseFromId(int i)
         {
             //select the matching category
@@ -62,7 +77,7 @@ namespace Budget
 
         /// <summary>
         /// Adds a new expense with the specified date, category, amount, and description 
-        /// to the expense list. If there are existing expenses, the new expense is assigned 
+        /// to the expense database. If there are existing expenses, the new expense is assigned 
         /// a unique ID, which is 1 more than the highest existing ID.
         /// </summary>
         /// <param name="date">The date of the expense.</param>
@@ -87,12 +102,14 @@ namespace Budget
             cmd.CommandText = "SELECT MAX(Id) FROM expenses;";
             object result = cmd.ExecuteScalar();
 
+            // if there are expenses in the db
             if (result != DBNull.Value)
                 newID = int.Parse(result.ToString());
 
             Expense newExpense = new Expense(newID + 1, date, category, amount, description);
             InsertIntoDB(newExpense);
         }
+
         private void InsertIntoDB(Expense expense)
         {
             SQLiteCommand cmd = new SQLiteCommand(Database.dbConnection);
@@ -108,6 +125,24 @@ namespace Budget
             cmd.ExecuteNonQuery();
         }
 
+
+        /// <summary>
+        /// Updates an expense in the database that matches the id passed with the new passed information.
+        /// </summary>
+        /// <param name="id">The id of the expense to update.</param>
+        /// <param name="newDate">The new date of the expense.</param>
+        /// <param name="newCategory">The new category of the expense.</param>
+        /// <param name="newAmount">The new amount of the expense.</param>
+        /// <param name="newDescription">The new description of the expense.</param>
+        /// <exception cref="ArgumentException"></exception>
+        /// <example>
+        /// <code>
+        /// Expenses expenses = new Expenses();
+        /// 
+        /// //The expense with an id of 1 will have the updated fields.
+        /// expenses.UpdateProperties(1,DateTime.Now, 1, 5.5, "Groceries");
+        /// </code>
+        /// </example>
         public void UpdateProperties(int id, DateTime newDate, int newCategory, Double newAmount, String newDescription)
         {
             if (!Database.IsValidIdInTable(newCategory, "categories"))
@@ -125,12 +160,9 @@ namespace Budget
             cmd.ExecuteNonQuery();
         }
 
-        // ====================================================================
-        // Delete expense
-        // ====================================================================
         /// <summary>
-        /// Tries to remove the expense with the specified ID from the expense list.
-        /// If there isn't a expense in the list with the given ID then it isn't removed.
+        /// Tries to remove the expense with the specified ID from the expense database.
+        /// If there isn't a expense in the database with the given ID then it isn't removed.
         /// </summary>
         /// <param name="Id">The ID of the expense to be deleted.</param>
         /// <example>
@@ -155,9 +187,9 @@ namespace Budget
         //        this instance
         // ====================================================================
         /// <summary>
-        /// Returns a new list containing copies of all expenses in the expense list.
+        /// Returns a new list containing copies of all expenses in the expense database.
         /// </summary>
-        /// <returns>A new list of expenses, where each expense is a copy of the expense objects in the Expenses object's list.</returns>
+        /// <returns>A new list of expenses, where each expense is a copy of the expense objects in the Expenses object's database.</returns>
         /// <example>
         /// <code>
         /// Expenses expenses = new Expenses();
@@ -165,7 +197,6 @@ namespace Budget
         /// foreach (Expense e in expenses.List()) {
         ///    Console.WriteLine(e);
         /// }
-        /// Id INTEGER PRIMARY KEY,
         /// </code>
         /// </example>
         public List<Expense> List()
@@ -175,6 +206,7 @@ namespace Budget
             SQLiteDataReader rdr = cmd.ExecuteReader();
             List<Expense> expenseList = new List<Expense>();
 
+            //populate list with expenses from db.
             while (rdr.Read())
             {
                 expenseList.Add(new Expense(rdr.GetInt32(0), rdr.GetDateTime(3), rdr.GetInt32(1), rdr.GetDouble(2), rdr.GetString(4)));

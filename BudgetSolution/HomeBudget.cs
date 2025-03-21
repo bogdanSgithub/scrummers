@@ -255,6 +255,7 @@ namespace Budget
 
             SQLiteCommand cmd = new SQLiteCommand(Database.dbConnection);
 
+            //get all budget items from db that match the given parameters
             cmd.CommandText = $"SELECT e.Id, e.CategoryId, e.Description, e.Date, e.Amount, c.Description FROM categories c, expenses e WHERE e.CategoryId = c.Id AND e.Date > @start AND e.Date < @end {(FilterFlag ? "AND e.CategoryId = @filteredID": "")} ORDER BY e.Date;";
 
             cmd.Parameters.AddWithValue("@start", Start);
@@ -269,6 +270,7 @@ namespace Budget
             List<BudgetItem> items = new List<BudgetItem>();
             Double total = 0;
 
+            //loop through the reader to populate the budget item list
             while (rdr.Read())
             {
                 // set fields from database to variables to increase clarity
@@ -375,6 +377,7 @@ namespace Budget
 
             SQLiteCommand cmd = new SQLiteCommand(Database.dbConnection);
             
+            //Get all the budget items, but with the month and year of when the expense was made.
             cmd.CommandText = $"SELECT e.Id, e.CategoryId, e.Description, e.Date, e.Amount, c.Description, strftime('%Y/%m', e.Date) AS MonthYear FROM categories c, expenses e WHERE e.CategoryId = c.Id AND e.Date > @start AND e.Date < @end {(FilterFlag ? "AND e.CategoryId = @filteredID" : "")} ORDER BY e.Date;";
 
             cmd.Parameters.AddWithValue("@start", Start);
@@ -389,6 +392,8 @@ namespace Budget
             List<BudgetItemsByMonth> listBudgetItemsByMonth = new List<BudgetItemsByMonth>();
             BudgetItemsByMonth budgetItemsByMonth = new BudgetItemsByMonth();
             string previousMonth = "";
+
+            //loop over reader to add the fields to create budget items by month and add them to the list
             while (rdr.Read())
             {  
                 // set fields from database to variables to increase clarity
@@ -400,7 +405,7 @@ namespace Budget
                 string categoryDescription = rdr.GetString(5);
                 string currentMonth = rdr.GetString(6);
 
-                // 
+                // if the month is not the same as the previous one, add the built budget item by month to the list and resert it
                 if (previousMonth != currentMonth)
                 {
                     if (previousMonth != "")
@@ -415,6 +420,7 @@ namespace Budget
                     previousMonth = currentMonth;
                 }
 
+                // update the single budget item by month every iteration of the same month
                 budgetItemsByMonth.Total += amount;
                 budgetItemsByMonth.Details.Add(new BudgetItem
                     {
@@ -427,6 +433,7 @@ namespace Budget
                         Balance = -budgetItemsByMonth.Total
                     });
             }
+            //make sure the last budget item is not null before adding it
             if (budgetItemsByMonth.Month is not null)
                 listBudgetItemsByMonth.Add(budgetItemsByMonth);
 
@@ -521,14 +528,12 @@ namespace Budget
 
         public List<BudgetItemsByCategory> GetBudgetItemsByCategory(DateTime? Start, DateTime? End, bool FilterFlag, int CategoryID)
         {
-            // ------------------------------------------------------------------------
-            // return joined list within time frame
-            // ------------------------------------------------------------------------
             Start = Start ?? new DateTime(1900, 1, 1);
             End = End ?? new DateTime(2500, 1, 1);
 
             SQLiteCommand cmd = new SQLiteCommand(Database.dbConnection);
 
+            //get all the budget items to be able to add them to the list
             cmd.CommandText = $"SELECT e.Id, e.CategoryId, e.Description, e.Date, e.Amount, c.Description, strftime('%Y/%m', e.Date) AS MonthYear FROM categories c, expenses e WHERE e.CategoryId = c.Id AND e.Date > @start AND e.Date < @end {(FilterFlag ? "AND e.CategoryId = @filteredID" : "")} ORDER BY c.Description, e.Date;";
 
             cmd.Parameters.AddWithValue("@start", Start);
@@ -537,9 +542,6 @@ namespace Budget
 
             SQLiteDataReader rdr = cmd.ExecuteReader();
 
-            // ------------------------------------------------------------------------
-            // create a BudgetItem list with totals,
-            // ------------------------------------------------------------------------
             List<BudgetItemsByCategory> listBudgetItemsByCategory = new List<BudgetItemsByCategory>();
             BudgetItemsByCategory budgetItemsByCategory = new BudgetItemsByCategory();
             string previousCategory = "";
@@ -555,7 +557,7 @@ namespace Budget
                 string currentMonth = rdr.GetString(6);
 
 
-                // 
+                // if the category is not the same as the previous one, add the built budget item by category to the list and resert it
                 if (previousCategory != categoryDescription)
                 {
                     if (previousCategory != "")
@@ -570,6 +572,7 @@ namespace Budget
                     previousCategory = categoryDescription;
                 }
 
+                // update the single budget item by category every iteration of the same month
                 budgetItemsByCategory.Total += amount;
                 budgetItemsByCategory.Details.Add(new BudgetItem
                 {
@@ -582,6 +585,7 @@ namespace Budget
                     Balance = -budgetItemsByCategory.Total
                 });
             }
+            //make sure the last budget item is not null before adding it
             if (budgetItemsByCategory.Category is not null)
                 listBudgetItemsByCategory.Add(budgetItemsByCategory);
 
