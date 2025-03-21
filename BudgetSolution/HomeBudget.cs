@@ -427,8 +427,8 @@ namespace Budget
                         Balance = -budgetItemsByMonth.Total
                     });
             }
-
-            listBudgetItemsByMonth.Add(budgetItemsByMonth);
+            if (budgetItemsByMonth.Month is not null)
+                listBudgetItemsByMonth.Add(budgetItemsByMonth);
 
             return listBudgetItemsByMonth;
         }
@@ -582,8 +582,8 @@ namespace Budget
                     Balance = -budgetItemsByCategory.Total
                 });
             }
-
-            listBudgetItemsByCategory.Add(budgetItemsByCategory);
+            if (listBudgetItemsByCategory.Category is not null)
+                listBudgetItemsByCategory.Add(budgetItemsByCategory);
 
             return listBudgetItemsByCategory;
         }
