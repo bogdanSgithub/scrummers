@@ -521,40 +521,71 @@ namespace Budget
 
         public List<BudgetItemsByCategory> GetBudgetItemsByCategory(DateTime? Start, DateTime? End, bool FilterFlag, int CategoryID)
         {
-            // -----------------------------------------------------------------------
-            // get all items first
-            // -----------------------------------------------------------------------
-            List<BudgetItem> items = GetBudgetItems(Start, End, FilterFlag, CategoryID);
+            // ------------------------------------------------------------------------
+            // return joined list within time frame
+            // ------------------------------------------------------------------------
+            Start = Start ?? new DateTime(1900, 1, 1);
+            End = End ?? new DateTime(2500, 1, 1);
 
-            // -----------------------------------------------------------------------
-            // Group by Category
-            // -----------------------------------------------------------------------
-            var GroupedByCategory = items.GroupBy(c => c.Category);
+            SQLiteCommand cmd = new SQLiteCommand(Database.dbConnection);
 
-            // -----------------------------------------------------------------------
-            // create new list
-            // -----------------------------------------------------------------------
-            var summary = new List<BudgetItemsByCategory>();
-            foreach (var CategoryGroup in GroupedByCategory.OrderBy(g => g.Key))
+            cmd.CommandText = $"SELECT e.Id, e.CategoryId, e.Description, e.Date, e.Amount, c.Description, strftime('%Y/%m', e.Date) AS MonthYear FROM categories c, expenses e WHERE e.CategoryId = c.Id AND e.Date > @start AND e.Date < @end {(FilterFlag ? "AND e.CategoryId = @filteredID" : "")} ORDER BY c.Description, e.Date;";
+
+            cmd.Parameters.AddWithValue("@start", Start);
+            cmd.Parameters.AddWithValue("@end", End);
+            cmd.Parameters.AddWithValue("@filteredID", CategoryID);
+
+            SQLiteDataReader rdr = cmd.ExecuteReader();
+
+            // ------------------------------------------------------------------------
+            // create a BudgetItem list with totals,
+            // ------------------------------------------------------------------------
+            List<BudgetItemsByCategory> listBudgetItemsByCategory = new List<BudgetItemsByCategory>();
+            BudgetItemsByCategory budgetItemsByCategory = new BudgetItemsByCategory();
+            string previousCategory = "";
+            while (rdr.Read())
             {
-                // calculate total for this category, and create list of details
-                double total = 0;
-                var details = new List<BudgetItem>();
-                foreach (var item in CategoryGroup)
+                // set fields from database to variables to increase clarity
+                int expID = rdr.GetInt32(0);
+                int dbCatID = rdr.GetInt32(1);
+                string itemDescription = rdr.GetString(2);
+                DateTime date = rdr.GetDateTime(3);
+                double amount = rdr.GetDouble(4);
+                string categoryDescription = rdr.GetString(5);
+                string currentMonth = rdr.GetString(6);
+
+
+                // 
+                if (previousCategory != categoryDescription)
                 {
-                    total = total + item.Amount;
-                    details.Add(item);
+                    if (previousCategory != "")
+                        listBudgetItemsByCategory.Add(budgetItemsByCategory);
+
+                    budgetItemsByCategory = new BudgetItemsByCategory
+                    {
+                        Category = categoryDescription,
+                        Total = 0,
+                        Details = new List<BudgetItem>()
+                    };
+                    previousCategory = categoryDescription;
                 }
 
-                // Add new BudgetItemsByCategory to our list
-                summary.Add(new BudgetItemsByCategory
+                budgetItemsByCategory.Total += amount;
+                budgetItemsByCategory.Details.Add(new BudgetItem
                 {
-                    Category = CategoryGroup.Key,
-                    Details = details,
-                    Total = total
+                    CategoryID = dbCatID,
+                    ExpenseID = expID,
+                    ShortDescription = itemDescription,
+                    Date = date,
+                    Amount = amount,
+                    Category = categoryDescription,
+                    Balance = -budgetItemsByCategory.Total
                 });
             }
-            return summary;
+
+            listBudgetItemsByCategory.Add(budgetItemsByCategory);
+
+            return listBudgetItemsByCategory;
         }
 
 
