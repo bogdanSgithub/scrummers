@@ -492,20 +492,20 @@ namespace Budget
 
             SQLiteCommand cmd = new SQLiteCommand(Database.dbConnection);
 
-            
-            cmd.CommandText = "SELECT e.Id, e.CategoryId, e.Description, e.Date, e.Amount, c.Description FROM categories c, expenses e WHERE e.CategoryId = c.Id AND e.Date > @start AND e.Date < @end ORDER BY e.CategoryId, e.Date;";
+            cmd.CommandText = $"SELECT e.Id, e.CategoryId, e.Description, e.Date, e.Amount, c.Description, strftime('%Y/%m', e.Date) AS MonthYear FROM categories c, expenses e WHERE e.CategoryId = c.Id AND e.Date > @start AND e.Date < @end {(FilterFlag ? "AND e.CategoryId = @filteredID" : "")} ORDER BY c.Description, e.Date;";
 
             cmd.Parameters.AddWithValue("@start", Start);
             cmd.Parameters.AddWithValue("@end", End);
+            cmd.Parameters.AddWithValue("@filteredID", CategoryID);
 
             SQLiteDataReader rdr = cmd.ExecuteReader();
 
             // ------------------------------------------------------------------------
             // create a BudgetItem list with totals,
             // ------------------------------------------------------------------------
-            List<BudgetItemsByCategory> items = new List<BudgetItemsByCategory>();
-            Double total = 0;
-
+            List<BudgetItemsByCategory> listBudgetItemsByCategory = new List<BudgetItemsByCategory>();
+            BudgetItemsByCategory budgetItemsByCategory = new BudgetItemsByCategory();
+            string previousCategory = "";
             while (rdr.Read())
             {
                 // set fields from database to variables to increase clarity
@@ -515,12 +515,40 @@ namespace Budget
                 DateTime date = rdr.GetDateTime(3);
                 double amount = rdr.GetDouble(4);
                 string categoryDescription = rdr.GetString(5);
+                string currentMonth = rdr.GetString(6);
 
-                // keep track of running totals
-                if (CategoryID == 0) { }
+
+                // 
+                if (previousCategory != categoryDescription)
+                {
+                    if (previousCategory != "")
+                        listBudgetItemsByCategory.Add(budgetItemsByCategory);
+
+                    budgetItemsByCategory = new BudgetItemsByCategory
+                    {
+                        Category = categoryDescription,
+                        Total = 0,
+                        Details = new List<BudgetItem>()
+                    };
+                    previousCategory = categoryDescription;
+                }
+
+                budgetItemsByCategory.Total += amount;
+                budgetItemsByCategory.Details.Add(new BudgetItem
+                {
+                    CategoryID = dbCatID,
+                    ExpenseID = expID,
+                    ShortDescription = itemDescription,
+                    Date = date,
+                    Amount = amount,
+                    Category = categoryDescription,
+                    Balance = -budgetItemsByCategory.Total
+                });
             }
 
-            return items;
+            listBudgetItemsByCategory.Add(budgetItemsByCategory);
+
+            return listBudgetItemsByCategory;
         }
 
 

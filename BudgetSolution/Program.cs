@@ -8,7 +8,7 @@ namespace BudgetSolution
 {
     internal class Program
     {
-        string budgetFile = Path.GetFullPath(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "..\\..\\..\\")) + "\\" + "test.budget";
+        string budgetFile = "C:\\Users\\ALI\\source\\repos\\bogdanSgithub\\scrummers\\TestDatabase\\messy.db";
         DateTime? Start;
         DateTime? End;
         bool FilterFlag;
@@ -23,14 +23,13 @@ namespace BudgetSolution
 
         public Program()
         {
-            TestDatabase();
-            /*
+
             homeBudget = new HomeBudget(budgetFile);
             if (GetParameters())
             {
                 GetMethodChoice();
                 CallReport();
-            }*/
+            }
         }
 
         public void TestDatabase()
