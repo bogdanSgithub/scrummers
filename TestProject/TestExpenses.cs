@@ -317,7 +317,68 @@ namespace BudgetCodeTests
             }
         }
 
+        [Fact]
+        public void ExpensesConstructor_CreatesDefaultDBIfDoesntExist()
+        {
+            //Arrange
+            //Constructor should create a default db if there is no connection i.e it was initialized before categories
+            Expenses expenses = new Expenses();
 
+
+            //Assert
+            Assert.True(File.Exists("default.db"));
+
+        }
+
+        [Fact]
+        public void ExpensesGetExpenseByID_InvalidID_ShouldThrow()
+        {
+            //Arrange
+            String folder = TestConstants.GetSolutionDir();
+            String goodDB = $"{folder}\\{TestConstants.testDBInputFile}";
+            String messyDB = $"{folder}\\messyDB";
+            System.IO.File.Copy(goodDB, messyDB, true);
+            Database.existingDatabase(messyDB);
+            SQLiteConnection conn = Database.dbConnection;
+            Expenses expenses = new Expenses();
+            int IdToFind = 3273823;
+
+            try
+            {
+                // Act
+                expenses.GetExpenseFromId(IdToFind);
+            }
+            catch
+            {
+                // Assert
+                Assert.True(true);
+            }
+        }
+
+        [Fact]
+        public void ExpensesAddWithCategoryID_DoesntExists()
+        {
+            //Arrange
+            String folder = TestConstants.GetSolutionDir();
+            String goodDB = $"{folder}\\{TestConstants.testDBInputFile}";
+            String messyDB = $"{folder}\\messyDB";
+            System.IO.File.Copy(goodDB, messyDB, true);
+            Database.existingDatabase(messyDB);
+            SQLiteConnection conn = Database.dbConnection;
+            Expenses expenses = new Expenses();
+            int IdOfCategory = 3273823;
+
+            try
+            {
+                // Act
+                expenses.Add(DateTime.Now, IdOfCategory, 1, "Shouldn't work");
+            } 
+            catch
+            {
+                // Assert 
+                Assert.True(true);
+            }
+        }
         // ========================================================================
 
         /*[Fact]

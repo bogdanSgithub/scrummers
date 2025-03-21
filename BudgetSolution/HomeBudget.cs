@@ -582,7 +582,7 @@ namespace Budget
                     Balance = -budgetItemsByCategory.Total
                 });
             }
-            if (listBudgetItemsByCategory.Category is not null)
+            if (budgetItemsByCategory.Category is not null)
                 listBudgetItemsByCategory.Add(budgetItemsByCategory);
 
             return listBudgetItemsByCategory;
