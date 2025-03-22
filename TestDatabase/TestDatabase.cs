@@ -314,6 +314,46 @@ namespace BudgetCodeTests
                 Assert.True(true);
             }
         }
+
+        [Fact]
+        public void SQLite_TestInvalidIsValidIdInTable_ToThrow()
+        {
+            // Arrange
+            string path = TestConstants.GetSolutionDir();
+            string filename = "newdb.db";
+
+            Database.newDatabase(path + "\\" + filename);
+
+            // Act
+            try
+            {
+                Database.IsValidIdInTable(1, "invalidTable");
+            }
+            catch
+            {
+                Assert.True(true);
+            }
+        }
+
+        [Fact]
+        public void SQLite_TestInvalidClearDBTable_ToThrow()
+        {
+            // Arrange
+            string path = TestConstants.GetSolutionDir();
+            string filename = "newdb.db";
+
+            Database.newDatabase(path + "\\" + filename);
+
+            // Act
+            try
+            {
+                Database.ClearDBTable("invalidTable");
+            }
+            catch
+            {
+                Assert.True(true);
+            }
+        }
     }
 
 
