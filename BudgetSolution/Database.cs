@@ -121,25 +121,35 @@ namespace Budget
             cmd.ExecuteNonQuery();
         }
 
+        /// <summary>
+        /// Given a table name, deletes it from the database. The table name must be one of the default tables 
+        /// </summary>
+        /// <param name="table">The name of the table.</param>
+        /// <example>
+        /// <code>
+        /// Database.ClearDBTable("categories");
+        /// </code>
+        /// </example>
         public static void ClearDBTable(string table)
         {
             if (!_tables.Contains(table))
                 throw new ArgumentException("Invalid table");
 
             SQLiteCommand cmd = new SQLiteCommand(dbConnection);
-
+            // cannot do binding because it's a table name however it is still safe because we make sure it's a  valid table name.
             cmd.CommandText = $"DELETE FROM {table};";
             cmd.ExecuteNonQuery();
         }
 
         /// <summary>
-        /// Inserts the default category types 
+        /// Inserts the default category types into the categoryTypes table
+        /// Decided to put it in Database class as it is a necessary step when creating a new database.
         /// </summary>
         public static void SetInitialCategoryTypes()
         {
             SQLiteCommand cmd = new SQLiteCommand(dbConnection);
 
-            // add initial categoryTypes
+            // add initial categoryTypes into table
             foreach (Category.CategoryType type in Enum.GetValues(typeof(Category.CategoryType)))
             {
                 string query = $"INSERT INTO categoryTypes (Id, Description) VALUES({(int)type + 1}, '{type}');";
@@ -233,5 +243,4 @@ namespace Budget
             return int.Parse(result.ToString()) == 1;
         }
     }
-
 }
