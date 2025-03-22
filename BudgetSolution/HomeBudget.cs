@@ -68,13 +68,13 @@ namespace Budget
         // Constructor (existing budget ... must specify file)
         // -------------------------------------------------------------------
         /// <summary>
-        /// Constructor that takes in the budget File Name and uses that file to set the Categories and Expenses.
+        /// Constructor that takes in the database File Name and uses that file to set the Categories and Expenses.
         /// </summary>
-        /// <param name="budgetFileName"> string which represents the name of the budget file
+        /// <param name="databaseFile"> string which represents the name of the database file
         /// </param>
         /// <example>
         /// <code>
-        /// HomeBudget myBudget = new HomeBudget("C:\\Users\\studentID\\Desktop\\Scrummers\\BudgetSolution\\test.budget");
+        /// HomeBudget myBudget = new HomeBudget("C:\\Users\\studentID\\Desktop\\Scrummers\\BudgetSolution\\test.db");
         /// </code>
         /// </example>
         public HomeBudget(String databaseFile, bool newDB = false)
@@ -106,7 +106,11 @@ namespace Budget
         // Reasoning: an expense of $15 is -$15 from your bank account.
         // ============================================================================
         /// <summary>
-        /// Returns a list of BudgetItems
+        /// Returns a list of BudgetItems queried from the database
+        /// 
+        /// NOTE: VERY IMPORTANT... budget amount is the negative of the expense amount
+        /// Reasoning: an expense of $15 is -$15 from your bank account.
+        /// 
         /// Sorting:
         /// The list is sorted in ascending order by Date.
         /// 
@@ -156,8 +160,7 @@ namespace Budget
         /// 
         /// <code>
         /// <![CDATA[
-        /// HomeBudget budget = new HomeBudget();
-        /// budget.ReadFromFile(@"C:\Users\studentID\Downloads\BudgetSolution\test.budget");
+        /// HomeBudget myBudget = new HomeBudget("C:\\Users\\studentID\\Desktop\\Scrummers\\BudgetSolution\\test.db");
         /// 
         /// // Get a list of all budget items
         /// var budgetItems = budget.GetBudgetItems(null, null, false, 0);
@@ -304,8 +307,9 @@ namespace Budget
         // "year/month", list of budget items, and total for that month
         // ============================================================================
         /// <summary>
-        /// Retrieves a summary of budget items grouped by month within the specified date range.
+        /// Retrieves a summary of budget items grouped by month within the specified date range by querying the database.
         /// The method calculates the total expenses for each month and returns a list of budget summaries (BudgetItemsByMonth objects) which are grouped by month.
+        /// 
         /// </summary>
         /// <param name="Start">Start Date Parameter used to get budget items after a certain date. If null, it defaults to 1/1/1900.</param>
         /// <param name="End">End Date Parameter used to get budget items before a certain date. If null, it defaults to 1/1/2500.</param>
@@ -316,8 +320,7 @@ namespace Budget
         /// Getting a list of BudgetItemsByCategory
         /// <code>
         /// <![CDATA[
-        /// HomeBudget budget = new HomeBudget();
-        /// budget.ReadFromFile(@"C:\Users\Bogdan\source\repos\testPLZ\test.budget");
+        /// HomeBudget myBudget = new HomeBudget("C:\\Users\\studentID\\Desktop\\Scrummers\\BudgetSolution\\test.db");
         /// var budgetItemsByCategories = budget.GetBudgetItemsByCategory(null, null, false, 10);
         /// foreach (var budgetItemsByCategory in budgetItemsByCategories)
         /// {
@@ -444,7 +447,7 @@ namespace Budget
         // Group all expenses by category (ordered by category name)
         // ============================================================================
         /// <summary>
-        /// Retrieves a summary of budget items grouped by category within the specified date range.
+        /// Retrieves a summary of budget items grouped by category within the specified date range by querying the database.
         /// The method calculates the total expenses for each category and returns a list of budget summaries (BudgetItemsByCategory objects) which are grouped by category.
         /// </summary>
         /// <param name="Start">Start Date Parameter used to get budget items after a certain date. If null, it defaults to 1/1/1900.</param>
@@ -475,8 +478,7 @@ namespace Budget
         /// Getting a list of BudgetItemsByCategory
         /// <code>
         /// <![CDATA[
-        /// HomeBudget budget = new HomeBudget();
-        /// budget.ReadFromFile(@"C:\Users\Bogdan\source\repos\testPLZ\test.budget");
+        /// HomeBudget myBudget = new HomeBudget("C:\\Users\\studentID\\Desktop\\Scrummers\\BudgetSolution\\test.db");
         /// var budgetItemsByCategories = budget.GetBudgetItemsByCategory(null, null, false, 10);
         /// foreach (var budgetItemsByCategory in budgetItemsByCategories)
         /// {
@@ -613,7 +615,7 @@ namespace Budget
         //             "category", the total for that category for all the months
         // ============================================================================
         /// <summary>
-        /// Groups all budget events by category and month, creating a list of dictionaries containing key-value pairs. 
+        /// Groups all budget events retrieved from the database by category and month, creating a list of dictionaries containing key-value pairs. 
         /// The dictionaries provide a detailed breakdown of monthly expenses and category totals.
         /// </summary>
         /// <param name="Start">Start Date Parameter used to get budget items after a certain date. If null, it defaults to 1/1/1900.</param>
@@ -626,8 +628,7 @@ namespace Budget
         /// Getting a list of BudgetItemsByCategory
         /// <code>
         /// <![CDATA[
-        /// HomeBudget budget = new HomeBudget();
-        /// budget.ReadFromFile(@"C:\Users\Bogdan\source\repos\testPLZ\test.budget");
+        /// HomeBudget myBudget = new HomeBudget("C:\\Users\\studentID\\Desktop\\Scrummers\\BudgetSolution\\test.db");
         /// var budgetItemsByCategories = budget.GetBudgetItemsByCategory(null, null, false, 10);
         /// foreach (var budgetItemsByCategory in budgetItemsByCategories)
         /// {
