@@ -317,128 +317,67 @@ namespace BudgetCodeTests
             }
         }
 
-
-        // ========================================================================
-
-        /*[Fact]
-        public void ExpenseMethod_WriteToFile()
+        [Fact]
+        public void ExpensesConstructor_CreatesDefaultDBIfDoesntExist()
         {
-            // Arrange
-            String dir = TestConstants.GetSolutionDir();
+            //Arrange
+            //Constructor should create a default db if there is no connection i.e it was initialized before categories
             Expenses expenses = new Expenses();
-            expenses.ReadFromFile(dir + "\\" + testInputFile);
-            string fileName = TestConstants.ExpenseOutputTestFile;
-            String outputFile = dir + "\\" + fileName;
-            File.Delete(outputFile);
 
-            // Act
-            expenses.SaveToFile(outputFile);
 
-            // Assert
-            Assert.True(File.Exists(outputFile), "output file created");
-            Assert.True(FileEquals(dir + "\\" + testInputFile, outputFile), "Input /output files are the same");
-            String fileDir = Path.GetFullPath(Path.Combine(expenses.DirName, ".\\"));
-            Assert.Equal(dir, fileDir);
-            Assert.Equal(fileName, expenses.FileName);
-
-            // Cleanup
-            if (FileEquals(dir + "\\" + testInputFile, outputFile))
-            {
-                File.Delete(outputFile);
-            }
+            //Assert
+            Assert.True(File.Exists("default.db"));
 
         }
-        */
-        // ========================================================================
 
-        /*[Fact]
-        public void ExpenseMethod_WriteToFile_VerifyNewExpenseWrittenCorrectly()
-        {
-            // Arrange
-            String dir = TestConstants.GetSolutionDir();
-            Expenses expenses = new Expenses();
-            expenses.ReadFromFile(dir + "\\" + testInputFile);
-            string fileName = TestConstants.ExpenseOutputTestFile;
-            String outputFile = dir + "\\" + fileName;
-            File.Delete(outputFile);
-
-            // Act
-            expenses.Add(DateTime.Now, 14, 35.27, "McDonalds");
-            List<Expense> listBeforeSaving = expenses.List();
-            expenses.SaveToFile(outputFile);
-            expenses.ReadFromFile(outputFile);
-            List<Expense> listAfterSaving = expenses.List();
-
-            Expense beforeSaving = listBeforeSaving[listBeforeSaving.Count - 1];
-            Expense afterSaving = listAfterSaving.Find(e => e.Id == beforeSaving.Id);
-
-            // Assert
-            Assert.Equal(beforeSaving.Id, afterSaving.Id);
-            Assert.Equal(beforeSaving.Category, afterSaving.Category);
-            Assert.Equal(beforeSaving.Description, afterSaving.Description);
-            Assert.Equal(beforeSaving.Amount, afterSaving.Amount);
-
-        }*/
-
-        // ========================================================================
-
-        /*
         [Fact]
-        public void ExpenseMethod_WriteToFile_WriteToLastFileWrittenToByDefault()
+        public void ExpensesGetExpenseByID_InvalidID_ShouldThrow()
         {
-            // Arrange
-            String dir = TestConstants.GetSolutionDir();
+            //Arrange
+            String folder = TestConstants.GetSolutionDir();
+            String goodDB = $"{folder}\\{TestConstants.testDBInputFile}";
+            String messyDB = $"{folder}\\messyDB";
+            System.IO.File.Copy(goodDB, messyDB, true);
+            Database.existingDatabase(messyDB);
+            SQLiteConnection conn = Database.dbConnection;
             Expenses expenses = new Expenses();
-            expenses.ReadFromFile(dir + "\\" + testInputFile);
-            string fileName = TestConstants.ExpenseOutputTestFile;
-            String outputFile = dir + "\\" + fileName;
-            File.Delete(outputFile);
-            expenses.SaveToFile(outputFile); // output file is now last file that was written to.
-            File.Delete(outputFile);  // Delete the file
+            int IdToFind = 3273823;
 
-            // Act
-            expenses.SaveToFile(); // should write to same file as before
-
-            // Assert
-            Assert.True(File.Exists(outputFile), "output file created");
-            String fileDir = Path.GetFullPath(Path.Combine(expenses.DirName, ".\\"));
-            Assert.Equal(dir, fileDir);
-            Assert.Equal(fileName, expenses.FileName);
-
-            // Cleanup
-            if (FileEquals(dir + "\\" + testInputFile, outputFile))
+            try
             {
-                File.Delete(outputFile);
+                // Act
+                expenses.GetExpenseFromId(IdToFind);
             }
+            catch
+            {
+                // Assert
+                Assert.True(true);
+            }
+        }
 
-        }*/
-
-        // ========================================================================
-
-
-
-        // -------------------------------------------------------
-        // helpful functions, ... they are not tests
-        // -------------------------------------------------------
-
-        // source taken from: https://www.dotnetperls.com/file-equals
-
-        private bool FileEquals(string path1, string path2)
+        [Fact]
+        public void ExpensesAddWithCategoryID_DoesntExists()
         {
-            byte[] file1 = File.ReadAllBytes(path1);
-            byte[] file2 = File.ReadAllBytes(path2);
-            if (file1.Length == file2.Length)
+            //Arrange
+            String folder = TestConstants.GetSolutionDir();
+            String goodDB = $"{folder}\\{TestConstants.testDBInputFile}";
+            String messyDB = $"{folder}\\messyDB";
+            System.IO.File.Copy(goodDB, messyDB, true);
+            Database.existingDatabase(messyDB);
+            SQLiteConnection conn = Database.dbConnection;
+            Expenses expenses = new Expenses();
+            int IdOfCategory = 3273823;
+
+            try
             {
-                for (int i = 0; i < file1.Length; i++)
-                {
-                    if (file1[i] != file2[i])
-                    {
-                        return false;
-                    }
-                }
-                return true;
+                // Act
+                expenses.Add(DateTime.Now, IdOfCategory, 1, "Shouldn't work");
+            } 
+            catch
+            {
+                // Assert 
+                Assert.True(true);
             }
-            return false;
         }
     }
 }

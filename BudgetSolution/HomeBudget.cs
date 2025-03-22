@@ -68,13 +68,13 @@ namespace Budget
         // Constructor (existing budget ... must specify file)
         // -------------------------------------------------------------------
         /// <summary>
-        /// Constructor that takes in the budget File Name and uses that file to set the Categories and Expenses.
+        /// Constructor that takes in the database File Name and uses that file to set the Categories and Expenses.
         /// </summary>
-        /// <param name="budgetFileName"> string which represents the name of the budget file
+        /// <param name="databaseFile"> string which represents the name of the database file
         /// </param>
         /// <example>
         /// <code>
-        /// HomeBudget myBudget = new HomeBudget("C:\\Users\\studentID\\Desktop\\Scrummers\\BudgetSolution\\test.budget");
+        /// HomeBudget myBudget = new HomeBudget("C:\\Users\\studentID\\Desktop\\Scrummers\\BudgetSolution\\test.db");
         /// </code>
         /// </example>
         public HomeBudget(String databaseFile, bool newDB = false)
@@ -105,7 +105,11 @@ namespace Budget
         // Reasoning: an expense of $15 is -$15 from your bank account.
         // ============================================================================
         /// <summary>
-        /// Returns a list of BudgetItems
+        /// Returns a list of BudgetItems queried from the database
+        /// 
+        /// NOTE: VERY IMPORTANT... budget amount is the negative of the expense amount
+        /// Reasoning: an expense of $15 is -$15 from your bank account.
+        /// 
         /// Sorting:
         /// The list is sorted in ascending order by Date.
         /// 
@@ -155,8 +159,7 @@ namespace Budget
         /// 
         /// <code>
         /// <![CDATA[
-        /// HomeBudget budget = new HomeBudget();
-        /// budget.ReadFromFile(@"C:\Users\studentID\Downloads\BudgetSolution\test.budget");
+        /// HomeBudget myBudget = new HomeBudget("C:\\Users\\studentID\\Desktop\\Scrummers\\BudgetSolution\\test.db");
         /// 
         /// // Get a list of all budget items
         /// var budgetItems = budget.GetBudgetItems(null, null, false, 0);
@@ -254,6 +257,7 @@ namespace Budget
 
             SQLiteCommand cmd = new SQLiteCommand(Database.dbConnection);
 
+            //get all budget items from db that match the given parameters
             cmd.CommandText = $"SELECT e.Id, e.CategoryId, e.Description, e.Date, e.Amount, c.Description FROM categories c, expenses e WHERE e.CategoryId = c.Id AND e.Date > @start AND e.Date < @end {(FilterFlag ? "AND e.CategoryId = @filteredID": "")} ORDER BY e.Date;";
 
             cmd.Parameters.AddWithValue("@start", Start);
@@ -268,6 +272,7 @@ namespace Budget
             List<BudgetItem> items = new List<BudgetItem>();
             Double total = 0;
 
+            //loop through the reader to populate the budget item list
             while (rdr.Read())
             {
                 // set fields from database to variables to increase clarity
@@ -301,8 +306,9 @@ namespace Budget
         // "year/month", list of budget items, and total for that month
         // ============================================================================
         /// <summary>
-        /// Retrieves a summary of budget items grouped by month within the specified date range.
+        /// Retrieves a summary of budget items grouped by month within the specified date range by querying the database.
         /// The method calculates the total expenses for each month and returns a list of budget summaries (BudgetItemsByMonth objects) which are grouped by month.
+        /// 
         /// </summary>
         /// <param name="Start">Start Date Parameter used to get budget items after a certain date. If null, it defaults to 1/1/1900.</param>
         /// <param name="End">End Date Parameter used to get budget items before a certain date. If null, it defaults to 1/1/2500.</param>
@@ -313,8 +319,7 @@ namespace Budget
         /// Getting a list of BudgetItemsByCategory
         /// <code>
         /// <![CDATA[
-        /// HomeBudget budget = new HomeBudget();
-        /// budget.ReadFromFile(@"C:\Users\Bogdan\source\repos\testPLZ\test.budget");
+        /// HomeBudget myBudget = new HomeBudget("C:\\Users\\studentID\\Desktop\\Scrummers\\BudgetSolution\\test.db");
         /// var budgetItemsByCategories = budget.GetBudgetItemsByCategory(null, null, false, 10);
         /// foreach (var budgetItemsByCategory in budgetItemsByCategories)
         /// {
@@ -374,6 +379,7 @@ namespace Budget
 
             SQLiteCommand cmd = new SQLiteCommand(Database.dbConnection);
             
+            //Get all the budget items, but with the month and year of when the expense was made.
             cmd.CommandText = $"SELECT e.Id, e.CategoryId, e.Description, e.Date, e.Amount, c.Description, strftime('%Y/%m', e.Date) AS MonthYear FROM categories c, expenses e WHERE e.CategoryId = c.Id AND e.Date > @start AND e.Date < @end {(FilterFlag ? "AND e.CategoryId = @filteredID" : "")} ORDER BY e.Date;";
 
             cmd.Parameters.AddWithValue("@start", Start);
@@ -388,6 +394,8 @@ namespace Budget
             List<BudgetItemsByMonth> listBudgetItemsByMonth = new List<BudgetItemsByMonth>();
             BudgetItemsByMonth budgetItemsByMonth = new BudgetItemsByMonth();
             string previousMonth = "";
+
+            //loop over reader to add the fields to create budget items by month and add them to the list
             while (rdr.Read())
             {  
                 // set fields from database to variables to increase clarity
@@ -399,7 +407,7 @@ namespace Budget
                 string categoryDescription = rdr.GetString(5);
                 string currentMonth = rdr.GetString(6);
 
-                // 
+                // if the month is not the same as the previous one, add the built budget item by month to the list and resert it
                 if (previousMonth != currentMonth)
                 {
                     if (previousMonth != "")
@@ -414,6 +422,7 @@ namespace Budget
                     previousMonth = currentMonth;
                 }
 
+                // update the single budget item by month every iteration of the same month
                 budgetItemsByMonth.Total += amount;
                 budgetItemsByMonth.Details.Add(new BudgetItem
                     {
@@ -426,8 +435,9 @@ namespace Budget
                         Balance = -budgetItemsByMonth.Total
                     });
             }
-
-            listBudgetItemsByMonth.Add(budgetItemsByMonth);
+            //make sure the last budget item is not null before adding it
+            if (budgetItemsByMonth.Month is not null)
+                listBudgetItemsByMonth.Add(budgetItemsByMonth);
 
             return listBudgetItemsByMonth;
         }
@@ -436,7 +446,7 @@ namespace Budget
         // Group all expenses by category (ordered by category name)
         // ============================================================================
         /// <summary>
-        /// Retrieves a summary of budget items grouped by category within the specified date range.
+        /// Retrieves a summary of budget items grouped by category within the specified date range by querying the database.
         /// The method calculates the total expenses for each category and returns a list of budget summaries (BudgetItemsByCategory objects) which are grouped by category.
         /// </summary>
         /// <param name="Start">Start Date Parameter used to get budget items after a certain date. If null, it defaults to 1/1/1900.</param>
@@ -467,8 +477,7 @@ namespace Budget
         /// Getting a list of BudgetItemsByCategory
         /// <code>
         /// <![CDATA[
-        /// HomeBudget budget = new HomeBudget();
-        /// budget.ReadFromFile(@"C:\Users\Bogdan\source\repos\testPLZ\test.budget");
+        /// HomeBudget myBudget = new HomeBudget("C:\\Users\\studentID\\Desktop\\Scrummers\\BudgetSolution\\test.db");
         /// var budgetItemsByCategories = budget.GetBudgetItemsByCategory(null, null, false, 10);
         /// foreach (var budgetItemsByCategory in budgetItemsByCategories)
         /// {
@@ -520,40 +529,68 @@ namespace Budget
 
         public List<BudgetItemsByCategory> GetBudgetItemsByCategory(DateTime? Start, DateTime? End, bool FilterFlag, int CategoryID)
         {
-            // -----------------------------------------------------------------------
-            // get all items first
-            // -----------------------------------------------------------------------
-            List<BudgetItem> items = GetBudgetItems(Start, End, FilterFlag, CategoryID);
+            Start = Start ?? new DateTime(1900, 1, 1);
+            End = End ?? new DateTime(2500, 1, 1);
 
-            // -----------------------------------------------------------------------
-            // Group by Category
-            // -----------------------------------------------------------------------
-            var GroupedByCategory = items.GroupBy(c => c.Category);
+            SQLiteCommand cmd = new SQLiteCommand(Database.dbConnection);
 
-            // -----------------------------------------------------------------------
-            // create new list
-            // -----------------------------------------------------------------------
-            var summary = new List<BudgetItemsByCategory>();
-            foreach (var CategoryGroup in GroupedByCategory.OrderBy(g => g.Key))
+            //get all the budget items to be able to add them to the list
+            cmd.CommandText = $"SELECT e.Id, e.CategoryId, e.Description, e.Date, e.Amount, c.Description, strftime('%Y/%m', e.Date) AS MonthYear FROM categories c, expenses e WHERE e.CategoryId = c.Id AND e.Date > @start AND e.Date < @end {(FilterFlag ? "AND e.CategoryId = @filteredID" : "")} ORDER BY c.Description, e.Date;";
+
+            cmd.Parameters.AddWithValue("@start", Start);
+            cmd.Parameters.AddWithValue("@end", End);
+            cmd.Parameters.AddWithValue("@filteredID", CategoryID);
+
+            SQLiteDataReader rdr = cmd.ExecuteReader();
+
+            List<BudgetItemsByCategory> listBudgetItemsByCategory = new List<BudgetItemsByCategory>();
+            BudgetItemsByCategory budgetItemsByCategory = new BudgetItemsByCategory();
+            string previousCategory = "";
+            while (rdr.Read())
             {
-                // calculate total for this category, and create list of details
-                double total = 0;
-                var details = new List<BudgetItem>();
-                foreach (var item in CategoryGroup)
+                // set fields from database to variables to increase clarity
+                int expID = rdr.GetInt32(0);
+                int dbCatID = rdr.GetInt32(1);
+                string itemDescription = rdr.GetString(2);
+                DateTime date = rdr.GetDateTime(3);
+                double amount = rdr.GetDouble(4);
+                string categoryDescription = rdr.GetString(5);
+                string currentMonth = rdr.GetString(6);
+
+
+                // if the category is not the same as the previous one, add the built budget item by category to the list and resert it
+                if (previousCategory != categoryDescription)
                 {
-                    total = total + item.Amount;
-                    details.Add(item);
+                    if (previousCategory != "")
+                        listBudgetItemsByCategory.Add(budgetItemsByCategory);
+
+                    budgetItemsByCategory = new BudgetItemsByCategory
+                    {
+                        Category = categoryDescription,
+                        Total = 0,
+                        Details = new List<BudgetItem>()
+                    };
+                    previousCategory = categoryDescription;
                 }
 
-                // Add new BudgetItemsByCategory to our list
-                summary.Add(new BudgetItemsByCategory
+                // update the single budget item by category every iteration of the same month
+                budgetItemsByCategory.Total += amount;
+                budgetItemsByCategory.Details.Add(new BudgetItem
                 {
-                    Category = CategoryGroup.Key,
-                    Details = details,
-                    Total = total
+                    CategoryID = dbCatID,
+                    ExpenseID = expID,
+                    ShortDescription = itemDescription,
+                    Date = date,
+                    Amount = amount,
+                    Category = categoryDescription,
+                    Balance = -budgetItemsByCategory.Total
                 });
             }
-            return summary;
+            //make sure the last budget item is not null before adding it
+            if (budgetItemsByCategory.Category is not null)
+                listBudgetItemsByCategory.Add(budgetItemsByCategory);
+
+            return listBudgetItemsByCategory;
         }
 
 
@@ -577,7 +614,7 @@ namespace Budget
         //             "category", the total for that category for all the months
         // ============================================================================
         /// <summary>
-        /// Groups all budget events by category and month, creating a list of dictionaries containing key-value pairs. 
+        /// Groups all budget events retrieved from the database by category and month, creating a list of dictionaries containing key-value pairs. 
         /// The dictionaries provide a detailed breakdown of monthly expenses and category totals.
         /// </summary>
         /// <param name="Start">Start Date Parameter used to get budget items after a certain date. If null, it defaults to 1/1/1900.</param>
@@ -590,8 +627,7 @@ namespace Budget
         /// Getting a list of BudgetItemsByCategory
         /// <code>
         /// <![CDATA[
-        /// HomeBudget budget = new HomeBudget();
-        /// budget.ReadFromFile(@"C:\Users\Bogdan\source\repos\testPLZ\test.budget");
+        /// HomeBudget myBudget = new HomeBudget("C:\\Users\\studentID\\Desktop\\Scrummers\\BudgetSolution\\test.db");
         /// var budgetItemsByCategories = budget.GetBudgetItemsByCategory(null, null, false, 10);
         /// foreach (var budgetItemsByCategory in budgetItemsByCategories)
         /// {
