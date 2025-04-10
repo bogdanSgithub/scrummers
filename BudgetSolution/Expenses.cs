@@ -22,17 +22,12 @@ namespace Budget
     //        - etc
     // ====================================================================
     /// <summary>
-    /// Object that allows the user to interact with the expense database.
+    /// Object that allows the user to interact with the expenses table in the database.
     /// </summary>
     public class Expenses
     {
         public Expenses()
         {   
-            // make a default database if no connection was made
-            if (Database.dbConnection is null)
-            {
-                Database.newDatabase("default.db");
-            }
         }
 
         /// <summary>

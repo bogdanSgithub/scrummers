@@ -73,10 +73,7 @@ namespace Budget
         /// <param name="newDB">A flag that represents if a new database should be created or not.</param>
         public Categories(SQLiteConnection conn, bool newDB)
         {
-            if (newDB)
-            {
-                Database.newDatabase("default.db");
-            }
+            
         }
         /// <summary>
         /// Updates a matching category within the database.
