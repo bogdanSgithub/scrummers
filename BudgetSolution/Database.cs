@@ -38,7 +38,7 @@ namespace Budget
         /// </summary>
         public static SQLiteConnection dbConnection { get { return _connection; } }
         private static SQLiteConnection _connection;
-        private static List<string> _tables = new List<string> { "categories", "categoryTypes", "expenses" };
+        private static List<string> _tables = new List<string>();
 
         // ===================================================================
         // create and open a new database
@@ -61,6 +61,23 @@ namespace Budget
             CreateDatabaseTables();
             SetInitialCategoryTypes();
             SetCategoriesToDefaults();
+        }
+        
+        // get all the tables from the database
+        private static List<string> GetTablesFromDB()
+        {
+            SQLiteCommand cmd = new SQLiteCommand(_connection);
+            List<string> tables = new List<string>();
+
+            cmd.CommandText = $"SELECT name FROM sqlite_schema WHERE type='table';";
+            SQLiteDataReader rdr = cmd.ExecuteReader();
+            while (rdr.Read())
+            {
+                tables.Add(rdr.GetString(0));
+            }
+            Console.WriteLine(tables);
+
+            return tables;
         }
 
         // ===================================================================
@@ -132,6 +149,7 @@ namespace Budget
         /// </example>
         public static void ClearDBTable(string table)
         {
+            _tables = GetTablesFromDB();
             if (!_tables.Contains(table))
                 throw new ArgumentException("Invalid table");
 
@@ -229,6 +247,7 @@ namespace Budget
         /// <returns></returns>
         static public bool IsValidIdInTable(int id, string table)
         {
+            _tables = GetTablesFromDB();
             if (!_tables.Contains(table))
                 throw new ArgumentException("Not a valid table");
 

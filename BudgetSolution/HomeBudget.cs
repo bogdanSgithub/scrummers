@@ -22,13 +22,12 @@ namespace Budget
     //        - etc
     // ====================================================================
     /// <summary>
-    /// Main Budget Manager class. Tracks Categories, Expenses, allowing you to read from files and save to files the data.
+    /// Main Budget Manager class. Tracks Categories, Expenses, allowing you to read from database and save to database the data.
     /// Provides important methods to get the budget items by different criteria.
     /// </summary>
     /// <example>
     /// <code>
-    /// HomeBudget budget = new HomeBudget();
-    /// budget.ReadFromFile("C:\\path\\to\\budget_file.txt");
+    /// HomeBudget budget = new HomeBudget("pathToFile.db");
     /// Access the categories and expenses
     /// var categories = budget.categories.List();
     /// var expenses = budget.expenses.List();
@@ -40,7 +39,6 @@ namespace Budget
     /// {
     ///     Console.WriteLine($"Category: {item.Category}, Description: {item.ShortDescription}, Amount: {item.Amount}");
     /// }
-    /// budget.SaveToFile("C:\\path\\to\\new_budget_file.txt");
     /// </code>
     /// </example>
     public class HomeBudget
@@ -284,7 +282,7 @@ namespace Budget
                 string categoryDescription = rdr.GetString(5);
 
                 // keep track of running totals
-                total = total - amount;
+                total += amount;
                 items.Add(new BudgetItem
                 {
                     CategoryID = dbCatID,
@@ -293,7 +291,7 @@ namespace Budget
                     Date = date,
                     Amount = amount,
                     Category = categoryDescription,
-                    Balance = -total
+                    Balance = total
                 });
             }
 
