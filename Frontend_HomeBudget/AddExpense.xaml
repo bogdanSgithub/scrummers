@@ -7,6 +7,23 @@
         mc:Ignorable="d"
         Title="AddExpense" Height="450" Width="800">
     <Grid>
-        
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto" ></ColumnDefinition>
+            <ColumnDefinition Width="Auto"></ColumnDefinition>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" ></RowDefinition>
+            <RowDefinition Height="Auto"></RowDefinition>
+            <RowDefinition Height="Auto"></RowDefinition>
+            <RowDefinition Height="Auto"></RowDefinition>
+            <RowDefinition Height="Auto"></RowDefinition>
+            <RowDefinition Height="Auto"></RowDefinition>
+        </Grid.RowDefinitions>
+        <TextBox x:Name="Date" Grid.Row="0" Grid.Column="0">Date</TextBox>
+        <TextBox x:Name="Amount" Grid.Row="1" Grid.Column="0">Amount</TextBox>
+        <TextBox x:Name="Description" Grid.Row="2" Grid.Column="0">Description</TextBox>
+        <ComboBox x:Name="Categorys" Grid.Row="3"/>
+        <Button x:Name="Button_AddExpense" Grid.Row="4" Margin="10" Click="Button_AddExpense_Click">Add Expense</Button>
+        <Button x:Name="Button_Cancel" Grid.Row="4" Grid.Column="1" Margin="10">Cancel</Button>
     </Grid>
 </Window>

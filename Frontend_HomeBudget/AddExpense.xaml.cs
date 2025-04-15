@@ -22,6 +22,21 @@ namespace Frontend_HomeBudget
         public AddExpense()
         {
             InitializeComponent();
+            List<string> items = new List<string>
+            {
+                "Option A",
+                "Option B",
+                "Option C"
+            };
+            items.Add("+ Add Category");
+
+            Categorys.ItemsSource = items;
+            Categorys.SelectedIndex = 0;
+        }
+
+        private void Button_AddExpense_Click(object sender, RoutedEventArgs e)
+        {
+
         }
     }
 }
