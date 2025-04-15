@@ -11,6 +11,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TestDatabase", "TestDatabas
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Frontend_HomeBudget", "Frontend_HomeBudget\Frontend_HomeBudget.csproj", "{06A6C9BE-85E8-4260-89AA-A50CF8602D0D}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BudgetPresenter", "BudgetPresenter\BudgetPresenter.csproj", "{8DBF7C47-647F-4EE1-8A08-9217A4BABC78}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,6 +35,10 @@ Global
 		{06A6C9BE-85E8-4260-89AA-A50CF8602D0D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{06A6C9BE-85E8-4260-89AA-A50CF8602D0D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{06A6C9BE-85E8-4260-89AA-A50CF8602D0D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8DBF7C47-647F-4EE1-8A08-9217A4BABC78}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8DBF7C47-647F-4EE1-8A08-9217A4BABC78}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8DBF7C47-647F-4EE1-8A08-9217A4BABC78}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8DBF7C47-647F-4EE1-8A08-9217A4BABC78}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
