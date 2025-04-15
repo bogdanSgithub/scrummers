@@ -6,7 +6,8 @@ using System.Threading.Tasks;
 
 namespace BudgetPresenter
 {
-    internal interface IView
+    public interface IView
     {
+        public void Alert(string message);
     }
 }

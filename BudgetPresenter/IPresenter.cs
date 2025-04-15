@@ -6,7 +6,8 @@ using System.Threading.Tasks;
 
 namespace BudgetPresenter
 {
-    internal interface IPresenter
+    public interface IPresenter
     {
+
     }
 }

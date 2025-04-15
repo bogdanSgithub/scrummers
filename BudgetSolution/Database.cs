@@ -261,5 +261,16 @@ namespace Budget
 
             return int.Parse(result.ToString()) == 1;
         }
+
+        static public int CategoryIdFromDescription(string description)
+        {
+            SQLiteCommand cmd = new SQLiteCommand(dbConnection);
+            cmd.CommandText = $"SELECT Id FROM categories WHERE Description = @description;";
+            cmd.Parameters.AddWithValue ("description", description);
+
+            cmd.Prepare();
+            object result = cmd.ExecuteScalar();
+            return int.Parse(result.ToString());
+        }
     }
 }
