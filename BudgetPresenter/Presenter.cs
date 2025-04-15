@@ -22,7 +22,9 @@ namespace BudgetPresenter
         {
             double amount;
             if (!(double.TryParse(amountInput, out amount) && amount >= 0))
-                throw new ArgumentException("Invalid input: negative amount");
+            {
+                View.Alert("Amount must not be negative");
+            }
 
             try
             {
@@ -30,7 +32,7 @@ namespace BudgetPresenter
             }
             catch (Exception ex)
             {
-                throw new ArgumentException(ex.Message);
+                View.Alert("An error occured while adding the expense");
             }
         }
     }
