@@ -11,32 +11,33 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using Budget;
+using BudgetPresenter;
 
 namespace Frontend_HomeBudget
 {
     /// <summary>
     /// Interaction logic for AddExpense.xaml
     /// </summary>
-    public partial class AddExpense : Window
+    public partial class AddExpense : Window, IView
     {
-        public AddExpense()
+        public AddExpense(IPresenter presenter)
         {
             InitializeComponent();
-            List<string> items = new List<string>
-            {
-                "Option A",
-                "Option B",
-                "Option C"
-            };
-            items.Add("+ Add Category");
 
-            Categorys.ItemsSource = items;
+            Category AddCategoryItem = new Category(-1, "+ Add Category");
+
+            List<Category> categories = presenter.GetCategories();
+
+            categories.Add(AddCategoryItem);
+
+            Categorys.ItemsSource = categories;
             Categorys.SelectedIndex = 0;
         }
 
         private void Button_AddExpense_Click(object sender, RoutedEventArgs e)
         {
-
+            
         }
     }
 }

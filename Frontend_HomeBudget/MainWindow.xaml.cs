@@ -1,4 +1,5 @@
-﻿using System.Text;
+﻿using BudgetPresenter;
+using System.Text;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
@@ -22,8 +23,9 @@ namespace Frontend_HomeBudget
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)
-        {
-            AddExpense addExpense = new AddExpense();
+        {   
+            IPresenter presenter = new Presenter();
+            AddExpense addExpense = new AddExpense(presenter);
             addExpense.Show();
         }
     }
