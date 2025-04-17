@@ -5,11 +5,15 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Frontend_HomeBudget"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800"
+        Title="MainWindow" Height="450" Width="500"
         Background="White"
+        MaxHeight="450"
+        MaxWidth="500"
+        MinHeight="450"
+        MinWidth="500"
         >
     <Grid>
-        <TextBlock HorizontalAlignment="Center" FontSize="50" FontFamily="Comic Sans MS" Margin="0,20,0,0">Home Budget App</TextBlock>
+        <TextBlock HorizontalAlignment="Center" FontSize="50" Margin="0,20,0,0">Home Budget App</TextBlock>
         <Button Content="Reuse Previous File" Margin="0,0,0,100" VerticalAlignment="Bottom" HorizontalAlignment="Center" Padding="10" FontSize="20" Grid.Column="0" Grid.Row="0" BorderBrush="White" Background="#2864ec" Foreground="White" Visibility="Hidden" x:Name="returningUserBtn" Click="PreviousFile_Clicked"/>
         <Button Content="Select File to use" Margin="0,0,0,0" VerticalAlignment="Center" HorizontalAlignment="Center" Padding="10" FontSize="20" Grid.Column="0" Grid.Row="1" BorderBrush="White" Background="#2864ec" Foreground="White" Click="FileSelect_Clicked"/>
     </Grid>
