@@ -9,6 +9,7 @@ namespace BudgetPresenter
 {
     public interface IPresenter
     {
-        List<Category> GetCategories();
+        public List<Category> GetCategories();
+        public void AddExpense(DateTime dateInput, int categoryInput, string amountInput, string descriptionInput);
     }
 }

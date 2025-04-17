@@ -6,15 +6,11 @@ namespace BudgetPresenter
     {
         public List<Category> GetCategories()
         {
-            return new List<Category>();
+            return _homeBudget.categories.List();
         }
+
         private HomeBudget _homeBudget;
         private IView _view;
-
-        public IView View
-        { 
-            get { return _view; } 
-        }
 
         public Presenter(string filepath, IView view)
         {
@@ -22,21 +18,23 @@ namespace BudgetPresenter
             _view = view;
         }
 
-        public void ValidateAndAddExpense(DateTime dateInput, int categoryInput, string amountInput, string descriptionInput)
+        public void AddExpense(DateTime dateInput, int categoryInput, string amountInput, string descriptionInput)
         {
             double amount;
             if (!(double.TryParse(amountInput, out amount) && amount >= 0))
             {
-                View.Alert("Amount must not be negative");
+                _view.ShowError("Amount must be a non negative number");
+                return;
             }
 
             try
             {
                 _homeBudget.expenses.Add(dateInput, categoryInput, amount, descriptionInput);
+                _view.ShowCompletion("Expense was succesfully added!");
             }
             catch (Exception ex)
             {
-                View.Alert("An error occured while adding the expense");
+                _view.ShowError("Error: " + ex.Message);
             }
         }
     }

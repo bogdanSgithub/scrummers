@@ -8,6 +8,7 @@ namespace BudgetPresenter
 {
     public interface IView
     {
-        public void Alert(string message);
+        public void ShowError(string message);
+        public void ShowCompletion(string message);
     }
 }

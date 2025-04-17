@@ -24,8 +24,7 @@ namespace Frontend_HomeBudget
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {   
-            IPresenter presenter = new Presenter();
-            AddExpense addExpense = new AddExpense(presenter);
+            AddExpense addExpense = new AddExpense("C:\\Users\\2276038\\Source\\Repos\\scrummers\\BudgetSolution\\currentDatabase.db");
             addExpense.Show();
         }
     }
