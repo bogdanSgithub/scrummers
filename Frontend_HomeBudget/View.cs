@@ -7,6 +7,7 @@ using BudgetPresenter;
 using System.Windows;
 using System.Windows.Controls;
 using Budget;
+using Microsoft.Win32;
 
 namespace Frontend_HomeBudget
 {
@@ -14,21 +15,38 @@ namespace Frontend_HomeBudget
     {
 
         public IPresenter presenter { get; }
-        private string _filepath = "C:\\Users\\2276038\\Source\\Repos\\scrummers\\TestPresenter\\currentDatabase.db";
+        GetFileWindow fileWindow;
         AddExpenseWindow expenseWindow;
-        private Application _app;
 
         public View()
         {
-            presenter = new Presenter(_filepath, this);
-            _app = new Application();
+            presenter = new Presenter(this);
             presenter.StartProgram();
         }
 
         public void ShowFileSelectWindow()
         {
-            expenseWindow = new AddExpenseWindow(_filepath, this);
-            _app.Run(expenseWindow);
+            fileWindow = new GetFileWindow(this);
+            fileWindow.Show();
+        }
+
+        public void ShowAddExpenseWindow()
+        {
+            expenseWindow = new AddExpenseWindow(this);
+            expenseWindow.Show();
+            fileWindow.Close();
+        }
+
+        public void OpenFileDialog()
+        {
+            OpenFileDialog fileDialog = new OpenFileDialog();
+            fileDialog.Filter = "DB files (*.db)|*.db";
+
+
+            if (fileDialog.ShowDialog() == true)
+            {
+               presenter.GetSelectedFile(fileDialog.FileName);
+            }
         }
 
         public void ShowCompletion(string message)

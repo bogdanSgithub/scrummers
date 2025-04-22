@@ -9,8 +9,12 @@ namespace BudgetPresenter
 {
     public interface IPresenter
     {
+        public string FilePath { get; }
+        public void GetPreviousFile();
+        public void GetSelectedFile(string fileName);
+        public bool IsFirstTimeUser();
         public void StartProgram();
         public List<Category> GetCategories();
-        public void AddExpense(DateTime dateInput, int categoryInput, string amountInput, string descriptionInput);
+        public void ProcessAddExpense(DateTime dateInput, int categoryInput, string amountInput, string descriptionInput);
     }
 }
