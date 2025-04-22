@@ -1,4 +1,10 @@
 ﻿using Budget;
+using System.Text;
+using System.Threading.Tasks;
+using BudgetPresenter;
+using System.Windows;
+using Budget;
+
 
 namespace BudgetPresenter
 {
@@ -16,6 +22,11 @@ namespace BudgetPresenter
         {
             _homeBudget = new HomeBudget(filepath);
             _view = view;
+        }
+
+        public void StartProgram()
+        {
+            _view.ShowFileSelectWindow();
         }
 
         public void AddExpense(DateTime dateInput, int categoryInput, string amountInput, string descriptionInput)
