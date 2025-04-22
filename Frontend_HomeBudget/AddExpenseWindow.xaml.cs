@@ -22,13 +22,11 @@ namespace Frontend_HomeBudget
     /// </summary>
     public partial class AddExpenseWindow : Window
     {
-        private IPresenter _presenter;
         private List<Category> _categories;
         private IView _view;
 
-        public AddExpenseWindow(string filepath, IView view)
+        public AddExpenseWindow(IView view)
         {
-      
             InitializeComponent();
             _view = view;
             
@@ -52,7 +50,7 @@ namespace Frontend_HomeBudget
 
             DateTime date = (DateTime)Date.SelectedDate;
             Category category = _categories[Categorys.SelectedIndex];
-            _view.presenter.AddExpense(date, category.Id, Amount.Text, Description.Text);
+            _view.presenter.ProcessAddExpense(date, category.Id, Amount.Text, Description.Text);
         }
 
         private void Button_Clear_Click(object sender, RoutedEventArgs e)

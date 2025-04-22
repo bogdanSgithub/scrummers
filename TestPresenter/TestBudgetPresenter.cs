@@ -19,7 +19,7 @@ namespace TestPresenter
 
             TestView testView = new TestView(DbFilePath);
             Presenter presenter = testView.Presenter;
-            presenter.AddExpense(date, categoryId, amount, description);
+            presenter.ProcessAddExpense(date, categoryId, amount, description);
             Assert.Equal(EXPENSE_ADDED_MESSAGE, testView.Messages[0]);
             HomeBudget homeBudget = new HomeBudget(DbFilePath);
             List<Expense> expenses = homeBudget.expenses.List();

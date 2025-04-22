@@ -7,7 +7,9 @@ using System.Threading.Tasks;
 namespace BudgetPresenter
 {
     public interface IView
-    {   
+    {
+        public void ShowAddExpenseWindow();
+        public void OpenFileDialog();
         public IPresenter presenter { get; }
         public void ShowFileSelectWindow();
         public void ShowError(string message);
