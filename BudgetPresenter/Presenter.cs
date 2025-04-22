@@ -1,16 +1,22 @@
 ﻿using Budget;
+using System.Text;
+using System.Threading.Tasks;
+using BudgetPresenter;
+using System.Windows;
+using Budget;
+
 
 namespace BudgetPresenter
 {
     public class Presenter : IPresenter
     {
+        public List<Category> GetCategories()
+        {
+            return _homeBudget.categories.List();
+        }
+
         private HomeBudget _homeBudget;
         private IView _view;
-
-        public IView View
-        { 
-            get { return _view; } 
-        }
 
         public Presenter(string filepath, IView view)
         {
@@ -18,21 +24,28 @@ namespace BudgetPresenter
             _view = view;
         }
 
-        public void ValidateAndAddExpense(DateTime dateInput, int categoryInput, string amountInput, string descriptionInput)
+        public void StartProgram()
+        {
+            _view.ShowFileSelectWindow();
+        }
+
+        public void AddExpense(DateTime dateInput, int categoryInput, string amountInput, string descriptionInput)
         {
             double amount;
             if (!(double.TryParse(amountInput, out amount) && amount >= 0))
             {
-                View.Alert("Amount must not be negative");
+                _view.ShowError("Amount must be a non negative number");
+                return;
             }
 
             try
             {
                 _homeBudget.expenses.Add(dateInput, categoryInput, amount, descriptionInput);
+                _view.ShowCompletion("Expense was succesfully added!");
             }
             catch (Exception ex)
             {
-                View.Alert("An error occured while adding the expense");
+                _view.ShowError("Error: " + ex.Message);
             }
         }
     }
