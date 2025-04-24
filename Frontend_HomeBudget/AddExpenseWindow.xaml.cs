@@ -30,13 +30,20 @@ namespace Frontend_HomeBudget
             InitializeComponent();
             _view = view;
             
-            Category AddCategoryItem = new Category(-1, "+ Add Category");
+            RefreshCategories();
 
+        }
+
+        private void RefreshCategories()
+        {
             _categories = _view.presenter.GetCategories();
+            Category AddCategoryItem = new Category(-1, "+ Add Category");
             _categories.Add(AddCategoryItem);
+
 
             Categorys.ItemsSource = _categories;
             Categorys.SelectedIndex = 0;
+
         }
 
         private void Button_AddExpense_Click(object sender, RoutedEventArgs e)
@@ -59,6 +66,16 @@ namespace Frontend_HomeBudget
             Categorys.SelectedIndex = 0;
             Amount.Text = "Amount";
             Description.Text = "Description";
+        }
+
+
+        private void Categorys_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (Categorys.SelectedIndex == _categories.Count - 1)
+            {
+                _view.ShowAddCategoryWindow();
+                RefreshCategories();
+            }
         }
     }
 }
