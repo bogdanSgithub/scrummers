@@ -107,5 +107,10 @@ namespace BudgetPresenter
                 _view.ShowError("Error: " + ex.Message);
             }
         }
+
+        public void CloseApp()
+        {
+            _view.CloseApp();
+        }
     }
 }

@@ -60,5 +60,10 @@ namespace Frontend_HomeBudget
             Amount.Text = "Amount";
             Description.Text = "Description";
         }
+
+        private void Button_Close_Click(object sender, RoutedEventArgs e)
+        {
+            _view.presenter.CloseApp();
+        }
     }
 }

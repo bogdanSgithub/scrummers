@@ -14,5 +14,6 @@ namespace BudgetPresenter
         public void ShowFileSelectWindow();
         public void ShowError(string message);
         public void ShowCompletion(string message);
+        public void CloseApp();
     }
 }
