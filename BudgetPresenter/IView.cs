@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Principal;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 
 namespace BudgetPresenter
 {
@@ -14,5 +16,8 @@ namespace BudgetPresenter
         public void ShowFileSelectWindow();
         public void ShowError(string message);
         public void ShowCompletion(string message);
+        public void CloseAddCategoryWindow();
+        public void ShowAddCategoryWindow();
+
     }
 }

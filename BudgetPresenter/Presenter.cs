@@ -88,6 +88,13 @@ namespace BudgetPresenter
             return File.Exists("../../../info.json");
         }
 
+        public Category.CategoryType[] GetCategoryTypes()
+        {
+            Category.CategoryType[] values = (Category.CategoryType[]) Enum.GetValues(typeof(Category.CategoryType));
+
+            return values;
+        }
+
         public void ProcessAddExpense(DateTime dateInput, int categoryInput, string amountInput, string descriptionInput)
         {
             double amount;
@@ -101,6 +108,27 @@ namespace BudgetPresenter
             {
                 _homeBudget.expenses.Add(dateInput, categoryInput, amount, descriptionInput);
                 _view.ShowCompletion("Expense was succesfully added!");
+            }
+            catch (Exception ex)
+            {
+                _view.ShowError("Error: " + ex.Message);
+            }
+        }
+
+        public void ProcessAddCategory(Category.CategoryType categoryType, string description)
+        {
+            if (string.IsNullOrWhiteSpace(description))
+            {
+                _view.ShowError("Description cannot be empty.");
+                return;
+            }
+
+
+            try
+            {
+                _homeBudget.categories.Add(description, categoryType);
+                _view.ShowCompletion("Category was successfully added.");
+                _view.CloseAddCategoryWindow();
             }
             catch (Exception ex)
             {
