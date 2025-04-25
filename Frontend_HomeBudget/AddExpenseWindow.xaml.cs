@@ -14,6 +14,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using Budget;
 using BudgetPresenter;
+using System.IO;
 
 namespace Frontend_HomeBudget
 {
@@ -29,7 +30,10 @@ namespace Frontend_HomeBudget
         {
             InitializeComponent();
             _view = view;
-            
+
+            CurrentFile.Text = $"Current File {System.IO.Path.GetFileName(_view.presenter.FilePath)}";
+
+
             RefreshCategories();
 
         }
