@@ -31,7 +31,7 @@ namespace Frontend_HomeBudget
 
             CategoryTypes.SelectedIndex = 0;
 
-            CategoryTypes.ItemsSource = _view.presenter.GetCategoryTypes();
+            CategoryTypes.ItemsSource = _view.presenter.GetCategories();
         }
 
         private void AddCategoryButton_Clicked(object sender, RoutedEventArgs e)

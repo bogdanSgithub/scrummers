@@ -5,26 +5,41 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Frontend_HomeBudget"
         mc:Ignorable="d"
-        Title="AddExpense" Height="450" Width="800">
+        Title="AddExpense" Height="450" Width="800"
+        >
+    <Window.Background>
+        <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+        <GradientStop Color="Aquamarine" Offset="0.0"/>
+        <GradientStop Color="Blue" Offset="1.2"/>
+    </LinearGradientBrush>
+    </Window.Background>
+    
+    <Viewbox Stretch="Uniform">
     <Grid>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="Auto" ></ColumnDefinition>
-            <ColumnDefinition Width="Auto"></ColumnDefinition>
+            <ColumnDefinition Width="300" ></ColumnDefinition>
+            <ColumnDefinition Width="600" ></ColumnDefinition>
+            <ColumnDefinition Width="300" ></ColumnDefinition>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
-            <RowDefinition Height="Auto" ></RowDefinition>
-            <RowDefinition Height="Auto"></RowDefinition>
-            <RowDefinition Height="Auto"></RowDefinition>
-            <RowDefinition Height="Auto"></RowDefinition>
-            <RowDefinition Height="Auto"></RowDefinition>
-            <RowDefinition Height="Auto"></RowDefinition>
+            <RowDefinition Height="70" ></RowDefinition>
+            <RowDefinition Height="70"></RowDefinition>
+            <RowDefinition Height="70"></RowDefinition>
+            <RowDefinition Height="70"></RowDefinition>
+            <RowDefinition Height="70"></RowDefinition>
+            <RowDefinition Height="70"></RowDefinition>
+            <RowDefinition Height="70"></RowDefinition>
+            <RowDefinition Height="70"></RowDefinition>
+            <RowDefinition Height="70"></RowDefinition>
         </Grid.RowDefinitions>
-        <DatePicker x:Name="Date"/>
-        <TextBox x:Name="Amount" Grid.Row="1" Grid.Column="0">Amount</TextBox>
-        <TextBox x:Name="Description" Grid.Row="2" Grid.Column="0">Description</TextBox>
-        <ComboBox x:Name="Categorys" Grid.Row="3" SelectionChanged="Categorys_SelectionChanged" />
-        <Button x:Name="Button_AddExpense" Grid.Row="4" Margin="10" Click="Button_AddExpense_Click">Add Expense</Button>
-        <Button x:Name="Button_Clear" Grid.Row="4" Grid.Column="1" Margin="10" Click="Button_Clear_Click" >Clear</Button>
-        <Button x:Name="Button_Close" Grid.Row="5" Grid.Column="0" Margin="10" Click="Button_Close_Click" >Close</Button>
+            <DatePicker x:Name="Date" Grid.Column="1" Grid.Row="1" BorderThickness="0" FontSize="24"/>
+            <TextBox x:Name="Amount" Grid.Row="2" Grid.Column="1" BorderThickness="4" FontSize="24">Amount</TextBox>
+            <TextBox x:Name="Description" Grid.Row="3" Grid.Column="1" BorderThickness="4" FontSize="24">Description</TextBox>
+            <ComboBox x:Name="Categorys" Grid.Row="4" Grid.Column="1" SelectionChanged="Categorys_SelectionChanged" FontSize="24"/>
+            <Button x:Name="Button_AddExpense" Grid.Row="5" Grid.Column="1" Margin="10" Click="Button_AddExpense_Click" Background="Gray" BorderThickness="4" BorderBrush="LightGray" FontSize="24">Add Expense</Button>
+            <Button x:Name="Button_Clear" Grid.Row="6" Grid.Column="1" Margin="10" Click="Button_Clear_Click" Background="Gray" BorderThickness="4" BorderBrush="LightGray" FontSize="24">Clear</Button>
+            <Button x:Name="Button_Close" Grid.Row="7" Grid.Column="1" Margin="10" Click="Button_Close_Click" Background="Gray " BorderThickness="4" BorderBrush="LightGray" FontSize="24">Close</Button>
     </Grid>
+        </Viewbox>
+            
 </Window>
