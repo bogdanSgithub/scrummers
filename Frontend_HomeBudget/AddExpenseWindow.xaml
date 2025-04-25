@@ -19,12 +19,13 @@
             <RowDefinition Height="Auto"></RowDefinition>
             <RowDefinition Height="Auto"></RowDefinition>
         </Grid.RowDefinitions>
-        <DatePicker x:Name="Date"/>
+        <TextBlock Grid.Row="0" Grid.Column="1" x:Name="CurrentFile" Margin="10,0,0,0" VerticalAlignment="Center">Current File: </TextBlock>
+            <DatePicker x:Name="Date"/>
         <TextBox x:Name="Amount" Grid.Row="1" Grid.Column="0">Amount</TextBox>
         <TextBox x:Name="Description" Grid.Row="2" Grid.Column="0">Description</TextBox>
         <ComboBox x:Name="Categorys" Grid.Row="3" SelectionChanged="Categorys_SelectionChanged" />
         <Button x:Name="Button_AddExpense" Grid.Row="4" Margin="10" Click="Button_AddExpense_Click">Add Expense</Button>
-        <Button x:Name="Button_Clear" Grid.Row="4" Grid.Column="1" Margin="10" Click="Button_Clear_Click" >Clear</Button>
+        <Button x:Name="Button_Clear" Grid.Row="4" Grid.Column="1" Margin="10" Click="Button_Clear_Click" Width="50" HorizontalAlignment="Left">Clear</Button>
         <Button x:Name="Button_Close" Grid.Row="5" Grid.Column="0" Margin="10" Click="Button_Close_Click" >Close</Button>
     </Grid>
 </Window>
