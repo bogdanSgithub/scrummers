@@ -10,13 +10,16 @@
         MinHeight="150"
         MinWidth="245"
         MaxWidth="245"
+        
         >
+
     <Window.Background>
         <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
-            <GradientStop Color="Aquamarine" Offset="1.1"/>
-            <GradientStop Color="Blue" Offset="0.0"/>
+            <GradientStop Color="White" Offset="0.0"/>
+            <GradientStop Color="Gray" Offset="1.1"/>
         </LinearGradientBrush>
     </Window.Background>
+
     <Grid>
         <Grid>
 
@@ -34,8 +37,8 @@
             <ComboBox Grid.Row="0" Grid.Column="1" x:Name="CategoryTypes" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="11,0,0,0"></ComboBox>
             <TextBlock FontSize="12px" Grid.Row="1" Grid.Column="0" HorizontalAlignment="Center" VerticalAlignment="Top">Description:</TextBlock>
             <TextBox Grid.Row="1" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Top" Width="100px" Margin="0,0,0,0" x:Name="Description"></TextBox>
-            <Button Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Bottom" Margin="0,0,0,5" Click="AddCategoryButton_Clicked" Background="Gray" BorderThickness="1.5" BorderBrush="LightGray" >Add</Button>
-            <Button Grid.Row="1" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Bottom" Margin="0,0,0,5" Click="CancelButton_Clicked" Background="Gray" BorderThickness="1.5" BorderBrush="LightGray">Cancel</Button>
+            <Button Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Bottom" Margin="0,0,0,5" Click="AddCategoryButton_Clicked" BorderBrush="White" Background="#2864ec" Foreground="White" BorderThickness="1.5" >Add</Button>
+            <Button Grid.Row="1" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Bottom" Margin="0,0,0,5" Click="CancelButton_Clicked" BorderBrush="White" Background="#2864ec" Foreground="White" BorderThickness="1.5">Cancel</Button>
 
         </Grid>
 
