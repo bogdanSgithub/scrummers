@@ -115,6 +115,10 @@ namespace BudgetPresenter
             }
         }
 
+        public void CloseApp()
+        {
+            _view.CloseApp();
+        }
         public void ProcessAddCategory(Category.CategoryType categoryType, string description)
         {
             if (string.IsNullOrWhiteSpace(description))
@@ -122,7 +126,6 @@ namespace BudgetPresenter
                 _view.ShowError("Description cannot be empty.");
                 return;
             }
-
 
             try
             {

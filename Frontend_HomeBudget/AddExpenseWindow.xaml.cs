@@ -72,6 +72,10 @@ namespace Frontend_HomeBudget
             Description.Text = "Description";
         }
 
+        private void Button_Close_Click(object sender, RoutedEventArgs e)
+        {
+            _view.presenter.CloseApp();
+        }
 
         private void Categorys_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {

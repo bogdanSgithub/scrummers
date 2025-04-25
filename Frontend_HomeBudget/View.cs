@@ -66,6 +66,10 @@ namespace Frontend_HomeBudget
             MessageBox.Show(message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
         }
 
+        public void CloseApp()
+        {
+            Application.Current.Shutdown();
+        }
         public void CloseAddCategoryWindow()
         {
             addCategoryWindow.Close();
