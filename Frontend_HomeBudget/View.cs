@@ -15,8 +15,9 @@ namespace Frontend_HomeBudget
     {
 
         public IPresenter presenter { get; }
-        GetFileWindow fileWindow;
-        AddExpenseWindow expenseWindow;
+        private GetFileWindow fileWindow;
+        private AddExpenseWindow expenseWindow;
+        private AddCategoryWindow addCategoryWindow;
 
         public View()
         {
@@ -35,6 +36,12 @@ namespace Frontend_HomeBudget
             expenseWindow = new AddExpenseWindow(this);
             expenseWindow.Show();
             fileWindow.Close();
+        }
+
+        public void ShowAddCategoryWindow()
+        {
+            addCategoryWindow = new AddCategoryWindow(this);
+            addCategoryWindow.ShowDialog();
         }
 
         public void OpenFileDialog()
@@ -62,6 +69,10 @@ namespace Frontend_HomeBudget
         public void CloseApp()
         {
             Application.Current.Shutdown();
+        }
+        public void CloseAddCategoryWindow()
+        {
+            addCategoryWindow.Close();
         }
     }
 }
