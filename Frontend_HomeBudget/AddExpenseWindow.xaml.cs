@@ -14,6 +14,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using Budget;
 using BudgetPresenter;
+using System.IO;
 
 namespace Frontend_HomeBudget
 {
@@ -30,7 +31,10 @@ namespace Frontend_HomeBudget
             InitializeComponent();
 
             //initialize view
-            _view = view;
+            _view = view;            
+            
+            //display current used file
+            CurrentFile.Text = $"Current File {System.IO.Path.GetFileName(_view.presenter.FilePath)}";
             
             //set values inside of combobox on first load
             RefreshCategories();
@@ -83,6 +87,10 @@ namespace Frontend_HomeBudget
             Description.Text = "Description";
         }
 
+        private void Button_Close_Click(object sender, RoutedEventArgs e)
+        {
+            _view.presenter.CloseApp();
+        }
 
         /// <summary>
         /// Checks if the add expense option was clicked, if it was display the add category window and refresh the categories on add.

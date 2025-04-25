@@ -16,7 +16,7 @@ namespace BudgetPresenter
         public void StartProgram();
         public List<Category> GetCategories();
         public void ProcessAddExpense(DateTime dateInput, int categoryInput, string amountInput, string descriptionInput);
-        public Category.CategoryType[] GetCategoryTypes();
+        public void CloseApp();
         public void ProcessAddCategory(Category.CategoryType categoryType, string description);
     }
 }
