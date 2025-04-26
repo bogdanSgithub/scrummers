@@ -54,7 +54,7 @@ namespace BudgetPresenter
         /// <summary>
         /// Calls the ShowFileSelectWindow since that's how our app must start
         /// </summary>
-        public void StartProgram()
+        public void StartApplication()
         {   
             _view.ShowFileSelectWindow();
         }
@@ -63,7 +63,7 @@ namespace BudgetPresenter
         /// Processes a fileName that represents the database file path.
         /// </summary>
         /// <param name="fileName">The fileName, aka full path to the database file</param>
-        public void GetSelectedFile(string fileName)
+        public void ProcessSelectedFile(string fileName)
         {
             try
             {
@@ -86,6 +86,9 @@ namespace BudgetPresenter
 
         }
 
+        /// <summary>
+        /// Gets the last file that was used by the user which is stored in info.json
+        /// </summary>
         public void GetPreviousFile()
         {
             string jsonFileContent = File.ReadAllText("../../../info.json");
@@ -102,12 +105,19 @@ namespace BudgetPresenter
 
         }
 
-
+        /// <summary>
+        /// Checks if there is an info.json
+        /// </summary>
+        /// <returns>whether we have an info.json or not</returns>
         public bool IsFirstTimeUser()
         {
             return File.Exists("../../../info.json");
         }
 
+        /// <summary>
+        /// Gets all the category types using the enum
+        /// </summary>
+        /// <returns></returns>
         public Category.CategoryType[] GetCategoryTypes()
         {
             Category.CategoryType[] values = (Category.CategoryType[]) Enum.GetValues(typeof(Category.CategoryType));
@@ -115,6 +125,14 @@ namespace BudgetPresenter
             return values;
         }
 
+        /// <summary>
+        /// Takes the fields of an expense, Validates them and calls the expenses.Add method of the homeBudget API.
+        /// If a field is invalid, it will tell the view to show the error.
+        /// </summary>
+        /// <param name="dateInput">DateTime that represents the date of the expense</param>
+        /// <param name="categoryInput">int CategoryId that represents the id of the category of the expense</param>
+        /// <param name="amountInput">string of Amount that represents the amount of the expense</param>
+        /// <param name="descriptionInput">description that represents the description of the expense</param>
         public void ProcessAddExpense(DateTime dateInput, int categoryInput, string amountInput, string descriptionInput)
         {
             double amount;
@@ -135,10 +153,19 @@ namespace BudgetPresenter
             }
         }
 
+        /// <summary>
+        /// Closes the application
+        /// </summary>
         public void CloseApp()
         {
             _view.CloseApp();
         }
+
+        /// <summary>
+        /// Process Adding a category, the description cannot be null and it must be a valid categoryType
+        /// </summary>
+        /// <param name="categoryType"></param>
+        /// <param name="description"></param>
         public void ProcessAddCategory(Category.CategoryType categoryType, string description)
         {
             if (string.IsNullOrWhiteSpace(description))
