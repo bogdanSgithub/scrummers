@@ -11,6 +11,7 @@ namespace TestPresenter
         public TestView(string filePath)
         {
             FilePath = filePath;
+            Presenter = new Presenter(this);
         }
 
         public void CloseAddCategoryWindow()
