@@ -31,7 +31,7 @@ namespace Frontend_HomeBudget
             InitializeComponent();
             _view = view;
 
-            CurrentFile.Text = $"Current File {System.IO.Path.GetFileName(_view.presenter.FilePath)}";
+            CurrentFile.Text = $"Current File {System.IO.Path.GetFileName(_view.Presenter.FilePath)}";
 
 
             RefreshCategories();
@@ -40,7 +40,7 @@ namespace Frontend_HomeBudget
 
         private void RefreshCategories()
         {
-            _categories = _view.presenter.GetCategories();
+            _categories = _view.Presenter.GetCategories();
             Category AddCategoryItem = new Category(-1, "+ Add Category");
             _categories.Add(AddCategoryItem);
 
@@ -61,7 +61,7 @@ namespace Frontend_HomeBudget
 
             DateTime date = (DateTime)Date.SelectedDate;
             Category category = _categories[Categorys.SelectedIndex];
-            _view.presenter.ProcessAddExpense(date, category.Id, Amount.Text, Description.Text);
+            _view.Presenter.ProcessAddExpense(date, category.Id, Amount.Text, Description.Text);
         }
 
         private void Button_Clear_Click(object sender, RoutedEventArgs e)
@@ -74,7 +74,7 @@ namespace Frontend_HomeBudget
 
         private void Button_Close_Click(object sender, RoutedEventArgs e)
         {
-            _view.presenter.CloseApp();
+            _view.Presenter.CloseApp();
         }
 
         private void Categorys_SelectionChanged(object sender, SelectionChangedEventArgs e)

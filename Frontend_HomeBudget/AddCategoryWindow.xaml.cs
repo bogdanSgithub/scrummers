@@ -31,12 +31,12 @@ namespace Frontend_HomeBudget
 
             CategoryTypes.SelectedIndex = 0;
 
-            CategoryTypes.ItemsSource = _view.presenter.GetCategoryTypes();
+            CategoryTypes.ItemsSource = _view.Presenter.GetCategoryTypes();
         }
 
         private void AddCategoryButton_Clicked(object sender, RoutedEventArgs e)
         {
-            _view.presenter.ProcessAddCategory((Category.CategoryType)CategoryTypes.SelectedIndex, Description.Text);
+            _view.Presenter.ProcessAddCategory((Category.CategoryType)CategoryTypes.SelectedIndex, Description.Text);
         }
 
         private void CancelButton_Clicked(object sender, RoutedEventArgs e)

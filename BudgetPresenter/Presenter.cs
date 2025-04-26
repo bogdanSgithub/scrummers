@@ -78,6 +78,7 @@ namespace BudgetPresenter
                 _homeBudget = new HomeBudget(FilePath);
 
                 _view.ShowAddExpenseWindow();
+                _view.CloseFileSelectWindow();
             }
             catch (Exception ex)
             {

@@ -11,12 +11,13 @@ namespace BudgetPresenter
     {
         public string FilePath { get; }
         public void GetPreviousFile();
-        public void GetSelectedFile(string fileName);
-        public bool IsFirstTimeUser();
-        public void StartProgram();
-        public List<Category> GetCategories();
+        public void ProcessSelectedFile(string fileName);
         public void ProcessAddExpense(DateTime dateInput, int categoryInput, string amountInput, string descriptionInput);
-        public void CloseApp();
         public void ProcessAddCategory(Category.CategoryType categoryType, string description);
+        public bool IsFirstTimeUser();
+        public void StartApplication();
+        public List<Category> GetCategories();
+        public Category.CategoryType[] GetCategoryTypes();
+        public void CloseApp();
     }
 }
