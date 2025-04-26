@@ -20,29 +20,49 @@ namespace BudgetPresenter
         public string current { get; set; }
     }
 
-
+    /// <summary>
+    /// Class that implements the IPresenter interface
+    /// </summary>
     public class Presenter : IPresenter
     {
+        private HomeBudget _homeBudget;
+        private IView _view;
+
+        /// <summary>
+        /// The FilePath of the database file
+        /// </summary>
         public string FilePath { get; private set; }
 
+        /// <summary>
+        /// Gets all the Categories that are in the HomeBudget
+        /// </summary>
+        /// <returns>The list of categories in the HomeBudget</returns>
         public List<Category> GetCategories()
         {
             return _homeBudget.categories.List();
         }
 
-        private HomeBudget _homeBudget;
-        private IView _view;
-
+        /// <summary>
+        /// Constructor of the class.
+        /// </summary>
+        /// <param name="view">The reference to the view</param>
         public Presenter(IView view)
         {
             _view = view;
         }
 
+        /// <summary>
+        /// Calls the ShowFileSelectWindow since that's how our app must start
+        /// </summary>
         public void StartProgram()
         {   
             _view.ShowFileSelectWindow();
         }
 
+        /// <summary>
+        /// Processes a fileName that represents the database file path.
+        /// </summary>
+        /// <param name="fileName">The fileName, aka full path to the database file</param>
         public void GetSelectedFile(string fileName)
         {
             try
