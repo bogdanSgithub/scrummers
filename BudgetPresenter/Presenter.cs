@@ -137,9 +137,9 @@ namespace BudgetPresenter
         public void ProcessAddExpense(DateTime dateInput, int categoryInput, string amountInput, string descriptionInput)
         {
             double amount;
-            if (!(double.TryParse(amountInput, out amount) && amount >= 0))
+            if (!(double.TryParse(amountInput, out amount) && amount > 0))
             {
-                _view.ShowError("Amount must be a non negative number");
+                _view.ShowError("Amount must be a positive number");
                 return;
             }
 
