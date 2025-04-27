@@ -29,7 +29,6 @@ namespace Frontend_HomeBudget
         public AddExpenseWindow(IView view)
         {
             InitializeComponent();
-
             //initialize view
             _view = view;            
             
@@ -46,7 +45,7 @@ namespace Frontend_HomeBudget
         /// </summary>
         private void RefreshCategories()
         {
-            _categories = _view.presenter.GetCategories();
+            _categories = _view.Presenter.GetCategories();
             Category AddCategoryItem = new Category(-1, "+ Add Category");
             _categories.Add(AddCategoryItem);
 
@@ -70,7 +69,7 @@ namespace Frontend_HomeBudget
 
             DateTime date = (DateTime)Date.SelectedDate;
             Category category = _categories[Categorys.SelectedIndex];
-            _view.presenter.ProcessAddExpense(date, category.Id, Amount.Text, Description.Text);
+            _view.Presenter.ProcessAddExpense(date, category.Id, Amount.Text, Description.Text);
         }
 
 
@@ -89,7 +88,7 @@ namespace Frontend_HomeBudget
 
         private void Button_Close_Click(object sender, RoutedEventArgs e)
         {
-            _view.presenter.CloseApp();
+            _view.Presenter.CloseApp();
         }
 
         /// <summary>

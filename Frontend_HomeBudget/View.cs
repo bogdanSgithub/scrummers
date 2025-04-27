@@ -14,65 +14,104 @@ namespace Frontend_HomeBudget
     class View : IView
     {
 
-        public IPresenter presenter { get; }
-        private GetFileWindow fileWindow;
-        private AddExpenseWindow expenseWindow;
-        private AddCategoryWindow addCategoryWindow;
+        /// <summary>
+        /// IPresenter presenter, the view's reference to the presenter
+        /// </summary>
+        public IPresenter Presenter { get; }
+        private GetFileWindow _fileWindow;
+        private AddExpenseWindow _expenseWindow;
+        private AddCategoryWindow _addCategoryWindow;
 
+        /// <summary>
+        /// Constructor. Creates a Presenter, saves a reference of that presenter and starts the application.
+        /// </summary>
         public View()
         {
-            presenter = new Presenter(this);
-            presenter.StartProgram();
+            Presenter = new Presenter(this);
+            Presenter.StartApplication();
         }
 
+        /// <summary>
+        /// Displays the FileSelectWindow
+        /// </summary>
         public void ShowFileSelectWindow()
         {
-            fileWindow = new GetFileWindow(this);
-            fileWindow.Show();
+            _fileWindow = new GetFileWindow(this);
+            _fileWindow.Show();
         }
 
+        /// <summary>
+        /// Displays the AddExpenseWindow
+        /// </summary>
         public void ShowAddExpenseWindow()
         {
-            expenseWindow = new AddExpenseWindow(this);
-            expenseWindow.Show();
-            fileWindow.Close();
+            _expenseWindow = new AddExpenseWindow(this);
+            _expenseWindow.Show();
         }
 
+        /// <summary>
+        /// Closes the FileSelectWindow
+        /// </summary>
+        public void CloseFileSelectWindow()
+        {
+            _fileWindow.Close();
+        }
+
+        /// <summary>
+        /// Displays the AddCategoryWindow
+        /// </summary>
         public void ShowAddCategoryWindow()
         {
-            addCategoryWindow = new AddCategoryWindow(this);
-            addCategoryWindow.ShowDialog();
+            _addCategoryWindow = new AddCategoryWindow(this);
+            _addCategoryWindow.ShowDialog();
         }
 
+        /// <summary>
+        /// Opens a FileDialog and once the user has selected a file, it calls the ProcessSelectedFile of the Presenter
+        /// </summary>
         public void OpenFileDialog()
         {
             OpenFileDialog fileDialog = new OpenFileDialog();
             fileDialog.Filter = "DB files (*.db)|*.db";
 
-
             if (fileDialog.ShowDialog() == true)
             {
-               presenter.GetSelectedFile(fileDialog.FileName);
+               Presenter.ProcessSelectedFile(fileDialog.FileName);
             }
         }
 
+        /// <summary>
+        /// Shows a good message box with the provided message
+        /// </summary>
+        /// <param name="message"></param>
         public void ShowCompletion(string message)
         {
             MessageBox.Show(message, "Succesfull", MessageBoxButton.OK, MessageBoxImage.Information);
         }
 
+        /// <summary>
+        /// Shows an error message box with the provided message
+        /// </summary>
+        /// <param name="message"></param>
         public void ShowError(string message)
         {
             MessageBox.Show(message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
         }
 
+        /// <summary>
+        /// Closes the Application
+        /// </summary>
         public void CloseApp()
         {
             Application.Current.Shutdown();
         }
+
+        /// <summary>
+        /// Closes the Add CategoryWindow
+        /// </summary>
         public void CloseAddCategoryWindow()
         {
-            addCategoryWindow.Close();
+            _addCategoryWindow.Close();
         }
     }
 }

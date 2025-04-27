@@ -31,7 +31,7 @@ namespace Frontend_HomeBudget
             InitializeComponent();
 
             // if the user is returning (i.e info.json exists), display the use previous file button.
-            if (_view.presenter.IsFirstTimeUser())
+            if (_view.Presenter.IsFirstTimeUser())
                 returningUserBtn.Visibility = Visibility.Visible;
         }
 
@@ -48,7 +48,7 @@ namespace Frontend_HomeBudget
         /// </summary>
         private void PreviousFile_Clicked(object sender, RoutedEventArgs e)
         {
-            _view.presenter.GetPreviousFile();
+            _view.Presenter.GetPreviousFile();
         }
 
     }

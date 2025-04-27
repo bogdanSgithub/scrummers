@@ -12,12 +12,13 @@ namespace BudgetPresenter
     {
         public void ShowAddExpenseWindow();
         public void OpenFileDialog();
-        public IPresenter presenter { get; }
+        public IPresenter Presenter { get; }
         public void ShowFileSelectWindow();
         public void ShowError(string message);
         public void ShowCompletion(string message);
         public void CloseApp();
         public void CloseAddCategoryWindow();
+        public void CloseFileSelectWindow();
         public void ShowAddCategoryWindow();
     }
 }

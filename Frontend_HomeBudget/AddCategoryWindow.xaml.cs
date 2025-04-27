@@ -42,7 +42,7 @@ namespace Frontend_HomeBudget
         /// </summary>
         private void AddCategoryButton_Clicked(object sender, RoutedEventArgs e)
         {
-            _view.presenter.ProcessAddCategory((Category.CategoryType)CategoryTypes.SelectedIndex, Description.Text);
+            _view.Presenter.ProcessAddCategory((Category.CategoryType)CategoryTypes.SelectedIndex, Description.Text);
         }
 
         /// <summary>
