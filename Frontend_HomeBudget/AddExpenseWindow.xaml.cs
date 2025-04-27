@@ -33,7 +33,7 @@ namespace Frontend_HomeBudget
             _view = view;            
             
             //display current used file
-            CurrentFile.Text = $"Current File {System.IO.Path.GetFileName(_view.presenter.FilePath)}";
+            CurrentFile.Text = $"Current File {System.IO.Path.GetFileName(_view.Presenter.FilePath)}";
             
             //set values inside of combobox on first load
             RefreshCategories();
