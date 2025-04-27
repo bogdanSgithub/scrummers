@@ -40,9 +40,6 @@ namespace Frontend_HomeBudget
         }
 
 
-        /// <summary>
-        /// Get all categories from presenter to set them into the combobox. Also adds the add category option.
-        /// </summary>
         private void RefreshCategories()
         {
             _categories = _view.Presenter.GetCategories();

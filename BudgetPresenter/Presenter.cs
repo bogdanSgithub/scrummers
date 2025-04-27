@@ -67,6 +67,11 @@ namespace BudgetPresenter
         {
             try
             {
+                if (fileName is null || fileName == "")
+                {
+                    throw new ArgumentException("invalid filename, cannot be null or empty.");
+                }
+
                 // add \\ to each slash because we need to escape those characters in the file path.
                 string escapedFilePath = fileName.Replace("\\", "\\\\");
 
@@ -84,7 +89,6 @@ namespace BudgetPresenter
             {
                 _view.ShowError(ex.Message);
             }
-
         }
 
         /// <summary>
@@ -111,7 +115,7 @@ namespace BudgetPresenter
         /// <returns>whether we have an info.json or not</returns>
         public bool IsFirstTimeUser()
         {
-            return File.Exists("../../../info.json");
+            return !File.Exists("../../../info.json");
         }
 
         /// <summary>
