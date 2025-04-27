@@ -97,13 +97,12 @@ namespace BudgetPresenter
             // read the data inside of the file, and set the "current" field of the object to the "current" field of the json file
             DeserializedFileInfo data = JsonSerializer.Deserialize<DeserializedFileInfo>(jsonFileContent);
 
-
             FilePath = data.current;
 
             _homeBudget = new HomeBudget(FilePath);
 
             _view.ShowAddExpenseWindow();
-
+            _view.CloseFileSelectWindow();
         }
 
         /// <summary>
