@@ -29,15 +29,20 @@ namespace Frontend_HomeBudget
         public AddExpenseWindow(IView view)
         {
             InitializeComponent();
-            _view = view;
-
-            CurrentFile.Text = $"Current File {System.IO.Path.GetFileName(_view.Presenter.FilePath)}";
-
-
+            //initialize view
+            _view = view;            
+            
+            //display current used file
+            CurrentFile.Text = $"Current File {System.IO.Path.GetFileName(_view.presenter.FilePath)}";
+            
+            //set values inside of combobox on first load
             RefreshCategories();
-
         }
 
+
+        /// <summary>
+        /// Get all categories from presenter to set them into the combobox. Also adds the add category option.
+        /// </summary>
         private void RefreshCategories()
         {
             _categories = _view.Presenter.GetCategories();
@@ -50,6 +55,9 @@ namespace Frontend_HomeBudget
 
         }
 
+        /// <summary>
+        /// Adds an expense to the database on button click. Uses values from the two text boxes, combobox and the date picker.
+        /// </summary>
         private void Button_AddExpense_Click(object sender, RoutedEventArgs e)
         {
 
@@ -64,6 +72,12 @@ namespace Frontend_HomeBudget
             _view.Presenter.ProcessAddExpense(date, category.Id, Amount.Text, Description.Text);
         }
 
+
+        /// <summary>
+        /// Resets all of the values in the form to their defaults on button click.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void Button_Clear_Click(object sender, RoutedEventArgs e)
         {
             Date.SelectedDate = null;
@@ -77,6 +91,9 @@ namespace Frontend_HomeBudget
             _view.Presenter.CloseApp();
         }
 
+        /// <summary>
+        /// Checks if the add expense option was clicked, if it was display the add category window and refresh the categories on add.
+        /// </summary>
         private void Categorys_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             if (Categorys.SelectedIndex == _categories.Count - 1)

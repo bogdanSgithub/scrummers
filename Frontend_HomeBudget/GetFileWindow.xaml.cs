@@ -26,6 +26,7 @@ namespace Frontend_HomeBudget
 
         public GetFileWindow(IView view)
         {
+            // initialize view
             _view = view;
             InitializeComponent();
 
@@ -34,12 +35,17 @@ namespace Frontend_HomeBudget
                 returningUserBtn.Visibility = Visibility.Visible;
         }
 
+        /// <summary>
+        /// Opens the file dialog for selecting the db file on click.
+        /// </summary>
         private void FileSelect_Clicked(object sender, RoutedEventArgs e)
         {
             _view.OpenFileDialog();
         }
 
-
+        /// <summary>
+        /// Reloads the previously used db file from the .json file to use as the main db.
+        /// </summary>
         private void PreviousFile_Clicked(object sender, RoutedEventArgs e)
         {
             _view.Presenter.GetPreviousFile();
