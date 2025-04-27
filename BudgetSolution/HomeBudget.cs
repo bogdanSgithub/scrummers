@@ -84,7 +84,7 @@ namespace Budget
             }
 
             // file did not exist, or user wants a new database, so open NEW DB
-            else
+            if (newDB)
             {
                 Database.newDatabase(databaseFile);
             }
