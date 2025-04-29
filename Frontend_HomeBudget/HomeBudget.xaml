@@ -1,0 +1,35 @@
+﻿<Window x:Class="Frontend_HomeBudget.HomeBudget"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Frontend_HomeBudget"
+        mc:Ignorable="d"
+        Title="HomeBudget" Height="450" Width="800">
+    <Grid>
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+                <ColumnDefinition Width="2*"/>
+            </Grid.ColumnDefinitions>
+
+            <StackPanel Grid.Column="0" Margin="10,10,0,0">
+                <TextBlock FontSize="20" Margin="0,0,0,20">Display Options</TextBlock>
+
+                <TextBlock>Start Date:</TextBlock>
+                <DatePicker Text="h"></DatePicker>
+                <TextBlock Margin="0,10,0,0">End Date:</TextBlock>
+                <DatePicker Text="h"></DatePicker>
+                <CheckBox Margin="0,10,0,0" >Filter Category</CheckBox>
+                <ComboBox Margin="0,5,0,0"></ComboBox>
+
+                <TextBlock Margin="0,10,0,0">Summary:</TextBlock>
+                <CheckBox Margin="0,10,0,0" >By Month</CheckBox>
+                <CheckBox Margin="0,3,0,0" >By Category</CheckBox>
+
+
+                <Button Margin="0,20,0,0">Add Expense</Button>
+            </StackPanel>
+        </Grid>
+    </Grid>
+</Window>
