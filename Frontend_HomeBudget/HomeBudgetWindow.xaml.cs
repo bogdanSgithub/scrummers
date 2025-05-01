@@ -25,7 +25,7 @@ namespace Frontend_HomeBudget
         {
             InitializeComponent();
             _view = view;
-            BudgetItems.ItemsSource = _view.Presenter.GetBudgetItems(null, null, false, 0, false, false);
+            BudgetItems.ItemsSource = _view.Presenter.GetBudgetItems(null, null, false, 0, true, true);
         }
     }
 }
