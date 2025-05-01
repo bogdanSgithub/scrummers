@@ -105,7 +105,7 @@ namespace BudgetPresenter
 
             _homeBudget = new HomeBudget(FilePath);
 
-            _view.ShowAddExpenseWindow();
+            _view.ShowHomeBudgetWindow();
             _view.CloseFileSelectWindow();
         }
 

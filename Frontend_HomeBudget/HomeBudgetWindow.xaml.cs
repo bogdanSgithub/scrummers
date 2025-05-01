@@ -1,4 +1,5 @@
-﻿using System;
+﻿using BudgetPresenter;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -17,11 +18,14 @@ namespace Frontend_HomeBudget
     /// <summary>
     /// Logique d'interaction pour HomeBudget.xaml
     /// </summary>
-    public partial class HomeBudget : Window
+    public partial class HomeBudgetWindow : Window
     {
-        public HomeBudget()
+        private IView _view;
+        public HomeBudgetWindow(IView view)
         {
             InitializeComponent();
+
+            _view = view;
         }
     }
 }
