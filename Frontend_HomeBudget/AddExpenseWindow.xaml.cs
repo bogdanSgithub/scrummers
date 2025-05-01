@@ -84,8 +84,8 @@ namespace Frontend_HomeBudget
         }
 
         private void Button_Close_Click(object sender, RoutedEventArgs e)
-        {
-            _view.Presenter.CloseApp();
+        {   
+            Close();
         }
 
         /// <summary>

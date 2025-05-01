@@ -28,7 +28,8 @@
                 <CheckBox Margin="0,3,0,0" >By Category</CheckBox>
 
                 
-                <Button Margin="0,20,0,0">Add Expense</Button>
+                <Button x:Name="Button_AddExpense" Click="Button_AddExpense_Click" Margin="0,20,0,0">Add Expense</Button>
+                <Button x:Name="Button_Close" Margin="10" Click="Button_Close_Click" >Close</Button>
             </StackPanel>
             <DataGrid x:Name="BudgetItems" Grid.Column="1">
                 
