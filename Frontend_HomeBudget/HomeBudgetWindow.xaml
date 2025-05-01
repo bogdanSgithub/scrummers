@@ -27,9 +27,12 @@
                 <CheckBox Margin="0,10,0,0" >By Month</CheckBox>
                 <CheckBox Margin="0,3,0,0" >By Category</CheckBox>
 
-
+                
                 <Button Margin="0,20,0,0">Add Expense</Button>
             </StackPanel>
+            <DataGrid x:Name="BudgetItems" Grid.Column="1">
+                
+            </DataGrid>
         </Grid>
     </Grid>
 </Window>
