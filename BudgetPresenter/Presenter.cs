@@ -193,7 +193,7 @@ namespace BudgetPresenter
 
         public ArrayList GetBudgetItems(DateTime? Start, DateTime? End, bool FilterFlag, int CategoryID, bool ByMonth, bool ByCategory)
         {
-            return new ArrayList();
+            return new ArrayList(_homeBudget.GetBudgetDictionaryByCategoryAndMonth(Start, End, FilterFlag, CategoryID));
         }
     }
 }
