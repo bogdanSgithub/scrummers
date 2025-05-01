@@ -8,6 +8,7 @@ using System.Windows;
 using System.Windows.Controls;
 using Budget;
 using Microsoft.Win32;
+using System.Collections;
 
 namespace Frontend_HomeBudget
 {
@@ -30,6 +31,7 @@ namespace Frontend_HomeBudget
         {
             Presenter = new Presenter(this);
             Presenter.StartApplication();
+            _homeBudgetWindow = new HomeBudgetWindow(this);
         }
 
         /// <summary>
@@ -69,7 +71,7 @@ namespace Frontend_HomeBudget
 
         public void ShowHomeBudgetWindow()
         {
-            _homeBudgetWindow = new HomeBudgetWindow(this);
+            Presenter.ProcessRefreshBudgetItems(null, null, false, 0, false, false);
             _homeBudgetWindow.Show();
         }
 
@@ -122,5 +124,9 @@ namespace Frontend_HomeBudget
             _addCategoryWindow.Close();
         }
 
+        public void RefreshBudgetItems(ArrayList budgetItems)
+        {
+            _homeBudgetWindow.BudgetItems.ItemsSource = budgetItems;
+        }
     }
 }

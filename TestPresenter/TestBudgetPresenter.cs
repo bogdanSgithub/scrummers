@@ -1,5 +1,6 @@
 using Budget;
 using BudgetPresenter;
+using System.Collections;
 
 namespace TestPresenter
 {
@@ -97,7 +98,7 @@ namespace TestPresenter
             TestView testView = new TestView(DbFilePath);
 
             // Act
-            testView.Presenter.ProcessSelectedFile(DbFilePath);
+            testView.Presenter.GetPreviousFile();
 
             // Assert
             Assert.True(File.Exists(INFO_JSON_PATH));
@@ -273,5 +274,72 @@ namespace TestPresenter
             Assert.Equal(NB_CATEGORIES, categories.Count);
         }
 
+        [Fact]
+        public void Test_GetBudgetItems_Normal()
+        {
+            // Arrange
+            TestView testView = new TestView(DbFilePath);
+
+            // Act
+            testView.OpenFileDialog();
+            ArrayList arrayList = testView.Presenter.GetBudgetItems(null, null, false, 0, false, false);
+
+            HomeBudget hb = new HomeBudget(DbFilePath);
+            ArrayList budgetItems = new ArrayList(hb.GetBudgetItems(null, null, false, 0));
+
+            // Assert
+            Assert.Equal(budgetItems, arrayList);
+        }
+
+        [Fact]
+        public void Test_GetBudgetItems_ByMonth()
+        {
+            // Arrange
+            TestView testView = new TestView(DbFilePath);
+
+            // Act
+            testView.OpenFileDialog();
+            ArrayList arrayList = testView.Presenter.GetBudgetItems(null, null, false, 0, true, false);
+
+            HomeBudget hb = new HomeBudget(DbFilePath);
+            ArrayList budgetItems = new ArrayList(hb.GetBudgetItemsByMonth(null, null, false, 0));
+
+            // Assert
+            Assert.Equal(budgetItems, arrayList);
+        }
+
+        [Fact]
+        public void Test_GetBudgetItems_ByCategory()
+        {
+            // Arrange
+            TestView testView = new TestView(DbFilePath);
+
+            // Act
+            testView.OpenFileDialog();
+            ArrayList arrayList = testView.Presenter.GetBudgetItems(null, null, false, 0, false, true);
+
+            HomeBudget hb = new HomeBudget(DbFilePath);
+            ArrayList budgetItems = new ArrayList(hb.GetBudgetItemsByCategory(null, null, false, 0));
+
+            // Assert
+            Assert.Equal(budgetItems, arrayList);
+        }
+
+        [Fact]
+        public void Test_GetBudgetItems_ByCategoryAndMonth()
+        {
+            // Arrange
+            TestView testView = new TestView(DbFilePath);
+
+            // Act
+            testView.OpenFileDialog();
+            ArrayList arrayList = testView.Presenter.GetBudgetItems(null, null, false, 0, true, true);
+
+            HomeBudget hb = new HomeBudget(DbFilePath);
+            ArrayList budgetItems = new ArrayList(hb.GetBudgetDictionaryByCategoryAndMonth(null, null, false, 0));
+
+            // Assert
+            Assert.Equal(budgetItems, arrayList);
+        }
     }
 }

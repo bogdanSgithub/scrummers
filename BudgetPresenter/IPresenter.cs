@@ -20,6 +20,6 @@ namespace BudgetPresenter
         public List<Category> GetCategories();
         public Category.CategoryType[] GetCategoryTypes();
         public void CloseApp();
-        public ArrayList GetBudgetItems(DateTime? Start, DateTime? End, bool FilterFlag, int CategoryID, bool ByMonth, bool ByCategory);
+        public void ProcessRefreshBudgetItems(DateTime? Start, DateTime? End, bool FilterFlag, int CategoryID, bool ByMonth, bool ByCategory);
     }
 }
