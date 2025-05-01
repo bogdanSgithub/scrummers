@@ -59,5 +59,10 @@ namespace TestPresenter
         {
             Messages.Add("Showed FileSelectWindow");
         }
+
+        public void ShowHomeBudgetWindow()
+        {
+            Messages.Add("Showed HomeBudgetWindow");
+        }
     }
 }

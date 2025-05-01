@@ -10,7 +10,7 @@ namespace TestPresenter
         private const string EXPENSE_ADDED_MESSAGE = "Showed Completion: Expense was succesfully added!";
         private const string CATEGORY_ADDED_ERROR_MESSAGE = "Showed Error: Description cannot be empty.";
         private const int NB_CATEGORIES = 16;
-        private const int NB_EXPENSES = 1;
+        private const int NB_EXPENSES = 0;
         private string INFO_JSON_PATH = "../../../info.json";
 
         [Fact]
@@ -58,7 +58,7 @@ namespace TestPresenter
             // Assert
             Assert.Equal(DbFilePath, testView.Presenter.FilePath);
             Assert.True(File.Exists(INFO_JSON_PATH));
-            Assert.Equal("Showed AddExpenseWindow", testView.Messages[0]);
+            Assert.Equal("Showed HomeBudgetWindow", testView.Messages[0]);
             Assert.Equal("Closed FileSelectWindow", testView.Messages[1]);
             Assert.True(testView.Messages.Count == 2);
         }
@@ -102,7 +102,7 @@ namespace TestPresenter
             // Assert
             Assert.True(File.Exists(INFO_JSON_PATH));
             Assert.Equal(DbFilePath, testView.Presenter.FilePath);
-            Assert.Equal("Showed AddExpenseWindow", testView.Messages[0]);
+            Assert.Equal("Showed HomeBudgetWindow", testView.Messages[0]);
             Assert.Equal("Closed FileSelectWindow", testView.Messages[1]);
         }
 
@@ -272,5 +272,6 @@ namespace TestPresenter
             categories = homeBudget.categories.List();
             Assert.Equal(NB_CATEGORIES, categories.Count);
         }
+
     }
 }
