@@ -20,5 +20,6 @@ namespace BudgetPresenter
         public void CloseAddCategoryWindow();
         public void CloseFileSelectWindow();
         public void ShowAddCategoryWindow();
+        public void ShowHomeBudgetWindow();
     }
 }

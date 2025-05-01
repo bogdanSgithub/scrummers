@@ -21,6 +21,7 @@ namespace Frontend_HomeBudget
         private GetFileWindow _fileWindow;
         private AddExpenseWindow _expenseWindow;
         private AddCategoryWindow _addCategoryWindow;
+        private HomeBudgetWindow _homeBudgetWindow;
 
         /// <summary>
         /// Constructor. Creates a Presenter, saves a reference of that presenter and starts the application.
@@ -65,6 +66,13 @@ namespace Frontend_HomeBudget
             _addCategoryWindow = new AddCategoryWindow(this);
             _addCategoryWindow.ShowDialog();
         }
+
+        public void ShowHomeBudgetWindow()
+        {
+            _homeBudgetWindow = new HomeBudgetWindow(this);
+            _homeBudgetWindow.Show();
+        }
+
 
         /// <summary>
         /// Opens a FileDialog and once the user has selected a file, it calls the ProcessSelectedFile of the Presenter
@@ -113,5 +121,6 @@ namespace Frontend_HomeBudget
         {
             _addCategoryWindow.Close();
         }
+
     }
 }
