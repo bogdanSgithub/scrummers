@@ -25,7 +25,24 @@ namespace Frontend_HomeBudget
         {
             InitializeComponent();
             _view = view;
-            BudgetItems.ItemsSource = _view.Presenter.GetBudgetItems(null, null, false, 0, true, true);
+            RefreshBudgetItems();
+        }
+
+        private void RefreshBudgetItems()
+        {
+            BudgetItems.ItemsSource = _view.Presenter.GetBudgetItems(null, null, false, 0, false, false);
+        }
+
+        private void Button_AddExpense_Click(object sender, RoutedEventArgs e)
+        {
+            _view.ShowAddExpenseWindow();
+            RefreshBudgetItems();
+        }
+
+        
+        private void Button_Close_Click(object sender, RoutedEventArgs e)
+        {
+            _view.Presenter.CloseApp();
         }
     }
 }
