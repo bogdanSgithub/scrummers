@@ -5,6 +5,7 @@ using BudgetPresenter;
 using System.Windows;
 using Budget;
 using System.Text.Json;
+using System.Collections;
 
 
 namespace BudgetPresenter
@@ -82,7 +83,7 @@ namespace BudgetPresenter
 
                 _homeBudget = new HomeBudget(FilePath);
 
-                _view.ShowAddExpenseWindow();
+                _view.ShowHomeBudgetWindow();
                 _view.CloseFileSelectWindow();
             }
             catch (Exception ex)
@@ -188,6 +189,11 @@ namespace BudgetPresenter
             {
                 _view.ShowError("Error: " + ex.Message);
             }
+        }
+
+        public ArrayList GetBudgetItems(DateTime? Start, DateTime? End, bool FilterFlag, int CategoryID, bool ByMonth, bool ByCategory)
+        {
+            return new ArrayList();
         }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -19,5 +20,6 @@ namespace BudgetPresenter
         public List<Category> GetCategories();
         public Category.CategoryType[] GetCategoryTypes();
         public void CloseApp();
+        public ArrayList GetBudgetItems(DateTime? Start, DateTime? End, bool FilterFlag, int CategoryID, bool ByMonth, bool ByCategory);
     }
 }
