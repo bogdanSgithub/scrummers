@@ -126,9 +126,10 @@ namespace Frontend_HomeBudget
             _addCategoryWindow.Close();
         }
 
-        public void RefreshBudgetItems(ArrayList budgetItems)
+        public void RefreshBudgetItemsAndCategories(ArrayList budgetItems, ArrayList categories)
         {
             _homeBudgetWindow.BudgetItems.ItemsSource = budgetItems;
+            _homeBudgetWindow.Categories.ItemsSource = categories;
         }
 
         public void RefreshCategories(ArrayList categories)

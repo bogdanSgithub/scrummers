@@ -26,17 +26,15 @@ namespace Frontend_HomeBudget
         {
             InitializeComponent();
             _view = view;
-            RefreshBudgetItems();
-        }
-
-        private void RefreshBudgetItems()
-        {
-            _view.Presenter.ProcessRefreshBudgetItems(StartDate.SelectedDate, EndDate.SelectedDate, (bool)FilterCat.IsChecked, Categories.SelectedIndex + 1, false, false);
         }
 
         private void RefreshFilter(object sender, RoutedEventArgs e)
         {
-            RefreshBudgetItems();
+            int index = Categories.SelectedIndex;
+            Categories.SelectionChanged -= RefreshFilter;
+            _view.Presenter.ProcessRefreshBudgetItems(StartDate.SelectedDate, EndDate.SelectedDate, (bool)FilterCat.IsChecked, Categories.SelectedIndex + 1, false, false);
+            Categories.SelectedIndex = index;
+            Categories.SelectionChanged += RefreshFilter;
         }
 
 

@@ -193,7 +193,8 @@ namespace BudgetPresenter
                 budgetItems = new ArrayList(_homeBudget.GetBudgetItems(Start, End, FilterFlag, CategoryID));
             }
 
-            _view.RefreshBudgetItems(budgetItems);
+            ArrayList categories = new ArrayList(_homeBudget.categories.List());
+            _view.RefreshBudgetItemsAndCategories(budgetItems, categories);
         }
 
         public void ProcessRefreshCategories()

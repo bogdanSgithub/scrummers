@@ -22,7 +22,7 @@ namespace BudgetPresenter
         public void CloseFileSelectWindow();
         public void ShowAddCategoryWindow();
         public void ShowHomeBudgetWindow();
-        public void RefreshBudgetItems(ArrayList budgetItems);
+        public void RefreshBudgetItemsAndCategories(ArrayList budgetItems, ArrayList categories);
         public void RefreshCategories(ArrayList categories);
         public void RefreshCategoryTypes(ArrayList categoryTypes);
     }
