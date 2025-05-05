@@ -32,9 +32,6 @@ namespace Frontend_HomeBudget
 
             //set the selection in the combobox to 0
             CategoryTypes.SelectedIndex = 0;
-
-            //put the category types into the combobox
-            CategoryTypes.ItemsSource = _view.Presenter.GetCategoryTypes();
         }
 
         /// <summary>

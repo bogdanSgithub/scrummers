@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Principal;
@@ -21,5 +22,8 @@ namespace BudgetPresenter
         public void CloseFileSelectWindow();
         public void ShowAddCategoryWindow();
         public void ShowHomeBudgetWindow();
+        public void RefreshBudgetItems(ArrayList budgetItems);
+        public void RefreshCategories(ArrayList categories);
+        public void RefreshCategoryTypes(ArrayList categoryTypes);
     }
 }

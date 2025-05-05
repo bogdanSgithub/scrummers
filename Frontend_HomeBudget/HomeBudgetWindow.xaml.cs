@@ -1,5 +1,6 @@
 ﻿using BudgetPresenter;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -25,13 +26,12 @@ namespace Frontend_HomeBudget
         {
             InitializeComponent();
             _view = view;
-            Categories.ItemsSource = _view.Presenter.GetCategories();
             RefreshBudgetItems();
         }
 
         private void RefreshBudgetItems()
         {
-            BudgetItems.ItemsSource = _view.Presenter.GetBudgetItems(StartDate.SelectedDate, EndDate.SelectedDate, (bool)FilterCat.IsChecked, Categories.SelectedIndex + 1, false, false);
+            _view.Presenter.ProcessRefreshBudgetItems(StartDate.SelectedDate, EndDate.SelectedDate, (bool)FilterCat.IsChecked, Categories.SelectedIndex + 1, false, false);
         }
 
         private void RefreshFilter(object sender, RoutedEventArgs e)
@@ -43,7 +43,7 @@ namespace Frontend_HomeBudget
         private void Button_AddExpense_Click(object sender, RoutedEventArgs e)
         {
             _view.ShowAddExpenseWindow();
-            RefreshBudgetItems();
+            _view.Presenter.ProcessRefreshBudgetItems(null, null, false, 0, false, false);
         }
 
         private void DataGrid_AutoGeneratingColumn(object sender, DataGridAutoGeneratingColumnEventArgs e)
