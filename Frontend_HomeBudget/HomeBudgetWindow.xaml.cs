@@ -26,7 +26,19 @@ namespace Frontend_HomeBudget
         {
             InitializeComponent();
             _view = view;
+            RefreshBudgetItems();
         }
+
+        private void RefreshBudgetItems()
+        {
+            _view.Presenter.ProcessRefreshBudgetItems(StartDate.SelectedDate, EndDate.SelectedDate, (bool)FilterCat.IsChecked, Categories.SelectedIndex + 1, false, false);
+        }
+
+        private void RefreshFilter(object sender, RoutedEventArgs e)
+        {
+            RefreshBudgetItems();
+        }
+
 
         private void Button_AddExpense_Click(object sender, RoutedEventArgs e)
         {
@@ -34,7 +46,15 @@ namespace Frontend_HomeBudget
             _view.Presenter.ProcessRefreshBudgetItems(null, null, false, 0, false, false);
         }
 
-        
+        private void DataGrid_AutoGeneratingColumn(object sender, DataGridAutoGeneratingColumnEventArgs e)
+        {
+            if (e.PropertyName == "CategoryID" || e.PropertyName == "ExpenseID")
+            {
+                e.Cancel = true;
+            }
+        }
+
+
         private void Button_Close_Click(object sender, RoutedEventArgs e)
         {
             _view.Presenter.CloseApp();
