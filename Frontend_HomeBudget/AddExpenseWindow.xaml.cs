@@ -34,22 +34,6 @@ namespace Frontend_HomeBudget
             
             //display current used file
             CurrentFile.Text = $"Current File {System.IO.Path.GetFileName(_view.Presenter.FilePath)}";
-            
-            //set values inside of combobox on first load
-            RefreshCategories();
-        }
-
-
-        private void RefreshCategories()
-        {
-            _categories = _view.Presenter.GetCategories();
-            Category AddCategoryItem = new Category(-1, "+ Add Category");
-            _categories.Add(AddCategoryItem);
-
-
-            Categorys.ItemsSource = _categories;
-            Categorys.SelectedIndex = 0;
-
         }
 
         /// <summary>
@@ -93,11 +77,7 @@ namespace Frontend_HomeBudget
         /// </summary>
         private void Categorys_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            if (Categorys.SelectedIndex == _categories.Count - 1)
-            {
-                _view.ShowAddCategoryWindow();
-                RefreshCategories();
-            }
+            _view.Presenter.ProcessCategorySelection(Categorys.SelectedIndex);
         }
     }
 }

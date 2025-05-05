@@ -23,5 +23,7 @@ namespace BudgetPresenter
         public void ShowAddCategoryWindow();
         public void ShowHomeBudgetWindow();
         public void RefreshBudgetItems(ArrayList budgetItems);
+        public void RefreshCategories(ArrayList categories);
+        public void RefreshCategoryTypes(ArrayList categoryTypes);
     }
 }

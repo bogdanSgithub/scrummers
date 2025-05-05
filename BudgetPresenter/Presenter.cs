@@ -28,20 +28,12 @@ namespace BudgetPresenter
     {
         private HomeBudget _homeBudget;
         private IView _view;
+        private ArrayList _categories;
 
         /// <summary>
         /// The FilePath of the database file
         /// </summary>
         public string FilePath { get; private set; }
-
-        /// <summary>
-        /// Gets all the Categories that are in the HomeBudget
-        /// </summary>
-        /// <returns>The list of categories in the HomeBudget</returns>
-        public List<Category> GetCategories()
-        {
-            return _homeBudget.categories.List();
-        }
 
         /// <summary>
         /// Constructor of the class.
@@ -117,17 +109,6 @@ namespace BudgetPresenter
         public bool IsFirstTimeUser()
         {
             return !File.Exists("../../../info.json");
-        }
-
-        /// <summary>
-        /// Gets all the category types using the enum
-        /// </summary>
-        /// <returns></returns>
-        public Category.CategoryType[] GetCategoryTypes()
-        {
-            Category.CategoryType[] values = (Category.CategoryType[]) Enum.GetValues(typeof(Category.CategoryType));
-
-            return values;
         }
 
         /// <summary>
@@ -213,6 +194,35 @@ namespace BudgetPresenter
             }
 
             _view.RefreshBudgetItems(budgetItems);
+        }
+
+        public void ProcessRefreshCategories()
+        {
+            _categories = new ArrayList(_homeBudget.categories.List());
+
+            Category AddCategoryItem = new Category(-1, "+ Add Category");
+            _categories.Add(AddCategoryItem);
+
+            _view.RefreshCategories(_categories);
+        }
+        public void ProcessRefreshCategoryTypes()
+        {
+            ArrayList categoryTypes;
+            Category.CategoryType[] values = (Category.CategoryType[])Enum.GetValues(typeof(Category.CategoryType));
+            categoryTypes = new ArrayList(values);
+
+            _view.RefreshCategoryTypes(categoryTypes);
+        }
+
+        public void ProcessCategorySelection(int selectionIndex)
+        {   
+            List<Category> categories = _homeBudget.categories.List();
+
+            if (selectionIndex == _categories.Count - 1)
+            {
+                _view.ShowAddCategoryWindow();
+                _view.Presenter.ProcessRefreshCategories();
+            }
         }
     }
 }

@@ -31,7 +31,6 @@ namespace Frontend_HomeBudget
         {
             Presenter = new Presenter(this);
             Presenter.StartApplication();
-            _homeBudgetWindow = new HomeBudgetWindow(this);
         }
 
         /// <summary>
@@ -49,6 +48,7 @@ namespace Frontend_HomeBudget
         public void ShowAddExpenseWindow()
         {
             _expenseWindow = new AddExpenseWindow(this);
+            Presenter.ProcessRefreshCategories();
             _expenseWindow.Show();
         }
 
@@ -66,11 +66,13 @@ namespace Frontend_HomeBudget
         public void ShowAddCategoryWindow()
         {
             _addCategoryWindow = new AddCategoryWindow(this);
+            Presenter.ProcessRefreshCategoryTypes();
             _addCategoryWindow.ShowDialog();
         }
 
         public void ShowHomeBudgetWindow()
         {
+            _homeBudgetWindow = new HomeBudgetWindow(this);
             Presenter.ProcessRefreshBudgetItems(null, null, false, 0, false, false);
             _homeBudgetWindow.Show();
         }
@@ -127,6 +129,17 @@ namespace Frontend_HomeBudget
         public void RefreshBudgetItems(ArrayList budgetItems)
         {
             _homeBudgetWindow.BudgetItems.ItemsSource = budgetItems;
+        }
+
+        public void RefreshCategories(ArrayList categories)
+        {
+            _expenseWindow.Categorys.ItemsSource = categories;
+            _expenseWindow.Categorys.SelectedIndex = 0;
+        }
+
+        public void RefreshCategoryTypes(ArrayList categories)
+        {
+            _addCategoryWindow.CategoryTypes.ItemsSource = categories;
         }
     }
 }
