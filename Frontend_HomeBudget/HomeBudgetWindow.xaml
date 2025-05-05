@@ -29,10 +29,20 @@
 
                 
                 <Button x:Name="Button_AddExpense" Click="Button_AddExpense_Click" Margin="0,20,0,0">Add Expense</Button>
-                <Button x:Name="Button_Close" Margin="10" Click="Button_Close_Click" >Close</Button>
+                <Button x:Name="Button_Close" Margin="10" Click="Button_Close_Click" HorizontalAlignment="Center"  Padding="10,0,10,0">Close</Button>
             </StackPanel>
             <DataGrid x:Name="BudgetItems" Grid.Column="1"  CanUserAddRows="False" AutoGeneratingColumn="DataGrid_AutoGeneratingColumn">
-                
+                <DataGrid.RowStyle>
+                    <Style TargetType="DataGridRow">
+                        <Setter Property="ContextMenu">
+                            <Setter.Value>
+                                <ContextMenu>
+                                    <MenuItem Header="Update" Click="EditMenuItem_Click"/>
+                                </ContextMenu>
+                            </Setter.Value>
+                        </Setter>
+                    </Style>
+                </DataGrid.RowStyle>
             </DataGrid>
         </Grid>
     </Grid>
