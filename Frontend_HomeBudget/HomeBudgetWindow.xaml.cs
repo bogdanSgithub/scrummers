@@ -44,6 +44,11 @@ namespace Frontend_HomeBudget
             _view.Presenter.ProcessRefreshBudgetItems(null, null, false, 0, false, false);
         }
 
+        private void UpdateMenuItem_Click(object sender, RoutedEventArgs e)
+        {
+            _view.ShowUpdateExpenseWindow();
+        }
+
         private void DataGrid_AutoGeneratingColumn(object sender, DataGridAutoGeneratingColumnEventArgs e)
         {
             if (e.PropertyName == "CategoryID" || e.PropertyName == "ExpenseID")
@@ -57,5 +62,6 @@ namespace Frontend_HomeBudget
         {
             _view.Presenter.CloseApp();
         }
+
     }
 }

@@ -13,7 +13,7 @@
                 <ColumnDefinition Width="2*"/>
             </Grid.ColumnDefinitions>
 
-            <StackPanel Grid.Column="0" Margin="10,10,0,0">
+            <StackPanel Grid.Column="0" Margin="10,10,10,0">
                 <TextBlock FontSize="20" Margin="0,0,0,20">Display Options</TextBlock>
 
                 <TextBlock>Start Date:</TextBlock>
@@ -37,7 +37,7 @@
                         <Setter Property="ContextMenu">
                             <Setter.Value>
                                 <ContextMenu>
-                                    <MenuItem Header="Update" Click="EditMenuItem_Click"/>
+                                    <MenuItem Header="Update" Click="UpdateMenuItem_Click"/>
                                 </ContextMenu>
                             </Setter.Value>
                         </Setter>

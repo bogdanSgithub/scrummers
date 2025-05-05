@@ -23,6 +23,7 @@ namespace Frontend_HomeBudget
         private AddExpenseWindow _expenseWindow;
         private AddCategoryWindow _addCategoryWindow;
         private HomeBudgetWindow _homeBudgetWindow;
+        private UpdateExpenseWindow _updateExpenseWindow;
 
         /// <summary>
         /// Constructor. Creates a Presenter, saves a reference of that presenter and starts the application.
@@ -141,6 +142,12 @@ namespace Frontend_HomeBudget
         public void RefreshCategoryTypes(ArrayList categories)
         {
             _addCategoryWindow.CategoryTypes.ItemsSource = categories;
+        }
+
+        public void ShowUpdateExpenseWindow()
+        {
+           _updateExpenseWindow = new UpdateExpenseWindow(this);
+            _updateExpenseWindow.ShowDialog();
         }
     }
 }
