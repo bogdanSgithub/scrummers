@@ -1,5 +1,6 @@
 using Budget;
 using BudgetPresenter;
+using System.Collections;
 
 namespace TestPresenter
 {
@@ -10,7 +11,7 @@ namespace TestPresenter
         private const string EXPENSE_ADDED_MESSAGE = "Showed Completion: Expense was succesfully added!";
         private const string CATEGORY_ADDED_ERROR_MESSAGE = "Showed Error: Description cannot be empty.";
         private const int NB_CATEGORIES = 16;
-        private const int NB_EXPENSES = 1;
+        private const int NB_EXPENSES = 0;
         private string INFO_JSON_PATH = "../../../info.json";
 
         [Fact]
@@ -58,7 +59,7 @@ namespace TestPresenter
             // Assert
             Assert.Equal(DbFilePath, testView.Presenter.FilePath);
             Assert.True(File.Exists(INFO_JSON_PATH));
-            Assert.Equal("Showed AddExpenseWindow", testView.Messages[0]);
+            Assert.Equal("Showed HomeBudgetWindow", testView.Messages[0]);
             Assert.Equal("Closed FileSelectWindow", testView.Messages[1]);
             Assert.True(testView.Messages.Count == 2);
         }
@@ -97,27 +98,13 @@ namespace TestPresenter
             TestView testView = new TestView(DbFilePath);
 
             // Act
-            testView.Presenter.ProcessSelectedFile(DbFilePath);
+            testView.Presenter.GetPreviousFile();
 
             // Assert
             Assert.True(File.Exists(INFO_JSON_PATH));
             Assert.Equal(DbFilePath, testView.Presenter.FilePath);
-            Assert.Equal("Showed AddExpenseWindow", testView.Messages[0]);
+            Assert.Equal("Showed HomeBudgetWindow", testView.Messages[0]);
             Assert.Equal("Closed FileSelectWindow", testView.Messages[1]);
-        }
-
-        [Fact]
-        public void Test_GetCategoryTypes()
-        {
-            // Arrange
-            TestView testView = new TestView(DbFilePath);
-
-            // Act
-            Category.CategoryType[] categoryTypes = testView.Presenter.GetCategoryTypes();
-
-            // Assert
-            Category.CategoryType[] VALID_CATEGORY_TYPES = [Category.CategoryType.Income, Category.CategoryType.Expense, Category.CategoryType.Credit, Category.CategoryType.Savings];
-            Assert.Equal(VALID_CATEGORY_TYPES, categoryTypes);
         }
 
         [Fact]
@@ -271,6 +258,21 @@ namespace TestPresenter
             homeBudget.categories.Delete(category.Id);
             categories = homeBudget.categories.List();
             Assert.Equal(NB_CATEGORIES, categories.Count);
+        }
+
+        [Fact]
+        public void Test_ProcessRefreshBudgetItems()
+        {
+            // Arrange
+            TestView testView = new TestView(DbFilePath);
+
+            // Act
+            testView.OpenFileDialog();
+            testView.Presenter.ProcessRefreshBudgetItems(null, null, false, 0, false, false);
+
+            // Assert
+            Assert.Equal("Showed HomeBudgetWindow", testView.Messages[1]);
+            Assert.Equal("Refresh the budget items, they look like this: System.Collections.ArrayList", testView.Messages[3]);
         }
     }
 }

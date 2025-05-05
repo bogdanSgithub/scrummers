@@ -1,5 +1,6 @@
 ﻿using BudgetPresenter;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -25,18 +26,12 @@ namespace Frontend_HomeBudget
         {
             InitializeComponent();
             _view = view;
-            RefreshBudgetItems();
-        }
-
-        private void RefreshBudgetItems()
-        {
-            BudgetItems.ItemsSource = _view.Presenter.GetBudgetItems(null, null, false, 0, false, false);
         }
 
         private void Button_AddExpense_Click(object sender, RoutedEventArgs e)
         {
             _view.ShowAddExpenseWindow();
-            RefreshBudgetItems();
+            _view.Presenter.ProcessRefreshBudgetItems(null, null, false, 0, false, false);
         }
 
         

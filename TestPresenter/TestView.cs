@@ -1,4 +1,5 @@
 ﻿using BudgetPresenter;
+using System.Collections;
 
 namespace TestPresenter
 {
@@ -58,6 +59,26 @@ namespace TestPresenter
         public void ShowFileSelectWindow()
         {
             Messages.Add("Showed FileSelectWindow");
+        }
+
+        public void ShowHomeBudgetWindow()
+        {
+            Messages.Add("Showed HomeBudgetWindow");
+        }
+
+        public void RefreshBudgetItems(ArrayList budgetItems)
+        {
+            Messages.Add($"Refresh the budget items, they look like this: {budgetItems}");
+        }
+
+        public void RefreshCategories(ArrayList categories)
+        {
+            Messages.Add($"Refresh the categories, they look like this: {categories}");
+        }
+
+        public void RefreshCategoryTypes(ArrayList categoryTypes)
+        {
+            Messages.Add($"Refresh the category types, they look like this: {categoryTypes}");
         }
     }
 }
