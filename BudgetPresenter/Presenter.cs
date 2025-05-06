@@ -160,16 +160,9 @@ namespace BudgetPresenter
                 return;
             }
 
-            try
-            {
-                _homeBudget.categories.Add(description, categoryType);
-                _view.ShowCompletion("Category was successfully added.");
-                _view.CloseAddCategoryWindow();
-            }
-            catch (Exception ex)
-            {
-                _view.ShowError("Error: " + ex.Message);
-            }
+            _homeBudget.categories.Add(description, categoryType);
+            _view.ShowCompletion("Category was successfully added.");
+            _view.CloseAddCategoryWindow();
         }
 
         public void ProcessRefreshBudgetItems(DateTime? Start, DateTime? End, bool FilterFlag, int CategoryID, bool ByMonth, bool ByCategory)

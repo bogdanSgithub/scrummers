@@ -220,6 +220,29 @@ namespace TestPresenter
         }
 
         [Fact]
+        public void Test_ProcessAddExpense_Invalid_Amount_NotNumber()
+        {
+            // Arrange
+            DateTime date = DateTime.Now;
+            int categoryId = 1;
+            string amount = "ya"; // invalid amount
+            string description = "test";
+
+            TestView testView = new TestView(DbFilePath);
+
+            // Act
+            testView.OpenFileDialog();
+            testView.Presenter.ProcessAddExpense(date, categoryId, amount, description);
+
+            HomeBudget homeBudget = new HomeBudget(DbFilePath);
+            List<Expense> expenses = homeBudget.expenses.List();
+
+            // Assert
+            Assert.Equal("Showed Error: Amount must be a positive number", testView.Messages[3]);
+            Assert.Equal(NB_EXPENSES, expenses.Count);
+        }
+
+        [Fact]
         public void Test_ProcessAddCategory_Invalid_Description()
         {
             // Arrange
@@ -261,7 +284,7 @@ namespace TestPresenter
         }
 
         [Fact]
-        public void Test_ProcessRefreshBudgetItems()
+        public void Test_ProcessRefreshBudgetItems_Normal()
         {
             // Arrange
             TestView testView = new TestView(DbFilePath);
@@ -270,9 +293,137 @@ namespace TestPresenter
             testView.OpenFileDialog();
             testView.Presenter.ProcessRefreshBudgetItems(null, null, false, 0, false, false);
 
+            HomeBudget hb = new HomeBudget(DbFilePath);
+            ArrayList budgetItems = new ArrayList(hb.GetBudgetItems(null, null, false, 0));
+
             // Assert
             Assert.Equal("Showed HomeBudgetWindow", testView.Messages[1]);
-            Assert.Equal("Refresh the budget items, they look like this: System.Collections.ArrayList", testView.Messages[3]);
+            Assert.Equal("Refresh the budget items and categories", testView.Messages[3]);
+            Assert.Equal(budgetItems, testView.BudgetItems);
+        }
+
+        [Fact]
+        public void Test_ProcessRefreshBudgetItems_ByMonth()
+        {
+            // Arrange
+            TestView testView = new TestView(DbFilePath);
+
+            // Act
+            testView.OpenFileDialog();
+            testView.Presenter.ProcessRefreshBudgetItems(null, null, false, 0, true, false);
+
+            HomeBudget hb = new HomeBudget(DbFilePath);
+            ArrayList budgetItems = new ArrayList(hb.GetBudgetItemsByMonth(null, null, false, 0));
+
+            // Assert
+            Assert.Equal("Showed HomeBudgetWindow", testView.Messages[1]);
+            Assert.Equal("Refresh the budget items and categories", testView.Messages[3]);
+            Assert.Equal(budgetItems, testView.BudgetItems);
+        }
+
+        [Fact]
+        public void Test_ProcessRefreshBudgetItems_ByCategory()
+        {
+            // Arrange
+            TestView testView = new TestView(DbFilePath);
+
+            // Act
+            testView.OpenFileDialog();
+            testView.Presenter.ProcessRefreshBudgetItems(null, null, false, 0, false, true);
+
+            HomeBudget hb = new HomeBudget(DbFilePath);
+            ArrayList budgetItems = new ArrayList(hb.GetBudgetItemsByCategory(null, null, false, 0));
+
+            // Assert
+            Assert.Equal("Showed HomeBudgetWindow", testView.Messages[1]);
+            Assert.Equal("Refresh the budget items and categories", testView.Messages[3]);
+            Assert.Equal(budgetItems, testView.BudgetItems);
+        }
+
+        [Fact]
+        public void Test_ProcessRefreshBudgetItems_ByCategoryAndMonth()
+        {
+            // Arrange
+            TestView testView = new TestView(DbFilePath);
+
+            // Act
+            testView.OpenFileDialog();
+            testView.Presenter.ProcessRefreshBudgetItems(null, null, false, 0, true, true);
+
+            HomeBudget hb = new HomeBudget(DbFilePath);
+            ArrayList budgetItems = new ArrayList(hb.GetBudgetDictionaryByCategoryAndMonth(null, null, false, 0));
+
+            // Assert
+            Assert.Equal("Showed HomeBudgetWindow", testView.Messages[1]);
+            Assert.Equal("Refresh the budget items and categories", testView.Messages[3]);
+            Assert.Equal(budgetItems, testView.BudgetItems);
+        }
+
+        [Fact]
+        public void Test_ProcessRefreshCategories()
+        {
+            // Arrange
+            TestView testView = new TestView(DbFilePath);
+
+            // Act
+            testView.OpenFileDialog();
+            testView.Presenter.ProcessRefreshCategories();
+
+            HomeBudget hb = new HomeBudget(DbFilePath);
+            ArrayList categories = new ArrayList(hb.categories.List());
+            Category addCategory = (Category) testView.Categories[testView.Categories.Count - 1]; // the last one is the addCategoryButton
+            testView.Categories.RemoveAt(testView.Categories.Count - 1); // remove the last element
+
+
+            // Assert
+            Assert.Equal("Showed HomeBudgetWindow", testView.Messages[1]);
+            Assert.Equal("Refresh the categories", testView.Messages[3]);
+            
+            Assert.Equal(categories.Count, testView.Categories.Count);
+            Assert.Equal(-1, addCategory.Id);
+            Assert.Equal("+ Add Category", addCategory.Description.Trim());
+        }
+
+        [Fact]
+        public void Test_ProcessRefreshCategoryTypes()
+        {
+            // Arrange
+            TestView testView = new TestView(DbFilePath);
+
+            // Act
+            testView.OpenFileDialog();
+            testView.Presenter.ProcessRefreshCategoryTypes();
+
+            HomeBudget hb = new HomeBudget(DbFilePath);
+            ArrayList categoryTypes = new ArrayList((Category.CategoryType[])Enum.GetValues(typeof(Category.CategoryType)));
+
+            // Assert
+            Assert.Equal("Showed HomeBudgetWindow", testView.Messages[1]);
+            Assert.Equal("Refresh the category types", testView.Messages[3]);
+
+            Assert.Equal(categoryTypes.Count, testView.CategoryTypes.Count);
+            Assert.Equal(categoryTypes, testView.CategoryTypes);
+        }
+
+        [Fact]
+        public void Test_ProcessCategorySelection()
+        {
+            // Arrange
+            TestView testView = new TestView(DbFilePath);
+
+            // Act
+            testView.OpenFileDialog();
+            testView.Presenter.ProcessRefreshCategories();
+            testView.Presenter.ProcessCategorySelection(testView.Categories.Count-1);
+
+            HomeBudget hb = new HomeBudget(DbFilePath);
+            ArrayList categoryTypes = new ArrayList((Category.CategoryType[])Enum.GetValues(typeof(Category.CategoryType)));
+
+            // Assert
+            Assert.Equal("Showed HomeBudgetWindow", testView.Messages[1]);
+            Assert.Equal("Refresh the categories", testView.Messages[3]);
+            Assert.Equal("Showed AddCategoryWindow", testView.Messages[4]);
+            Assert.Equal("Refresh the categories", testView.Messages[5]);
         }
     }
 }
