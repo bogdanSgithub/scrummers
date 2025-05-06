@@ -131,20 +131,6 @@ namespace Frontend_HomeBudget
         {
             _homeBudgetWindow.BudgetItems.ItemsSource = budgetItems;
             _homeBudgetWindow.Categories.ItemsSource = categories;
-            if ((bool)_homeBudgetWindow.ByMonth.IsChecked && (bool)_homeBudgetWindow.ByCategory.IsChecked)
-            {
-                if (budgetItems[0] is Dictionary<string, object>)
-                {
-                    foreach (string key in ((Dictionary<string, object>)budgetItems[0]).Keys)
-                    {
-                        var column = new DataGridTextColumn();
-                        column.Header = key;
-                        column.Binding = new Binding($"[{key}]"); // Notice the square brackets!
-                        _homeBudgetWindow.BudgetItems.Columns.Add(column);
-                    }
-                }
-            }
-            
         }
 
         public void RefreshCategories(ArrayList categories)
