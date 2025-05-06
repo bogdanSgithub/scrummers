@@ -5,27 +5,22 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Frontend_HomeBudget"
         mc:Ignorable="d"
-        Title="AddExpense" Height="450" Width="800">
+        Title="AddExpense" Height="400" Width="250" MaxHeight="400" MaxWidth="250" MinHeight="400" MinWidth="250">
     <Grid>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="Auto" ></ColumnDefinition>
-            <ColumnDefinition Width="Auto"></ColumnDefinition>
-        </Grid.ColumnDefinitions>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto" ></RowDefinition>
-            <RowDefinition Height="Auto"></RowDefinition>
-            <RowDefinition Height="Auto"></RowDefinition>
-            <RowDefinition Height="Auto"></RowDefinition>
-            <RowDefinition Height="Auto"></RowDefinition>
-            <RowDefinition Height="Auto"></RowDefinition>
-        </Grid.RowDefinitions>
-        <TextBlock Grid.Row="0" Grid.Column="1" x:Name="CurrentFile" Margin="10,0,0,0" VerticalAlignment="Center">Current File: </TextBlock>
-            <DatePicker x:Name="Date"/>
-        <TextBox x:Name="Amount" Grid.Row="1" Grid.Column="0">Amount</TextBox>
-        <TextBox x:Name="Description" Grid.Row="2" Grid.Column="0">Description</TextBox>
-        <ComboBox x:Name="Categorys" Grid.Row="3" SelectionChanged="Categorys_SelectionChanged" />
-        <Button x:Name="Button_AddExpense" Grid.Row="4" Margin="10" Click="Button_AddExpense_Click">Add Expense</Button>
-        <Button x:Name="Button_Clear" Grid.Row="4" Grid.Column="1" Margin="10" Click="Button_Clear_Click" Width="50" HorizontalAlignment="Left">Clear</Button>
-        <Button x:Name="Button_Close" Grid.Row="5" Grid.Column="0" Margin="10" Click="Button_Close_Click" >Close</Button>
+        <StackPanel>
+            <TextBlock FontWeight="Bold" HorizontalAlignment="Center" Margin="10">Add Expense</TextBlock>
+            <TextBlock Margin="19,0,0,0">Date:</TextBlock>
+            <DatePicker x:Name="Date" Width="200"/>
+            <TextBlock Margin="19,15,0,0">Amount:</TextBlock>
+            <TextBox Width="200" x:Name="Amount" Grid.Row="1" Grid.Column="0"></TextBox>
+            <TextBlock Margin="19,15,0,0">Description:</TextBlock>
+            <TextBox Width="200" x:Name="Description" Grid.Row="2" Grid.Column="0"></TextBox>
+            <TextBlock Margin="19,15,0,0">Category:</TextBlock>
+            <ComboBox x:Name="Categorys" Grid.Row="3" SelectionChanged="Categorys_SelectionChanged" Width="200" Margin="0,0,0,10"/>
+            <Button x:Name="Button_AddExpense" Grid.Row="4" Margin="10" Click="Button_AddExpense_Click">Add Expense</Button>
+            <Button x:Name="Button_Clear" Grid.Row="4" Grid.Column="1" Margin="10" Click="Button_Clear_Click" >Clear</Button>
+            <Button x:Name="Button_Close" Grid.Row="5" Grid.Column="0" Margin="10" Click="Button_Close_Click" >Close</Button>
+
+        </StackPanel>
     </Grid>
 </Window>

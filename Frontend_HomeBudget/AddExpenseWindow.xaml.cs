@@ -32,8 +32,6 @@ namespace Frontend_HomeBudget
             //initialize view
             _view = view;            
             
-            //display current used file
-            CurrentFile.Text = $"Current File {System.IO.Path.GetFileName(_view.Presenter.FilePath)}";
         }
 
         /// <summary>

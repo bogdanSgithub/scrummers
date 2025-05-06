@@ -28,6 +28,9 @@ namespace Frontend_HomeBudget
         {
             InitializeComponent();
             _view = view;
+
+            //display current used file
+            CurrentFile.Text = $"Current File: {System.IO.Path.GetFileName(_view.Presenter.FilePath)}";
         }
 
         private void RefreshFilter(object sender, RoutedEventArgs e)
