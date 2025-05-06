@@ -1,4 +1,5 @@
-﻿using BudgetPresenter;
+﻿using Budget;
+using BudgetPresenter;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -13,6 +14,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace Frontend_HomeBudget
 {
@@ -52,10 +54,19 @@ namespace Frontend_HomeBudget
             }
         }
 
-
         private void Button_Close_Click(object sender, RoutedEventArgs e)
         {
             _view.Presenter.CloseApp();
+        }
+
+        private void UpdateMenuItem_Click(object sender, RoutedEventArgs e)
+        {
+            if (BudgetItems.SelectedItem is not null)
+            {
+                _view.ShowUpdateExpenseWindow(BudgetItems.SelectedItem as BudgetItem);
+            }
+
+            RefreshFilter(sender, new RoutedEventArgs());
         }
     }
 }
