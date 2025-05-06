@@ -5,22 +5,22 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Frontend_HomeBudget"
         mc:Ignorable="d"
-        Title="UpdateExpenseWindow" Height="350" Width="300">
+        Title="UpdateExpenseWindow" Height="350" Width="300" MaxHeight="350" MaxWidth="300">
     <Grid>
         <StackPanel>
             <TextBlock HorizontalAlignment="Center" Margin="10" FontWeight="Bold">Update Expense</TextBlock>
 
             <TextBlock Margin="15,0,0,0">Date: </TextBlock>
-            <DatePicker Margin="15,0,0,10" HorizontalAlignment="Left" Width="260"></DatePicker>
+            <DatePicker x:Name="newDate" Margin="15,0,0,10" HorizontalAlignment="Left" Width="260"></DatePicker>
 
             <TextBlock Margin="15,0,0,0">Category:</TextBlock>
             <ComboBox x:Name="Categories" Margin="15,0,0,10" HorizontalAlignment="Left" Width="260"></ComboBox>
 
             <TextBlock Margin="15,0,0,0">Description:</TextBlock>
-            <TextBox Margin="15,0,0,10" HorizontalAlignment="Left" Width="260" Height="40"></TextBox>
+            <TextBox x:Name="newDesc" Margin="15,0,0,10" HorizontalAlignment="Left" Width="260" Height="40"></TextBox>
 
             <TextBlock Margin="15,0,0,0">Amount:</TextBlock>
-            <TextBox Margin="15,0,0,10" HorizontalAlignment="Left" Width="260"></TextBox>
+            <TextBox x:Name="newAmount" Margin="15,0,0,10" HorizontalAlignment="Left" Width="260"></TextBox>
 
             <Grid Margin="0,30,0,0">
                 <Grid.ColumnDefinitions>
@@ -28,8 +28,8 @@
                     <ColumnDefinition/>
                 </Grid.ColumnDefinitions>
                 
-                <Button Grid.Column="0" HorizontalAlignment="Center" Padding="20,5,20,5">Update</Button>
-                <Button Grid.Column="1" HorizontalAlignment="Center" Padding="20,5,20,5">Cancel</Button>
+                <Button Grid.Column="0" HorizontalAlignment="Center" Padding="20,5,20,5" Click="UpdateButton_Clicked">Update</Button>
+                <Button Grid.Column="1" HorizontalAlignment="Center" Padding="20,5,20,5" Click="CloseButton_Clicked">Cancel</Button>
             </Grid>
 
         </StackPanel>

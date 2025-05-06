@@ -19,6 +19,8 @@ namespace BudgetPresenter
         public void StartApplication();
         public void CloseApp();
         public void ProcessRefreshBudgetItems(DateTime? Start, DateTime? End, bool FilterFlag, int CategoryID, bool ByMonth, bool ByCategory);
+
+        public void ProcessUpdateExpense(int id, DateTime? newDate, int newCategory, string newAmount, String newDescription);
         public void ProcessRefreshCategories();
         public void ProcessRefreshCategoryTypes();
         public void ProcessCategorySelection(int selectionIndex);

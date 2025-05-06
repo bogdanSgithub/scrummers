@@ -48,7 +48,7 @@ namespace BudgetPresenter
         /// Calls the ShowFileSelectWindow since that's how our app must start
         /// </summary>
         public void StartApplication()
-        {   
+        {
             _view.ShowFileSelectWindow();
         }
 
@@ -176,7 +176,7 @@ namespace BudgetPresenter
         {
             ArrayList budgetItems;
 
-            if(ByMonth && ByCategory)
+            if (ByMonth && ByCategory)
             {
                 budgetItems = new ArrayList(_homeBudget.GetBudgetDictionaryByCategoryAndMonth(Start, End, FilterFlag, CategoryID));
             }
@@ -216,13 +216,47 @@ namespace BudgetPresenter
         }
 
         public void ProcessCategorySelection(int selectionIndex)
-        {   
+        {
             List<Category> categories = _homeBudget.categories.List();
 
             if (selectionIndex == _categories.Count - 1)
             {
                 _view.ShowAddCategoryWindow();
                 _view.Presenter.ProcessRefreshCategories();
+            }
+        }
+
+        public void ProcessUpdateExpense(int id, DateTime? newDate, int newCategory, string newAmount, string newDescription)
+        {
+            if (string.IsNullOrEmpty(newDescription))
+            {
+                _view.ShowError("New description cannot be null.");
+                return;
+            }
+
+            if (newDate is null)
+            {
+                _view.ShowError("New date cannot be null.");
+                return;
+            }
+
+            if (!(double.TryParse(newAmount, out double amount) && amount > 0))
+            {
+                _view.ShowError("Amount must be a positive number");
+                return;
+            }
+
+            try
+            {
+                DateTime date = (DateTime)newDate;
+
+                _homeBudget.expenses.UpdateProperties(id, date, newCategory + 1, amount, newDescription);
+
+                _view.ShowCompletion("Expense was succesfully updated.");
+            }
+            catch (Exception ex)
+            {
+                _view.ShowError($"Error: {ex.Message}");
             }
         }
     }

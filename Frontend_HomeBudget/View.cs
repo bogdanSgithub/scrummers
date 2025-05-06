@@ -135,8 +135,18 @@ namespace Frontend_HomeBudget
 
         public void RefreshCategories(ArrayList categories)
         {
-            _expenseWindow.Categorys.ItemsSource = categories;
-            _expenseWindow.Categorys.SelectedIndex = 0;
+            if (_expenseWindow is not null)
+            {
+                _expenseWindow.Categorys.ItemsSource = categories;
+                _expenseWindow.Categorys.SelectedIndex = 0;
+            }
+
+            if (_updateExpenseWindow is not null)
+            {
+                categories.RemoveAt(categories.Count - 1);
+                _updateExpenseWindow.Categories.ItemsSource = categories;
+                _updateExpenseWindow.Categories.SelectedIndex = 0;
+            }
         }
 
         public void RefreshCategoryTypes(ArrayList categories)
@@ -144,10 +154,17 @@ namespace Frontend_HomeBudget
             _addCategoryWindow.CategoryTypes.ItemsSource = categories;
         }
 
-        public void ShowUpdateExpenseWindow()
+        public void ShowUpdateExpenseWindow(BudgetItem item)
         {
-           _updateExpenseWindow = new UpdateExpenseWindow(this);
-            _updateExpenseWindow.ShowDialog();
+           _updateExpenseWindow = new UpdateExpenseWindow(this, item);
+            Presenter.ProcessRefreshCategories();
+            _updateExpenseWindow.Categories.SelectedIndex = item.CategoryID - 1;
+           _updateExpenseWindow.ShowDialog();
+        }
+
+        public void CloseUpdateExpenseWindow()
+        {
+            _updateExpenseWindow.Close();
         }
     }
 }
