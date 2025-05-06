@@ -32,7 +32,27 @@ namespace Frontend_HomeBudget
         {
             int index = Categories.SelectedIndex;
             Categories.SelectionChanged -= RefreshFilter;
-            _view.Presenter.ProcessRefreshBudgetItems(StartDate.SelectedDate, EndDate.SelectedDate, (bool)FilterCat.IsChecked, Categories.SelectedIndex + 1, false, false);
+            bool byMonth = ByMonth.IsChecked ?? false;
+            bool byCategory = ByCategory.IsChecked ?? false;
+
+            if (byMonth && byCategory)
+            {
+                if (BudgetItems.ItemsSource is List<Dictionary<string, object>> ListDict)
+                {
+                    foreach (string key in ListDict[0].Keys)
+                    {
+                        var column = new DataGridTextColumn();
+                        column.Header = key;
+                        column.Binding = new Binding($"[{key}]"); // Notice the square brackets!
+                        BudgetItems.Columns.Add(column);
+                    }
+                }
+            }
+
+            _view.Presenter.ProcessRefreshBudgetItems(StartDate.SelectedDate, EndDate.SelectedDate, (bool)FilterCat.IsChecked, Categories.SelectedIndex + 1, byMonth, byCategory);
+
+            
+
             Categories.SelectedIndex = index;
             Categories.SelectionChanged += RefreshFilter;
         }
