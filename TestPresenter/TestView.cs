@@ -1,4 +1,5 @@
-﻿using BudgetPresenter;
+﻿using Budget;
+using BudgetPresenter;
 using System.Collections;
 
 namespace TestPresenter
@@ -86,6 +87,16 @@ namespace TestPresenter
         {
             Messages.Add($"Refresh the category types");
             CategoryTypes = categoryTypes;
+        }
+
+        public void CloseUpdateExpenseWindow()
+        {
+            Messages.Add($"Refresh the CloseUpdateExpenseWindow");
+        }
+
+        public void ShowUpdateExpenseWindow(BudgetItem item)
+        {
+            Messages.Add($"Refresh the ShowUpdateExpenseWindow");
         }
     }
 }
