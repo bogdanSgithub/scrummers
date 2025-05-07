@@ -45,10 +45,8 @@ namespace Frontend_HomeBudget
                 _view.ShowError("Must choose a date");
                 return;
             }
-
             DateTime date = (DateTime)Date.SelectedDate;
-            Category category = _categories[Categorys.SelectedIndex];
-            _view.Presenter.ProcessAddExpense(date, category.Id, Amount.Text, Description.Text);
+            _view.Presenter.ProcessAddExpense(date, Categorys.SelectedIndex + 1, Amount.Text, Description.Text);
         }
 
 

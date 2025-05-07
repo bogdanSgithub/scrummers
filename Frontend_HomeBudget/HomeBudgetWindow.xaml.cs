@@ -46,7 +46,7 @@ namespace Frontend_HomeBudget
         private void Button_AddExpense_Click(object sender, RoutedEventArgs e)
         {
             _view.ShowAddExpenseWindow();
-            _view.Presenter.ProcessRefreshBudgetItems(null, null, false, 0, false, false);
+            RefreshFilter(sender, new RoutedEventArgs());
         }
 
         private void DataGrid_AutoGeneratingColumn(object sender, DataGridAutoGeneratingColumnEventArgs e)

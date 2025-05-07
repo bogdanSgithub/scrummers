@@ -50,7 +50,7 @@ namespace Frontend_HomeBudget
         {
             _expenseWindow = new AddExpenseWindow(this);
             Presenter.ProcessRefreshCategories();
-            _expenseWindow.Show();
+            _expenseWindow.ShowDialog();
         }
 
         /// <summary>
