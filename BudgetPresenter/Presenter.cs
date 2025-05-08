@@ -152,15 +152,15 @@ namespace BudgetPresenter
         /// </summary>
         /// <param name="categoryType"></param>
         /// <param name="description"></param>
-        public void ProcessAddCategory(Category.CategoryType categoryType, string description)
+        public void ProcessAddCategory(int categoryTypeIndex, string description)
         {
             if (string.IsNullOrWhiteSpace(description))
             {
                 _view.ShowError("Description cannot be empty.");
                 return;
             }
-
-            _homeBudget.categories.Add(description, categoryType);
+            
+            _homeBudget.categories.Add(description, (Category.CategoryType)categoryTypeIndex);
             _view.ShowCompletion("Category was successfully added.");
             _view.CloseAddCategoryWindow();
         }

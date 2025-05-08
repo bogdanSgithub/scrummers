@@ -1,17 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
-using Budget;
+﻿using System.Windows;
 using BudgetPresenter;
 
 namespace Frontend_HomeBudget
@@ -39,7 +26,7 @@ namespace Frontend_HomeBudget
         /// </summary>
         private void AddCategoryButton_Clicked(object sender, RoutedEventArgs e)
         {
-            _view.Presenter.ProcessAddCategory((Category.CategoryType)CategoryTypes.SelectedIndex, Description.Text);
+            _view.Presenter.ProcessAddCategory(CategoryTypes.SelectedIndex, Description.Text);
         }
 
         /// <summary>

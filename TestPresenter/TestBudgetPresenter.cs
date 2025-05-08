@@ -248,7 +248,7 @@ namespace TestPresenter
             // Arrange
             TestView testView = new TestView(DbFilePath);
             testView.OpenFileDialog();
-            testView.Presenter.ProcessAddCategory(Category.CategoryType.Income, "");
+            testView.Presenter.ProcessAddCategory((int)Category.CategoryType.Income, "");
 
             // Act
             HomeBudget homeBudget = new HomeBudget(DbFilePath);
@@ -267,7 +267,7 @@ namespace TestPresenter
 
             // Act
             testView.OpenFileDialog();
-            testView.Presenter.ProcessAddCategory(Category.CategoryType.Income, "plz work");
+            testView.Presenter.ProcessAddCategory((int)Category.CategoryType.Income, "plz work");
             
             HomeBudget homeBudget = new HomeBudget(DbFilePath);
             List<Category> categories = homeBudget.categories.List();

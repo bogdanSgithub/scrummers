@@ -1,20 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
-using Budget;
 using BudgetPresenter;
-using System.IO;
 
 namespace Frontend_HomeBudget
 {
@@ -23,13 +9,11 @@ namespace Frontend_HomeBudget
     /// </summary>
     public partial class AddExpenseWindow : Window
     {
-        private List<Category> _categories;
         private IView _view;
 
         public AddExpenseWindow(IView view)
         {
             InitializeComponent();
-            //initialize view
             _view = view;            
             
         }
