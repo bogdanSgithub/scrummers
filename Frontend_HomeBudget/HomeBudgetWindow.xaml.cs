@@ -25,7 +25,11 @@ namespace Frontend_HomeBudget
         {
             int index = Categories.SelectedIndex;
             Categories.SelectionChanged -= RefreshFilter;
-            _view.Presenter.ProcessRefreshBudgetItems(StartDate.SelectedDate, EndDate.SelectedDate, (bool)FilterCat.IsChecked, Categories.SelectedIndex + 1, false, false);
+            
+            _view.Presenter.ProcessRefreshBudgetItems(StartDate.SelectedDate, EndDate.SelectedDate, (bool)FilterCat.IsChecked, Categories.SelectedIndex + 1, (bool)ByMonth.IsChecked, (bool)ByCategory.IsChecked);
+
+            
+
             Categories.SelectedIndex = index;
             Categories.SelectionChanged += RefreshFilter;
         }
@@ -39,7 +43,7 @@ namespace Frontend_HomeBudget
 
         private void DataGrid_AutoGeneratingColumn(object sender, DataGridAutoGeneratingColumnEventArgs e)
         {
-            if (e.PropertyName == "CategoryID" || e.PropertyName == "ExpenseID")
+            if (e.PropertyName == "CategoryID" || e.PropertyName == "ExpenseID" || e.PropertyName == "Details")
             {
                 e.Cancel = true;
             }

@@ -9,6 +9,9 @@ using System.Windows.Controls;
 using Budget;
 using Microsoft.Win32;
 using System.Collections;
+using System.Windows.Data;
+using System.Windows.Input;
+using System.Data.Common;
 
 namespace Frontend_HomeBudget
 {
@@ -129,8 +132,60 @@ namespace Frontend_HomeBudget
 
         public void RefreshBudgetItemsAndCategories(ArrayList budgetItems, ArrayList categories)
         {
+            _homeBudgetWindow.BudgetItems.Columns.Clear();
             _homeBudgetWindow.BudgetItems.ItemsSource = budgetItems;
             _homeBudgetWindow.Categories.ItemsSource = categories;
+
+            bool byMonth = (bool)_homeBudgetWindow.ByMonth.IsChecked;
+            bool byCategory = (bool)_homeBudgetWindow.ByCategory.IsChecked;
+
+            if(byMonth && byCategory) 
+            {
+                List<string> keys = new List<string>();
+
+                foreach (Dictionary<string, object> dict in budgetItems)
+                    foreach (string key in dict.Keys)
+                        if (!keys.Contains(key))
+                            keys.Add(key);
+
+                _homeBudgetWindow.BudgetItems.Columns.Clear();
+
+                DataGridTextColumn columnMonth = new DataGridTextColumn();
+                columnMonth.Header = "Month";
+                columnMonth.Binding = new Binding($"[{"Month"}]");
+                _homeBudgetWindow.BudgetItems.Columns.Add(columnMonth);
+
+               
+
+                foreach (var category in categories)
+                {
+                    DataGridTextColumn column = new DataGridTextColumn();
+                    string categoryName = ((Category)category).Description;
+                    column.Header = categoryName;
+
+                    if (keys.Contains(column.Header))
+                    {
+                        string key = categoryName;
+
+                        column.Binding = new Binding($"[{key}]");
+
+                        if (key != "Month" && key != "Date" && key != "Category" && key != "Short Description")
+                            column.Binding.StringFormat = "{0:C}";
+
+                        if (!key.StartsWith("details"))
+                            _homeBudgetWindow.BudgetItems.Columns.Add(column);
+                    }
+                    else
+                    {
+                        _homeBudgetWindow.BudgetItems.Columns.Add(column);
+                    }
+                }
+
+                DataGridTextColumn columnTotal = new DataGridTextColumn();
+                columnTotal.Header = "Total";
+                columnTotal.Binding = new Binding($"[{"Total"}]");
+                _homeBudgetWindow.BudgetItems.Columns.Add(columnTotal);
+            }
         }
 
         public void RefreshCategories(ArrayList categories)
