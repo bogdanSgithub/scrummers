@@ -1,12 +1,4 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Budget;
-
-namespace BudgetPresenter
+﻿namespace BudgetPresenter
 {
     public interface IPresenter
     {
@@ -14,7 +6,7 @@ namespace BudgetPresenter
         public void GetPreviousFile();
         public void ProcessSelectedFile(string fileName);
         public void ProcessAddExpense(DateTime dateInput, int categoryInput, string amountInput, string descriptionInput);
-        public void ProcessAddCategory(Category.CategoryType categoryType, string description);
+        public void ProcessAddCategory(int categoryTypeIndex, string description);
         public bool IsFirstTimeUser();
         public void StartApplication();
         public void CloseApp();
