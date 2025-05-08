@@ -50,7 +50,7 @@ namespace Frontend_HomeBudget
 
         private void DataGrid_AutoGeneratingColumn(object sender, DataGridAutoGeneratingColumnEventArgs e)
         {
-            if (e.PropertyName == "CategoryID" || e.PropertyName == "ExpenseID")
+            if (e.PropertyName == "CategoryID" || e.PropertyName == "ExpenseID" || e.PropertyName == "Details")
             {
                 e.Cancel = true;
             }
