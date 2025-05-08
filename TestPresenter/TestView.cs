@@ -1,4 +1,5 @@
-﻿using BudgetPresenter;
+﻿using Budget;
+using BudgetPresenter;
 using System.Collections;
 
 namespace TestPresenter
@@ -8,6 +9,9 @@ namespace TestPresenter
         public List<string> Messages = new List<string>();
         public IPresenter Presenter { get; }
         public string FilePath { get; }
+        public ArrayList BudgetItems;
+        public ArrayList Categories;
+        public ArrayList CategoryTypes;
 
         public TestView(string filePath)
         {
@@ -66,19 +70,33 @@ namespace TestPresenter
             Messages.Add("Showed HomeBudgetWindow");
         }
 
-        public void RefreshBudgetItems(ArrayList budgetItems)
+        public void RefreshBudgetItemsAndCategories(ArrayList budgetItems, ArrayList categories)
         {
-            Messages.Add($"Refresh the budget items, they look like this: {budgetItems}");
+            Messages.Add($"Refresh the budget items and categories");
+            BudgetItems = budgetItems;
+            Categories = categories;
         }
 
         public void RefreshCategories(ArrayList categories)
         {
-            Messages.Add($"Refresh the categories, they look like this: {categories}");
+            Messages.Add($"Refresh the categories");
+            Categories = categories;
         }
 
         public void RefreshCategoryTypes(ArrayList categoryTypes)
         {
-            Messages.Add($"Refresh the category types, they look like this: {categoryTypes}");
+            Messages.Add($"Refresh the category types");
+            CategoryTypes = categoryTypes;
+        }
+
+        public void CloseUpdateExpenseWindow()
+        {
+            Messages.Add($"Refresh the CloseUpdateExpenseWindow");
+        }
+
+        public void ShowUpdateExpenseWindow(BudgetItem item)
+        {
+            Messages.Add($"Refresh the ShowUpdateExpenseWindow");
         }
     }
 }

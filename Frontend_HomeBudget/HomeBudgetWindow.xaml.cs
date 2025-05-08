@@ -1,4 +1,5 @@
-﻿using BudgetPresenter;
+﻿using Budget;
+using BudgetPresenter;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -13,6 +14,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace Frontend_HomeBudget
 {
@@ -26,6 +28,9 @@ namespace Frontend_HomeBudget
         {
             InitializeComponent();
             _view = view;
+
+            //display current used file
+            CurrentFile.Text = $"Current File: {System.IO.Path.GetFileName(_view.Presenter.FilePath)}";
         }
 
         private void RefreshFilter(object sender, RoutedEventArgs e)
@@ -45,7 +50,7 @@ namespace Frontend_HomeBudget
         private void Button_AddExpense_Click(object sender, RoutedEventArgs e)
         {
             _view.ShowAddExpenseWindow();
-            _view.Presenter.ProcessRefreshBudgetItems(null, null, false, 0, false, false);
+            RefreshFilter(sender, new RoutedEventArgs());
         }
 
         private void DataGrid_AutoGeneratingColumn(object sender, DataGridAutoGeneratingColumnEventArgs e)
@@ -56,10 +61,19 @@ namespace Frontend_HomeBudget
             }
         }
 
-
         private void Button_Close_Click(object sender, RoutedEventArgs e)
         {
             _view.Presenter.CloseApp();
+        }
+
+        private void UpdateMenuItem_Click(object sender, RoutedEventArgs e)
+        {
+            if (BudgetItems.SelectedItem is not null)
+            {
+                _view.ShowUpdateExpenseWindow(BudgetItems.SelectedItem as BudgetItem);
+            }
+
+            RefreshFilter(sender, new RoutedEventArgs());
         }
     }
 }
