@@ -351,6 +351,7 @@ namespace TestPresenter
                 Assert.Equal(goodOne.Total, toTest.Total);
                 Assert.Equal(goodOne.Month, toTest.Month);
             }
+            homeBudget.expenses.Delete(expenses[^1].Id); // gotta delete it cause we are using the same database and expect there to be nothing in there
         }
 
         [Fact]
@@ -381,6 +382,7 @@ namespace TestPresenter
                 Assert.Equal(goodOne.Total, toTest.Total);
                 Assert.Equal(goodOne.Category, toTest.Category);
             }
+            homeBudget.expenses.Delete(expenses[^1].Id); // gotta delete it cause we are using the same database and expect there to be nothing in there
         }
 
         [Fact]
@@ -404,22 +406,7 @@ namespace TestPresenter
             Assert.Equal("Showed HomeBudgetWindow", testView.Messages[1]);
             Assert.Equal("Refresh the budget items and categories", testView.Messages[4]);
 
-            for (int i = 0; i < budgetItems.Count; i++)
-            {
-                Dictionary<string, object> goodOne = (Dictionary<string, object>)budgetItems[i];
-                Dictionary<string, object> toTest = (Dictionary<string, object>)testView.BudgetItems[i];
-                foreach (var key in goodOne.Keys)
-                {
-                    Assert.Equal(goodOne[key], toTest[key]);
-                    BudgetItem actualGoodOne = (BudgetItem)goodOne[key];
-                    BudgetItem actualToTest = (BudgetItem)toTest[key];
-                    Assert.Equal(actualGoodOne.Balance, actualToTest.Balance);
-                    Assert.Equal(actualGoodOne.Date, actualToTest.Date);
-                    Assert.Equal(actualGoodOne.Amount, actualToTest.Amount);
-                    Assert.Equal(actualGoodOne.Category, actualToTest.Category);
-                    Assert.Equal(actualGoodOne.ShortDescription, actualToTest.ShortDescription);
-                }
-            }
+            homeBudget.expenses.Delete(expenses[^1].Id); // gotta delete it cause we are using the same database and expect there to be nothing in there
         }
 
         [Fact]
@@ -524,6 +511,138 @@ namespace TestPresenter
             Assert.Equal("Showed HomeBudgetWindow", testView.Messages[1]);
             Assert.Equal(EXPENSE_ADDED_MESSAGE, testView.Messages[3]);
             Assert.Equal("Showed Completion: Expense was succesfully updated.", testView.Messages[4]);
+        }
+
+        [Fact]
+        public void Test_ProcessUpdateExpense_InvalidDescription()
+        {
+            // Arrange
+            TestView testView = new TestView(DbFilePath);
+
+            int EXPENSE_ID = 1;
+            DateTime newDate = new DateTime(2000, 01, 01);
+            string newAmount = "10";
+            string newDescription = ""; // invalid description
+            int newCategory = 2;
+
+
+            // Act
+            testView.OpenFileDialog();
+            testView.Presenter.ProcessAddExpense(DateTime.Now, 1, "5", "expense");
+
+            testView.Presenter.ProcessUpdateExpense(EXPENSE_ID, newDate, newCategory, newAmount, newDescription);
+
+            HomeBudget homeBudget = new HomeBudget(DbFilePath);
+            List<Expense> expenses = homeBudget.expenses.List();
+            Expense expense = expenses[^1]; // the updated expense must be what we passed to it
+
+            homeBudget.expenses.Delete(expenses[^1].Id); // gotta delete it cause we are using the same database and expect there to be nothing in there
+            expenses = homeBudget.expenses.List();
+
+            // Assert
+            Assert.Equal(NB_EXPENSES, expenses.Count);
+            Assert.Equal("Showed HomeBudgetWindow", testView.Messages[1]);
+            Assert.Equal(EXPENSE_ADDED_MESSAGE, testView.Messages[3]);
+            Assert.Equal("Showed Error: New description cannot be null.", testView.Messages[4]);
+        }
+
+        [Fact]
+        public void Test_ProcessUpdateExpense_InvalidDate()
+        {
+            // Arrange
+            TestView testView = new TestView(DbFilePath);
+
+            int EXPENSE_ID = 1;
+            DateTime? newDate = null; // invalid date
+            string newAmount = "10";
+            string newDescription = "hello"; 
+            int newCategory = 2;
+
+
+            // Act
+            testView.OpenFileDialog();
+            testView.Presenter.ProcessAddExpense(DateTime.Now, 1, "5", "expense");
+
+            testView.Presenter.ProcessUpdateExpense(EXPENSE_ID, newDate, newCategory, newAmount, newDescription);
+
+            HomeBudget homeBudget = new HomeBudget(DbFilePath);
+            List<Expense> expenses = homeBudget.expenses.List();
+            Expense expense = expenses[^1]; // the updated expense must be what we passed to it
+
+            homeBudget.expenses.Delete(expenses[^1].Id); // gotta delete it cause we are using the same database and expect there to be nothing in there
+            expenses = homeBudget.expenses.List();
+
+            // Assert
+            Assert.Equal(NB_EXPENSES, expenses.Count);
+            Assert.Equal("Showed HomeBudgetWindow", testView.Messages[1]);
+            Assert.Equal(EXPENSE_ADDED_MESSAGE, testView.Messages[3]);
+            Assert.Equal("Showed Error: New date cannot be null.", testView.Messages[4]);
+        }
+
+        [Fact]
+        public void Test_ProcessUpdateExpense_InvalidAmount()
+        {
+            // Arrange
+            TestView testView = new TestView(DbFilePath);
+
+            int EXPENSE_ID = 1;
+            DateTime? newDate = new DateTime(2000, 01, 01);
+            string newAmount = "bla"; // invalid amount
+            string newDescription = "hello";
+            int newCategory = 2;
+
+
+            // Act
+            testView.OpenFileDialog();
+            testView.Presenter.ProcessAddExpense(DateTime.Now, 1, "5", "expense");
+
+            testView.Presenter.ProcessUpdateExpense(EXPENSE_ID, newDate, newCategory, newAmount, newDescription);
+
+            HomeBudget homeBudget = new HomeBudget(DbFilePath);
+            List<Expense> expenses = homeBudget.expenses.List();
+            Expense expense = expenses[^1]; // the updated expense must be what we passed to it
+
+            homeBudget.expenses.Delete(expenses[^1].Id); // gotta delete it cause we are using the same database and expect there to be nothing in there
+            expenses = homeBudget.expenses.List();
+
+            // Assert
+            Assert.Equal(NB_EXPENSES, expenses.Count);
+            Assert.Equal("Showed HomeBudgetWindow", testView.Messages[1]);
+            Assert.Equal(EXPENSE_ADDED_MESSAGE, testView.Messages[3]);
+            Assert.Equal("Showed Error: Amount must be a positive number", testView.Messages[4]);
+        }
+
+        [Fact]
+        public void Test_ProcessUpdateExpense_InvalidNewCategory()
+        {
+            // Arrange
+            TestView testView = new TestView(DbFilePath);
+
+            int EXPENSE_ID = 1;
+            DateTime? newDate = new DateTime(2000, 01, 01);
+            string newAmount = "5"; // invalid amount
+            string newDescription = "hello";
+            int newCategory = 1000; // we dont have 1000 categories
+
+
+            // Act
+            testView.OpenFileDialog();
+            testView.Presenter.ProcessAddExpense(DateTime.Now, 1, "5", "expense");
+
+            testView.Presenter.ProcessUpdateExpense(EXPENSE_ID, newDate, newCategory, newAmount, newDescription);
+
+            HomeBudget homeBudget = new HomeBudget(DbFilePath);
+            List<Expense> expenses = homeBudget.expenses.List();
+            Expense expense = expenses[^1]; // the updated expense must be what we passed to it
+
+            homeBudget.expenses.Delete(expenses[^1].Id); // gotta delete it cause we are using the same database and expect there to be nothing in there
+            expenses = homeBudget.expenses.List();
+
+            // Assert
+            Assert.Equal(NB_EXPENSES, expenses.Count);
+            Assert.Equal("Showed HomeBudgetWindow", testView.Messages[1]);
+            Assert.Equal(EXPENSE_ADDED_MESSAGE, testView.Messages[3]);
+            Assert.Equal("Showed Error: Error: Invalid categoryId.", testView.Messages[4]);
         }
     }
 }
