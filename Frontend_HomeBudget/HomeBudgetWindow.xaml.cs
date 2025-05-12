@@ -63,5 +63,21 @@ namespace Frontend_HomeBudget
 
             RefreshFilter(sender, new RoutedEventArgs());
         }
+
+        private void DeleteMenuItem_Click(object sender, RoutedEventArgs e)
+        {
+            MessageBoxResult answer = MessageBox.Show("Do you really want to delete this expense?", "Delete Expense", MessageBoxButton.YesNo, MessageBoxImage.Stop);
+
+            if (BudgetItems.SelectedItem is not null)
+            {
+                BudgetItem expenseToDelete = BudgetItems.SelectedItem as BudgetItem;
+
+                bool result = answer == MessageBoxResult.Yes;
+
+                _view.Presenter.ProcessDeleteExpense(expenseToDelete.ExpenseID, result);
+            }
+
+            RefreshFilter(sender, new RoutedEventArgs());
+        }
     }
 }

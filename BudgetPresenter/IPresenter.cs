@@ -7,6 +7,7 @@
         public void ProcessSelectedFile(string fileName);
         public void ProcessAddExpense(DateTime dateInput, int categoryInput, string amountInput, string descriptionInput);
         public void ProcessAddCategory(int categoryTypeIndex, string description);
+        public void ProcessDeleteExpense(int id, bool answer);
         public bool IsFirstTimeUser();
         public void StartApplication();
         public void CloseApp();
