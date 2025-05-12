@@ -1,5 +1,6 @@
 ﻿using BudgetPresenter;
 using System.Windows;
+using System.Windows.Media.Imaging;
 
 namespace Frontend_HomeBudget
 {
@@ -19,6 +20,8 @@ namespace Frontend_HomeBudget
             // if the user is returning (i.e info.json exists), display the use previous file button.
             if (!_view.Presenter.IsFirstTimeUser())
                 returningUserBtn.Visibility = Visibility.Visible;
+
+            Icon = new BitmapImage(new Uri("../../../assets/Image.png", UriKind.Relative));
         }
 
         /// <summary>
