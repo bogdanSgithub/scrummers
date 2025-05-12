@@ -1,6 +1,7 @@
 ﻿using Budget;
 using BudgetPresenter;
 using System;
+using System.Collections;
 using System.Windows;
 using System.Windows.Controls;
 
@@ -27,9 +28,6 @@ namespace Frontend_HomeBudget
             Categories.SelectionChanged -= RefreshFilter;
             
             _view.Presenter.ProcessRefreshBudgetItems(StartDate.SelectedDate, EndDate.SelectedDate, (bool)FilterCat.IsChecked, Categories.SelectedIndex + 1, (bool)ByMonth.IsChecked, (bool)ByCategory.IsChecked);
-
-            
-
             Categories.SelectedIndex = index;
             Categories.SelectionChanged += RefreshFilter;
         }
@@ -78,6 +76,12 @@ namespace Frontend_HomeBudget
             }
 
             RefreshFilter(sender, new RoutedEventArgs());
+        }
+
+        private void SearchBox_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            _view.Presenter.ProcessRefreshBudgetItems(StartDate.SelectedDate, EndDate.SelectedDate, (bool)FilterCat.IsChecked, Categories.SelectedIndex + 1, (bool)ByMonth.IsChecked, (bool)ByCategory.IsChecked);
+            _view.Presenter.ProcessSearch(SearchBox.Text, new ArrayList((ICollection)BudgetItems.ItemsSource), BudgetItems.SelectedIndex);
         }
     }
 }

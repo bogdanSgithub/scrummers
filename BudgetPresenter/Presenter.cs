@@ -30,6 +30,8 @@ namespace BudgetPresenter
         private IView _view;
         private ArrayList _categories;
 
+        private ArrayList _runningBudgetItems { get; set; }
+
         /// <summary>
         /// The FilePath of the database file
         /// </summary>
@@ -260,6 +262,24 @@ namespace BudgetPresenter
                 _homeBudget.expenses.Delete(id);
                 _view.ShowCompletion("Expense was successfully deleted.");
             }
+        }
+
+        public void ProcessSearch(string searchQuery, ArrayList budgetItems, int startingIndex)
+        {   
+            searchQuery = searchQuery.Trim().ToLower();
+            ArrayList filteredBudgetItems = new ArrayList();
+
+            for (int i=int.Max(startingIndex, 0); i < budgetItems.Count; i++)
+            {
+                BudgetItem item = (BudgetItem) budgetItems[i];
+                if (item.ShortDescription.ToLower().Contains(searchQuery) || item.Amount.ToString().Contains(searchQuery))
+                {
+                    filteredBudgetItems.Add(item);
+                }
+            }
+
+            ArrayList categories = new ArrayList(_homeBudget.categories.List());
+            _view.RefreshBudgetItemsAndCategories(filteredBudgetItems, categories);
         }
     }
 }

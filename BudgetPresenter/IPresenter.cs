@@ -1,4 +1,6 @@
-﻿namespace BudgetPresenter
+﻿using System.Collections;
+
+namespace BudgetPresenter
 {
     public interface IPresenter
     {
@@ -16,5 +18,6 @@
         public void ProcessRefreshCategories();
         public void ProcessRefreshCategoryTypes();
         public void ProcessCategorySelection(int selectionIndex);
+        public void ProcessSearch(string searchQuery, ArrayList budgetItems, int startingIndex);
     }
 }
