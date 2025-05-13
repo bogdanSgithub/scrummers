@@ -3,6 +3,7 @@ using BudgetPresenter;
 using System;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Controls.DataVisualization.Charting;
 
 namespace Frontend_HomeBudget
 {
