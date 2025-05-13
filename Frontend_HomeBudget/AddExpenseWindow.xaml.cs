@@ -1,5 +1,6 @@
 ﻿using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Media.Imaging;
 using BudgetPresenter;
 
 namespace Frontend_HomeBudget
@@ -14,8 +15,8 @@ namespace Frontend_HomeBudget
         public AddExpenseWindow(IView view)
         {
             InitializeComponent();
-            _view = view;            
-            
+            _view = view;
+            Icon = new BitmapImage(new Uri("../../../assets/Image.png", UriKind.Relative));
         }
 
         /// <summary>

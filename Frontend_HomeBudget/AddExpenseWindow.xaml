@@ -5,7 +5,8 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Frontend_HomeBudget"
         mc:Ignorable="d"
-        Title="AddExpense" Height="400" Width="250" MaxHeight="400" MaxWidth="250" MinHeight="400" MinWidth="250">
+        Title="AddExpense" Height="400" Width="250" MaxHeight="400" MaxWidth="250" MinHeight="400" MinWidth="250"
+>
     <Grid>
         <StackPanel>
             <TextBlock FontWeight="Bold" HorizontalAlignment="Center" Margin="10">Add Expense</TextBlock>

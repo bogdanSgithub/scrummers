@@ -1,6 +1,7 @@
 ﻿using Budget;
 using BudgetPresenter;
 using System.Windows;
+using System.Windows.Media.Imaging;
 
 namespace Frontend_HomeBudget
 {
@@ -22,6 +23,7 @@ namespace Frontend_HomeBudget
             newDate.SelectedDate = item.Date;
             newDesc.Text = item.ShortDescription;
             newAmount.Text = item.Amount.ToString();
+            Icon = new BitmapImage(new Uri("../../../assets/Image.png", UriKind.Relative));
         }
 
         private void UpdateButton_Clicked(object sender, RoutedEventArgs e)

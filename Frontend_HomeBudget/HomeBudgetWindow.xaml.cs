@@ -3,6 +3,7 @@ using BudgetPresenter;
 using System;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Media.Imaging;
 
 namespace Frontend_HomeBudget
 {
@@ -19,6 +20,7 @@ namespace Frontend_HomeBudget
 
             //display current used file
             CurrentFile.Text = $"Current File: {System.IO.Path.GetFileName(_view.Presenter.FilePath)}";
+            Icon = new BitmapImage(new Uri("../../../assets/Image.png", UriKind.Relative));
         }
 
         private void RefreshFilter(object sender, RoutedEventArgs e)
