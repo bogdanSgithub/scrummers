@@ -4,7 +4,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.DataVisualization.Charting;
 
-namespace Budget
+namespace Frontend_HomeBudget
 {
     /// <summary>
     /// Interaction logic for PieChart.xaml
@@ -29,7 +29,6 @@ namespace Budget
         // ----------------------------------------------------------------------------------
         // public properites
         // ----------------------------------------------------------------------------------
-        public DataPresenter presenter { get; set; }
         public List<object> DataSource
         {
             get { return _dataSource; }

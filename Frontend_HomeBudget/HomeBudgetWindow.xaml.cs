@@ -29,10 +29,14 @@ namespace Frontend_HomeBudget
             
             _view.Presenter.ProcessRefreshBudgetItems(StartDate.SelectedDate, EndDate.SelectedDate, (bool)FilterCat.IsChecked, Categories.SelectedIndex + 1, (bool)ByMonth.IsChecked, (bool)ByCategory.IsChecked);
 
-            
-
             Categories.SelectedIndex = index;
             Categories.SelectionChanged += RefreshFilter;
+
+            if ((bool)ByMonth.IsChecked && (bool)ByCategory.IsChecked) 
+                SwitchViewBtn.Visibility = Visibility.Visible;
+            else
+                SwitchViewBtn.Visibility = Visibility.Collapsed;
+
         }
 
 
@@ -79,6 +83,28 @@ namespace Frontend_HomeBudget
             }
 
             RefreshFilter(sender, new RoutedEventArgs());
+        }
+
+        private void SwitchDataView_Clicked(object sender, RoutedEventArgs e)
+        {
+            if (BudgetItems.Visibility == Visibility.Visible)
+            {
+                BudgetItems.Visibility = Visibility.Hidden;
+                FrontEndWindow.Width = 1300;
+                FrontEndWindow.MaxWidth = 1300;
+                FrontEndWindow.MinWidth = 1300;
+
+                SwitchViewBtn.Content = "Switch To Grid View";
+            }
+            else
+            {
+                FrontEndWindow.Width = 800;
+                FrontEndWindow.MaxWidth = 800;
+                FrontEndWindow.MinWidth = 800;
+                BudgetItems.Visibility = Visibility.Visible;
+
+                SwitchViewBtn.Content = "Switch To Piechart";
+            }
         }
     }
 }
