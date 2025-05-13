@@ -13,6 +13,7 @@ namespace Frontend_HomeBudget
     public partial class HomeBudgetWindow : Window
     {
         private IView _view;
+        private int _selectedIndex;
         public HomeBudgetWindow(IView view)
         {
             InitializeComponent();
@@ -81,7 +82,15 @@ namespace Frontend_HomeBudget
         private void SearchBox_TextChanged(object sender, TextChangedEventArgs e)
         {
             _view.Presenter.ProcessRefreshBudgetItems(StartDate.SelectedDate, EndDate.SelectedDate, (bool)FilterCat.IsChecked, Categories.SelectedIndex + 1, (bool)ByMonth.IsChecked, (bool)ByCategory.IsChecked);
-            _view.Presenter.ProcessSearch(SearchBox.Text, new ArrayList((ICollection)BudgetItems.ItemsSource), BudgetItems.SelectedIndex);
+            if (SearchBox.Text == "")
+                _selectedIndex = -1;
+            _view.Presenter.ProcessSearch(SearchBox.Text, new ArrayList((ICollection)BudgetItems.ItemsSource), _selectedIndex);
+        }
+
+        private void BudgetItems_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (BudgetItems.SelectedIndex != -1)
+                _selectedIndex = BudgetItems.SelectedIndex;
         }
     }
 }

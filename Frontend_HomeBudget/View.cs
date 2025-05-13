@@ -221,5 +221,10 @@ namespace Frontend_HomeBudget
         {
             _updateExpenseWindow.Close();
         }
+
+        public void PlayNoResultsSearch()
+        {
+            PlayNoResultsSearch();
+        }
     }
 }

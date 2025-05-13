@@ -98,5 +98,10 @@ namespace TestPresenter
         {
             Messages.Add($"Refresh the ShowUpdateExpenseWindow");
         }
+
+        public void PlayNoResultsSearch()
+        {
+            Messages.Add("Played No Results Search");
+        }
     }
 }

@@ -36,7 +36,7 @@
                 <TextBlock>Search</TextBlock>
                 <TextBox x:Name="SearchBox" TextChanged="SearchBox_TextChanged" Margin="10,0,0,0" Width="200px"></TextBox>
             </StackPanel>
-            <DataGrid x:Name="BudgetItems" CanUserAddRows="False" AutoGeneratingColumn="DataGrid_AutoGeneratingColumn" IsReadOnly="True">
+            <DataGrid x:Name="BudgetItems" SelectionChanged="BudgetItems_SelectionChanged" CanUserAddRows="False" AutoGeneratingColumn="DataGrid_AutoGeneratingColumn" IsReadOnly="True">
                 <DataGrid.ContextMenu>
                     <ContextMenu x:Name="ContextMenu">
                         <MenuItem Header="Update Expense" Click="UpdateMenuItem_Click"/>

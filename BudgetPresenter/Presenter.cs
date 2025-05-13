@@ -1,4 +1,5 @@
 ﻿using Budget;
+using System.Media;
 using System.Text;
 using System.Threading.Tasks;
 using BudgetPresenter;
@@ -6,7 +7,6 @@ using System.Windows;
 using Budget;
 using System.Text.Json;
 using System.Collections;
-
 
 namespace BudgetPresenter
 {
@@ -265,18 +265,32 @@ namespace BudgetPresenter
         }
 
         public void ProcessSearch(string searchQuery, ArrayList budgetItems, int startingIndex)
-        {   
+        {
+            if (budgetItems[0] is not BudgetItem)
+                return;
+
             searchQuery = searchQuery.Trim().ToLower();
             ArrayList filteredBudgetItems = new ArrayList();
 
-            for (int i=int.Max(startingIndex, 0); i < budgetItems.Count; i++)
+            if (startingIndex < 0)
+                startingIndex = 0;
+            
+            for (int i = startingIndex; i < budgetItems.Count; i++)
             {
                 BudgetItem item = (BudgetItem) budgetItems[i];
                 if (item.ShortDescription.ToLower().Contains(searchQuery) || item.Amount.ToString().Contains(searchQuery))
-                {
                     filteredBudgetItems.Add(item);
-                }
             }
+
+            for (int i = 0; i < startingIndex; i++)
+            {
+                BudgetItem item = (BudgetItem) budgetItems[i];
+                if (item.ShortDescription.ToLower().Contains(searchQuery) || item.Amount.ToString().Contains(searchQuery))
+                    filteredBudgetItems.Add(item);
+            }
+
+            if (filteredBudgetItems.Count == 0)
+                _view.PlayNoResultsSearch();
 
             ArrayList categories = new ArrayList(_homeBudget.categories.List());
             _view.RefreshBudgetItemsAndCategories(filteredBudgetItems, categories);
