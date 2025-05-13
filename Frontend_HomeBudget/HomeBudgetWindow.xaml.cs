@@ -79,7 +79,7 @@ namespace Frontend_HomeBudget
 
                 bool result = answer == MessageBoxResult.Yes;
 
-                _view.Presenter.ProcessDeleteExpense(expenseToDelete.ExpenseID, result);
+               // _view.Presenter.ProcessDeleteExpense(expenseToDelete.ExpenseID, result);
             }
 
             RefreshFilter(sender, new RoutedEventArgs());
@@ -87,20 +87,23 @@ namespace Frontend_HomeBudget
 
         private void SwitchDataView_Clicked(object sender, RoutedEventArgs e)
         {
+            const int PieWidth = 1300;
+            const int GridWidth = 800;
+
             if (BudgetItems.Visibility == Visibility.Visible)
             {
                 BudgetItems.Visibility = Visibility.Hidden;
-                FrontEndWindow.Width = 1300;
-                FrontEndWindow.MaxWidth = 1300;
-                FrontEndWindow.MinWidth = 1300;
+                FrontEndWindow.Width = PieWidth;
+                FrontEndWindow.MaxWidth = PieWidth;
+                FrontEndWindow.MinWidth = PieWidth;
 
                 SwitchViewBtn.Content = "Switch To Grid View";
             }
             else
             {
-                FrontEndWindow.Width = 800;
-                FrontEndWindow.MaxWidth = 800;
-                FrontEndWindow.MinWidth = 800;
+                FrontEndWindow.Width = GridWidth;
+                FrontEndWindow.MinWidth = GridWidth;
+                FrontEndWindow.MaxWidth = GridWidth;
                 BudgetItems.Visibility = Visibility.Visible;
 
                 SwitchViewBtn.Content = "Switch To Piechart";
