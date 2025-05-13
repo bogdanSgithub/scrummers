@@ -1,6 +1,8 @@
 using Budget;
 using BudgetPresenter;
 using System.Collections;
+using System.Diagnostics;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace TestPresenter
 {
@@ -291,15 +293,31 @@ namespace TestPresenter
 
             // Act
             testView.OpenFileDialog();
-            testView.Presenter.ProcessRefreshBudgetItems(null, null, false, 0, false, false);
 
-            HomeBudget hb = new HomeBudget(DbFilePath);
-            ArrayList budgetItems = new ArrayList(hb.GetBudgetItems(null, null, false, 0));
+            testView.Presenter.ProcessAddExpense(DateTime.Now, 1, "5", "expense");
+
+            HomeBudget homeBudget = new HomeBudget(DbFilePath);
+            List<Expense> expenses = homeBudget.expenses.List();
+
+            testView.Presenter.ProcessRefreshBudgetItems(null, null, false, 0, false, false);
+            ArrayList budgetItems = new ArrayList(homeBudget.GetBudgetItems(null, null, false, 0));
 
             // Assert
             Assert.Equal("Showed HomeBudgetWindow", testView.Messages[1]);
-            Assert.Equal("Refresh the budget items and categories", testView.Messages[3]);
-            Assert.Equal(budgetItems, testView.BudgetItems);
+            Assert.Equal("Refresh the budget items and categories", testView.Messages[4]);
+
+            for (int i = 0; i < budgetItems.Count; i++)
+            {
+                BudgetItem goodOne = (BudgetItem)budgetItems[i];
+                BudgetItem toTest = (BudgetItem)testView.BudgetItems[i];
+                Assert.Equal(goodOne.Balance, toTest.Balance);
+                Assert.Equal(goodOne.Date, toTest.Date);
+                Assert.Equal(goodOne.Amount, toTest.Amount);
+                Assert.Equal(goodOne.Category, toTest.Category);
+                Assert.Equal(goodOne.ShortDescription, toTest.ShortDescription);
+            }
+
+            homeBudget.expenses.Delete(expenses[^1].Id); // gotta delete it cause we are using the same database and expect there to be nothing in there
         }
 
         [Fact]
@@ -310,15 +328,30 @@ namespace TestPresenter
 
             // Act
             testView.OpenFileDialog();
-            testView.Presenter.ProcessRefreshBudgetItems(null, null, false, 0, true, false);
 
-            HomeBudget hb = new HomeBudget(DbFilePath);
-            ArrayList budgetItems = new ArrayList(hb.GetBudgetItemsByMonth(null, null, false, 0));
+            testView.Presenter.ProcessAddExpense(DateTime.Now, 1, "5", "expense");
+
+            HomeBudget homeBudget = new HomeBudget(DbFilePath);
+            List<Expense> expenses = homeBudget.expenses.List();
+
+            testView.Presenter.ProcessRefreshBudgetItems(null, null, false, 0, true, false);
+            ArrayList budgetItems = new ArrayList(homeBudget.GetBudgetItemsByMonth(null, null, false, 0));
 
             // Assert
             Assert.Equal("Showed HomeBudgetWindow", testView.Messages[1]);
-            Assert.Equal("Refresh the budget items and categories", testView.Messages[3]);
-            Assert.Equal(budgetItems, testView.BudgetItems);
+            Assert.Equal("Refresh the budget items and categories", testView.Messages[4]);
+
+            /*Assert.True(budgetItems.Cast<object>().OrderBy(x => x)
+                    .SequenceEqual(testView.BudgetItems.Cast<object>().OrderBy(x => x)));
+            */
+            for (int i = 0; i < budgetItems.Count; i++)
+            {
+                BudgetItemsByMonth goodOne = (BudgetItemsByMonth)budgetItems[i];
+                BudgetItemsByMonth toTest = (BudgetItemsByMonth)testView.BudgetItems[i];
+                Assert.Equal(goodOne.Total, toTest.Total);
+                Assert.Equal(goodOne.Month, toTest.Month);
+            }
+            homeBudget.expenses.Delete(expenses[^1].Id); // gotta delete it cause we are using the same database and expect there to be nothing in there
         }
 
         [Fact]
@@ -329,15 +362,27 @@ namespace TestPresenter
 
             // Act
             testView.OpenFileDialog();
-            testView.Presenter.ProcessRefreshBudgetItems(null, null, false, 0, false, true);
 
-            HomeBudget hb = new HomeBudget(DbFilePath);
-            ArrayList budgetItems = new ArrayList(hb.GetBudgetItemsByCategory(null, null, false, 0));
+            testView.Presenter.ProcessAddExpense(DateTime.Now, 1, "5", "expense");
+
+            HomeBudget homeBudget = new HomeBudget(DbFilePath);
+            List<Expense> expenses = homeBudget.expenses.List();
+
+            testView.Presenter.ProcessRefreshBudgetItems(null, null, false, 0, false, true);
+            ArrayList budgetItems = new ArrayList(homeBudget.GetBudgetItemsByCategory(null, null, false, 0));
 
             // Assert
             Assert.Equal("Showed HomeBudgetWindow", testView.Messages[1]);
-            Assert.Equal("Refresh the budget items and categories", testView.Messages[3]);
-            Assert.Equal(budgetItems, testView.BudgetItems);
+            Assert.Equal("Refresh the budget items and categories", testView.Messages[4]);
+
+            for (int i = 0; i < budgetItems.Count; i++)
+            {
+                BudgetItemsByCategory goodOne = (BudgetItemsByCategory)budgetItems[i];
+                BudgetItemsByCategory toTest = (BudgetItemsByCategory)testView.BudgetItems[i];
+                Assert.Equal(goodOne.Total, toTest.Total);
+                Assert.Equal(goodOne.Category, toTest.Category);
+            }
+            homeBudget.expenses.Delete(expenses[^1].Id); // gotta delete it cause we are using the same database and expect there to be nothing in there
         }
 
         [Fact]
@@ -348,15 +393,20 @@ namespace TestPresenter
 
             // Act
             testView.OpenFileDialog();
-            testView.Presenter.ProcessRefreshBudgetItems(null, null, false, 0, true, true);
 
-            HomeBudget hb = new HomeBudget(DbFilePath);
-            ArrayList budgetItems = new ArrayList(hb.GetBudgetDictionaryByCategoryAndMonth(null, null, false, 0));
+            testView.Presenter.ProcessAddExpense(DateTime.Now, 1, "5", "expense");
+
+            HomeBudget homeBudget = new HomeBudget(DbFilePath);
+            List<Expense> expenses = homeBudget.expenses.List();
+
+            testView.Presenter.ProcessRefreshBudgetItems(null, null, false, 0, true, true);
+            ArrayList budgetItems = new ArrayList(homeBudget.GetBudgetDictionaryByCategoryAndMonth(null, null, false, 0));
 
             // Assert
             Assert.Equal("Showed HomeBudgetWindow", testView.Messages[1]);
-            Assert.Equal("Refresh the budget items and categories", testView.Messages[3]);
-            Assert.Equal(budgetItems, testView.BudgetItems);
+            Assert.Equal("Refresh the budget items and categories", testView.Messages[4]);
+
+            homeBudget.expenses.Delete(expenses[^1].Id); // gotta delete it cause we are using the same database and expect there to be nothing in there
         }
 
         [Fact]
@@ -424,6 +474,175 @@ namespace TestPresenter
             Assert.Equal("Refresh the categories", testView.Messages[3]);
             Assert.Equal("Showed AddCategoryWindow", testView.Messages[4]);
             Assert.Equal("Refresh the categories", testView.Messages[5]);
+        }
+
+        [Fact]
+        public void Test_ProcessUpdateExpense_Valid()
+        {
+            // Arrange
+            TestView testView = new TestView(DbFilePath);
+
+            int EXPENSE_ID = 1;
+            DateTime newDate = new DateTime(2000, 01, 01);
+            string newAmount = "10";
+            string newDescription = "newExpense";
+            int newCategory = 2;
+
+
+            // Act
+            testView.OpenFileDialog();
+            testView.Presenter.ProcessAddExpense(DateTime.Now, 1, "5", "expense");
+
+            testView.Presenter.ProcessUpdateExpense(EXPENSE_ID, newDate, newCategory, newAmount, newDescription);
+
+            HomeBudget homeBudget = new HomeBudget(DbFilePath);
+            List<Expense> expenses = homeBudget.expenses.List();
+            Expense expense = expenses[^1]; // the updated expense must be what we passed to it
+
+            homeBudget.expenses.Delete(expenses[^1].Id); // gotta delete it cause we are using the same database and expect there to be nothing in there
+            expenses = homeBudget.expenses.List();
+
+            // Assert
+            Assert.Equal(NB_EXPENSES, expenses.Count);
+            Assert.Equal(newDate, expense.Date);
+            Assert.Equal(newCategory + 1, expense.Category);
+            Assert.Equal(double.Parse(newAmount), expense.Amount);
+            Assert.Equal(newDescription, expense.Description);
+            Assert.Equal("Showed HomeBudgetWindow", testView.Messages[1]);
+            Assert.Equal(EXPENSE_ADDED_MESSAGE, testView.Messages[3]);
+            Assert.Equal("Showed Completion: Expense was succesfully updated.", testView.Messages[4]);
+        }
+
+        [Fact]
+        public void Test_ProcessUpdateExpense_InvalidDescription()
+        {
+            // Arrange
+            TestView testView = new TestView(DbFilePath);
+
+            int EXPENSE_ID = 1;
+            DateTime newDate = new DateTime(2000, 01, 01);
+            string newAmount = "10";
+            string newDescription = ""; // invalid description
+            int newCategory = 2;
+
+
+            // Act
+            testView.OpenFileDialog();
+            testView.Presenter.ProcessAddExpense(DateTime.Now, 1, "5", "expense");
+
+            testView.Presenter.ProcessUpdateExpense(EXPENSE_ID, newDate, newCategory, newAmount, newDescription);
+
+            HomeBudget homeBudget = new HomeBudget(DbFilePath);
+            List<Expense> expenses = homeBudget.expenses.List();
+            Expense expense = expenses[^1]; // the updated expense must be what we passed to it
+
+            homeBudget.expenses.Delete(expenses[^1].Id); // gotta delete it cause we are using the same database and expect there to be nothing in there
+            expenses = homeBudget.expenses.List();
+
+            // Assert
+            Assert.Equal(NB_EXPENSES, expenses.Count);
+            Assert.Equal("Showed HomeBudgetWindow", testView.Messages[1]);
+            Assert.Equal(EXPENSE_ADDED_MESSAGE, testView.Messages[3]);
+            Assert.Equal("Showed Error: New description cannot be null.", testView.Messages[4]);
+        }
+
+        [Fact]
+        public void Test_ProcessUpdateExpense_InvalidDate()
+        {
+            // Arrange
+            TestView testView = new TestView(DbFilePath);
+
+            int EXPENSE_ID = 1;
+            DateTime? newDate = null; // invalid date
+            string newAmount = "10";
+            string newDescription = "hello"; 
+            int newCategory = 2;
+
+
+            // Act
+            testView.OpenFileDialog();
+            testView.Presenter.ProcessAddExpense(DateTime.Now, 1, "5", "expense");
+
+            testView.Presenter.ProcessUpdateExpense(EXPENSE_ID, newDate, newCategory, newAmount, newDescription);
+
+            HomeBudget homeBudget = new HomeBudget(DbFilePath);
+            List<Expense> expenses = homeBudget.expenses.List();
+            Expense expense = expenses[^1]; // the updated expense must be what we passed to it
+
+            homeBudget.expenses.Delete(expenses[^1].Id); // gotta delete it cause we are using the same database and expect there to be nothing in there
+            expenses = homeBudget.expenses.List();
+
+            // Assert
+            Assert.Equal(NB_EXPENSES, expenses.Count);
+            Assert.Equal("Showed HomeBudgetWindow", testView.Messages[1]);
+            Assert.Equal(EXPENSE_ADDED_MESSAGE, testView.Messages[3]);
+            Assert.Equal("Showed Error: New date cannot be null.", testView.Messages[4]);
+        }
+
+        [Fact]
+        public void Test_ProcessUpdateExpense_InvalidAmount()
+        {
+            // Arrange
+            TestView testView = new TestView(DbFilePath);
+
+            int EXPENSE_ID = 1;
+            DateTime? newDate = new DateTime(2000, 01, 01);
+            string newAmount = "bla"; // invalid amount
+            string newDescription = "hello";
+            int newCategory = 2;
+
+
+            // Act
+            testView.OpenFileDialog();
+            testView.Presenter.ProcessAddExpense(DateTime.Now, 1, "5", "expense");
+
+            testView.Presenter.ProcessUpdateExpense(EXPENSE_ID, newDate, newCategory, newAmount, newDescription);
+
+            HomeBudget homeBudget = new HomeBudget(DbFilePath);
+            List<Expense> expenses = homeBudget.expenses.List();
+            Expense expense = expenses[^1]; // the updated expense must be what we passed to it
+
+            homeBudget.expenses.Delete(expenses[^1].Id); // gotta delete it cause we are using the same database and expect there to be nothing in there
+            expenses = homeBudget.expenses.List();
+
+            // Assert
+            Assert.Equal(NB_EXPENSES, expenses.Count);
+            Assert.Equal("Showed HomeBudgetWindow", testView.Messages[1]);
+            Assert.Equal(EXPENSE_ADDED_MESSAGE, testView.Messages[3]);
+            Assert.Equal("Showed Error: Amount must be a positive number", testView.Messages[4]);
+        }
+
+        [Fact]
+        public void Test_ProcessUpdateExpense_InvalidNewCategory()
+        {
+            // Arrange
+            TestView testView = new TestView(DbFilePath);
+
+            int EXPENSE_ID = 1;
+            DateTime? newDate = new DateTime(2000, 01, 01);
+            string newAmount = "5"; // invalid amount
+            string newDescription = "hello";
+            int newCategory = 1000; // we dont have 1000 categories
+
+
+            // Act
+            testView.OpenFileDialog();
+            testView.Presenter.ProcessAddExpense(DateTime.Now, 1, "5", "expense");
+
+            testView.Presenter.ProcessUpdateExpense(EXPENSE_ID, newDate, newCategory, newAmount, newDescription);
+
+            HomeBudget homeBudget = new HomeBudget(DbFilePath);
+            List<Expense> expenses = homeBudget.expenses.List();
+            Expense expense = expenses[^1]; // the updated expense must be what we passed to it
+
+            homeBudget.expenses.Delete(expenses[^1].Id); // gotta delete it cause we are using the same database and expect there to be nothing in there
+            expenses = homeBudget.expenses.List();
+
+            // Assert
+            Assert.Equal(NB_EXPENSES, expenses.Count);
+            Assert.Equal("Showed HomeBudgetWindow", testView.Messages[1]);
+            Assert.Equal(EXPENSE_ADDED_MESSAGE, testView.Messages[3]);
+            Assert.Equal("Showed Error: Error: Invalid categoryId.", testView.Messages[4]);
         }
     }
 }

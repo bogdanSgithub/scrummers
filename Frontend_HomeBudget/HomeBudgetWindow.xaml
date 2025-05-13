@@ -33,8 +33,9 @@
             </StackPanel>
             <DataGrid x:Name="BudgetItems" Grid.Column="1"  CanUserAddRows="False" AutoGeneratingColumn="DataGrid_AutoGeneratingColumn" IsReadOnly="True">
                 <DataGrid.ContextMenu>
-                    <ContextMenu>
+                    <ContextMenu x:Name="ContextMenu">
                         <MenuItem Header="Update Expense" Click="UpdateMenuItem_Click"/>
+                        <MenuItem Header="Delete Expense" Click="DeleteMenuItem_Click"/>
                     </ContextMenu>
                 </DataGrid.ContextMenu>
             </DataGrid>

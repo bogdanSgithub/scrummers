@@ -252,5 +252,14 @@ namespace BudgetPresenter
                 _view.ShowError($"Error: {ex.Message}");
             }
         }
+
+        public void ProcessDeleteExpense(int id, bool answer)
+        {
+            if (answer)
+            {
+                _homeBudget.expenses.Delete(id);
+                _view.ShowCompletion("Expense was successfully deleted.");
+            }
+        }
     }
 }
