@@ -16,5 +16,7 @@
         public void ProcessRefreshCategories();
         public void ProcessRefreshCategoryTypes();
         public void ProcessCategorySelection(int selectionIndex);
+
+        public void ProcessRefreshPiechart(DateTime? Start, DateTime? End, bool FilterFlag, int CategoryID);
     }
 }
