@@ -6,6 +6,7 @@ using System.Windows;
 using Budget;
 using System.Text.Json;
 using System.Collections;
+using System.Collections.Generic;
 
 
 namespace BudgetPresenter
@@ -260,6 +261,22 @@ namespace BudgetPresenter
                 _homeBudget.expenses.Delete(id);
                 _view.ShowCompletion("Expense was successfully deleted.");
             }
+        }
+
+        public void ProcessRefreshPiechart(DateTime? Start, DateTime? End, bool FilterFlag, int CategoryID)
+        {
+            List<Dictionary<string, object>> budgetItems = _homeBudget.GetBudgetDictionaryByCategoryAndMonth(Start, End, FilterFlag, CategoryID);
+
+            //get categories as strings
+            List<string> stringCats = new List<string>();
+            List<Category> categories = _homeBudget.categories.List();
+
+            for (int i = 0; i < categories.Count; i++)
+            {
+                stringCats.Add(categories[i].Description);
+            }
+
+            _view.RefreshPiechart(budgetItems, stringCats);
         }
     }
 }

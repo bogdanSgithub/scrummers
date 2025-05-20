@@ -15,7 +15,7 @@ namespace Frontend_HomeBudget
         // ----------------------------------------------------------------------------------
         // private globals
         // ----------------------------------------------------------------------------------
-        private List<object> _dataSource;
+        private List<Dictionary<string, object>> _dataSource;
         private enum ChartType
         {
             Standard,
@@ -29,7 +29,7 @@ namespace Frontend_HomeBudget
         // ----------------------------------------------------------------------------------
         // public properites
         // ----------------------------------------------------------------------------------
-        public List<object> DataSource
+        public List<Dictionary<string, object>> DataSource
         {
             get { return _dataSource; }
             set
@@ -122,9 +122,8 @@ namespace Frontend_HomeBudget
         {
             // create a list of months from the source data
             List<String> months = new List<String>();
-            foreach (object obj in _dataSource)
+            foreach (Dictionary<string, object> item in _dataSource)
             {
-                var item = obj as Dictionary<String, object>;
                 if (item != null)
                 {
                     months.Add(item["Month"].ToString());
@@ -189,11 +188,7 @@ namespace Frontend_HomeBudget
                         var amount = 0.0;
                         double.TryParse(value, out amount);
 
-                        // only display expenses (i.e., amount < 0)
-                        if (amount < 0)
-                        {
-                            DisplayData.Add(new KeyValuePair<String, double>(category, -amount));
-                        }
+                          DisplayData.Add(new KeyValuePair<String, double>(category, -amount));
                     }
 
                     // we found the month we wanted, no need to loop through other months, so

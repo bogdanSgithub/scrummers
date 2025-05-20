@@ -37,7 +37,7 @@
             </StackPanel>
 
 
-            <local:DataChartControl x:Name="theChart" Grid.Column="1"></local:DataChartControl>
+            <local:DataChartControl x:Name="DataPieChart" Grid.Column="1"></local:DataChartControl>
 
 
             <DataGrid x:Name="BudgetItems" Grid.Column="1"  CanUserAddRows="False" AutoGeneratingColumn="DataGrid_AutoGeneratingColumn" IsReadOnly="True">

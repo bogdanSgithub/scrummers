@@ -18,6 +18,7 @@ namespace Frontend_HomeBudget
             InitializeComponent();
             _view = view;
 
+
             //display current used file
             CurrentFile.Text = $"Current File: {System.IO.Path.GetFileName(_view.Presenter.FilePath)}";
         }
@@ -79,7 +80,7 @@ namespace Frontend_HomeBudget
 
                 bool result = answer == MessageBoxResult.Yes;
 
-               // _view.Presenter.ProcessDeleteExpense(expenseToDelete.ExpenseID, result);
+               //_view.Presenter.ProcessDeleteExpense(expenseToDelete.ExpenseID, result);
             }
 
             RefreshFilter(sender, new RoutedEventArgs());
@@ -98,6 +99,9 @@ namespace Frontend_HomeBudget
                 FrontEndWindow.MinWidth = PieWidth;
 
                 SwitchViewBtn.Content = "Switch To Grid View";
+
+                _view.Presenter.ProcessRefreshPiechart(StartDate.SelectedDate, EndDate.SelectedDate, (bool)FilterCat.IsChecked, Categories.SelectedIndex + 1);
+
             }
             else
             {
