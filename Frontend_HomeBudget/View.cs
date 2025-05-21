@@ -227,6 +227,7 @@ namespace Frontend_HomeBudget
         {
             // initially it was SystemSounds.Beep.Play()
             Task.Run(() => SystemSounds.Beep.Play());
+        }
         public void RefreshPiechart(List<Dictionary<string, object>> budgetItems, List<string> categories)
         {
             _homeBudgetWindow.DataPieChart.InitializeByCategoryAndMonthDisplay(categories);

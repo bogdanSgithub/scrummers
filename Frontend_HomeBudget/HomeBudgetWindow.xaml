@@ -36,17 +36,15 @@
                 <Button x:Name="Button_Close" Margin="10" Click="Button_Close_Click" HorizontalAlignment="Center"  Padding="10,0,10,0">Close</Button>
             </StackPanel>
             <StackPanel Grid.Column="1">
-            <StackPanel Orientation="Horizontal">
-                <TextBlock>Search</TextBlock>
-                <TextBox x:Name="SearchBox" TextChanged="SearchBox_TextChanged" Margin="10,0,0,0" Width="200px"></TextBox>
-            </StackPanel>
-            <DataGrid x:Name="BudgetItems" SelectionChanged="BudgetItems_SelectionChanged" CanUserAddRows="False" AutoGeneratingColumn="DataGrid_AutoGeneratingColumn" IsReadOnly="True">
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock>Search</TextBlock>
+                    <TextBox x:Name="SearchBox" TextChanged="SearchBox_TextChanged" Margin="10,0,0,0" Width="200px"></TextBox>
+                </StackPanel>
+
+                <local:DataChartControl x:Name="DataPieChart" Grid.Column="1"></local:DataChartControl>
 
 
-            <local:DataChartControl x:Name="DataPieChart" Grid.Column="1"></local:DataChartControl>
-
-
-            <DataGrid x:Name="BudgetItems" Grid.Column="1"  CanUserAddRows="False" AutoGeneratingColumn="DataGrid_AutoGeneratingColumn" IsReadOnly="True">
+                    <DataGrid x:Name="BudgetItems" SelectionChanged="BudgetItems_SelectionChanged" Grid.Column="1"  CanUserAddRows="False" AutoGeneratingColumn="DataGrid_AutoGeneratingColumn" IsReadOnly="True">
                 <DataGrid.ContextMenu>
                     <ContextMenu x:Name="ContextMenu">
                         <MenuItem Header="Update Expense" Click="UpdateMenuItem_Click"/>

@@ -102,7 +102,7 @@ namespace Frontend_HomeBudget
         {
             if (BudgetItems.SelectedIndex != -1)
                 _selectedIndex = BudgetItems.SelectedIndex;
-                
+        }
         private void SwitchDataView_Clicked(object sender, RoutedEventArgs e)
         {
             const int PieWidth = 1300;
