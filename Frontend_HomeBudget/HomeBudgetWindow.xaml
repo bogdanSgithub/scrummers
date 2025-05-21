@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Frontend_HomeBudget"
         mc:Ignorable="d"
-        Title="HomeBudget" Height="450" Width="800" MaxHeight="450" MaxWidth="800" MinHeight="450" MinWidth="800"
+        Title="HomeBudget" Height="450" Width="800"
         xmlns:toolkit="http://schemas.microsoft.com/winfx/2006/xaml/presentation/toolkit"
         x:Name="FrontEndWindow"
         >
