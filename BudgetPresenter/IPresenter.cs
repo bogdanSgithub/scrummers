@@ -19,5 +19,6 @@ namespace BudgetPresenter
         public void ProcessRefreshCategoryTypes();
         public void ProcessCategorySelection(int selectionIndex);
         public void ProcessSearch(string searchQuery, ArrayList budgetItems, int startingIndex);
+        public void ProcessRefreshPiechart(DateTime? Start, DateTime? End, bool FilterFlag, int CategoryID);
     }
 }

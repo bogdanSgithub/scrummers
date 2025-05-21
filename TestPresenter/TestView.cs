@@ -103,5 +103,10 @@ namespace TestPresenter
         {
             Messages.Add("Played No Results Search");
         }
+
+        public void RefreshPiechart(List<Dictionary<string, object>> budgetItems, List<string> categories)
+        {
+            Messages.Add("Piechart was refreshed");
+        }
     }
 }

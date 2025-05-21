@@ -4,6 +4,8 @@ using System;
 using System.Collections;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Controls.DataVisualization.Charting;
+using System.Windows.Media.Imaging;
 
 namespace Frontend_HomeBudget
 {
@@ -19,8 +21,10 @@ namespace Frontend_HomeBudget
             InitializeComponent();
             _view = view;
 
+
             //display current used file
             CurrentFile.Text = $"Current File: {System.IO.Path.GetFileName(_view.Presenter.FilePath)}";
+            Icon = new BitmapImage(new Uri("../../../assets/Image.png", UriKind.Relative));
         }
 
         private void RefreshFilter(object sender, RoutedEventArgs e)
@@ -29,8 +33,15 @@ namespace Frontend_HomeBudget
             Categories.SelectionChanged -= RefreshFilter;
             
             _view.Presenter.ProcessRefreshBudgetItems(StartDate.SelectedDate, EndDate.SelectedDate, (bool)FilterCat.IsChecked, Categories.SelectedIndex + 1, (bool)ByMonth.IsChecked, (bool)ByCategory.IsChecked);
+
             Categories.SelectedIndex = index;
             Categories.SelectionChanged += RefreshFilter;
+
+            if ((bool)ByMonth.IsChecked && (bool)ByCategory.IsChecked) 
+                SwitchViewBtn.Visibility = Visibility.Visible;
+            else
+                SwitchViewBtn.Visibility = Visibility.Collapsed;
+
         }
 
 
@@ -73,7 +84,7 @@ namespace Frontend_HomeBudget
 
                 bool result = answer == MessageBoxResult.Yes;
 
-                _view.Presenter.ProcessDeleteExpense(expenseToDelete.ExpenseID, result);
+               //_view.Presenter.ProcessDeleteExpense(expenseToDelete.ExpenseID, result);
             }
 
             RefreshFilter(sender, new RoutedEventArgs());
@@ -91,6 +102,33 @@ namespace Frontend_HomeBudget
         {
             if (BudgetItems.SelectedIndex != -1)
                 _selectedIndex = BudgetItems.SelectedIndex;
+                
+        private void SwitchDataView_Clicked(object sender, RoutedEventArgs e)
+        {
+            const int PieWidth = 1300;
+            const int GridWidth = 800;
+
+            if (BudgetItems.Visibility == Visibility.Visible)
+            {
+                BudgetItems.Visibility = Visibility.Hidden;
+                FrontEndWindow.Width = PieWidth;
+                FrontEndWindow.MaxWidth = PieWidth;
+                FrontEndWindow.MinWidth = PieWidth;
+
+                SwitchViewBtn.Content = "Switch To Grid View";
+
+                _view.Presenter.ProcessRefreshPiechart(StartDate.SelectedDate, EndDate.SelectedDate, (bool)FilterCat.IsChecked, Categories.SelectedIndex + 1);
+
+            }
+            else
+            {
+                FrontEndWindow.Width = GridWidth;
+                FrontEndWindow.MinWidth = GridWidth;
+                FrontEndWindow.MaxWidth = GridWidth;
+                BudgetItems.Visibility = Visibility.Visible;
+
+                SwitchViewBtn.Content = "Switch To Piechart";
+            }
         }
     }
 }

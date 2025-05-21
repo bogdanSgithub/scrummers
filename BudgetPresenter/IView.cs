@@ -29,5 +29,6 @@ namespace BudgetPresenter
         public void RefreshCategories(ArrayList categories);
         public void RefreshCategoryTypes(ArrayList categoryTypes);
         public void PlayNoResultsSearch();
+        public void RefreshPiechart(List<Dictionary<string, object>> budgetItems, List<string> categories);
     }
 }
