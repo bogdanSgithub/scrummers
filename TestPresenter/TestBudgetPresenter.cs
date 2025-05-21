@@ -819,5 +819,124 @@ namespace TestPresenter
 
             homeBudget.expenses.Delete(expenses[^1].Id); // gotta delete it cause we are using the same database and expect there to be nothing in there
         }
+
+        [Fact]
+        public void Test_ProcessRefreshPiechart()
+        {
+            // Arrange
+            TestView testView = new TestView(DbFilePath);
+
+            // Act
+            testView.OpenFileDialog();
+
+            testView.Presenter.ProcessAddExpense(DateTime.Now, 1, "5", "expense");
+
+            HomeBudget homeBudget = new HomeBudget(DbFilePath);
+            List<Expense> expenses = homeBudget.expenses.List();
+
+
+            ArrayList budgetItems = new ArrayList(homeBudget.GetBudgetItems(null, null, false, 0));
+            //budgetItems
+
+            testView.Presenter.ProcessRefreshPiechart(null, null, false, 0);
+
+
+            // Assert
+            Assert.Equal("Showed HomeBudgetWindow", testView.Messages[1]);
+            Assert.Equal("Closed FileSelectWindow", testView.Messages[2]);
+            Assert.Equal("Piechart was refreshed", testView.Messages[4]);
+
+            List<Category> categories = homeBudget.categories.List();
+            for (int i=0; i<categories.Count; i++)
+            {
+                Assert.Equal(categories[i].Description, testView.PieChartCategories[i]);
+            }
+
+            homeBudget.expenses.Delete(expenses[^1].Id); // gotta delete it cause we are using the same database and expect there to be nothing in there
+        }
+
+        [Fact]
+        public void Test_ProcessDelete_True()
+        {
+            // Arrange
+            TestView testView = new TestView(DbFilePath);
+
+            // Act
+            testView.OpenFileDialog();
+
+            testView.Presenter.ProcessAddExpense(DateTime.Now, 1, "5", "expense");
+
+            HomeBudget homeBudget = new HomeBudget(DbFilePath);
+            List<Expense> expenses = homeBudget.expenses.List();
+
+
+            ArrayList budgetItems = new ArrayList(homeBudget.GetBudgetItems(null, null, false, 0));
+            //budgetItems
+
+            testView.Presenter.ProcessDeleteExpense(1, true);
+
+            // Assert
+            Assert.Equal("Showed HomeBudgetWindow", testView.Messages[1]);
+            Assert.Equal("Closed FileSelectWindow", testView.Messages[2]);
+            Assert.Equal("Showed Completion: Expense was successfully deleted.", testView.Messages[4]);
+
+            Assert.Equal(0, homeBudget.expenses.List().Count);
+        }
+
+        [Fact]
+        public void Test_ProcessDelete_False()
+        {
+            // Arrange
+            TestView testView = new TestView(DbFilePath);
+
+            // Act
+            testView.OpenFileDialog();
+
+            testView.Presenter.ProcessAddExpense(DateTime.Now, 1, "5", "expense");
+
+            HomeBudget homeBudget = new HomeBudget(DbFilePath);
+            List<Expense> expenses = homeBudget.expenses.List();
+
+
+            ArrayList budgetItems = new ArrayList(homeBudget.GetBudgetItems(null, null, false, 0));
+            //budgetItems
+
+            testView.Presenter.ProcessDeleteExpense(1, false);
+
+            // Assert
+            Assert.Equal("Showed HomeBudgetWindow", testView.Messages[1]);
+            Assert.Equal("Closed FileSelectWindow", testView.Messages[2]);
+
+            Assert.Equal(1, homeBudget.expenses.List().Count); // did not delete it
+            homeBudget.expenses.Delete(expenses[^1].Id); //stii gotta delete it tho after
+        }
+
+        [Fact]
+        public void Test_ProcessDelete_InvalidId()
+        {
+            // Arrange
+            TestView testView = new TestView(DbFilePath);
+
+            // Act
+            testView.OpenFileDialog();
+
+            testView.Presenter.ProcessAddExpense(DateTime.Now, 1, "5", "expense");
+
+            HomeBudget homeBudget = new HomeBudget(DbFilePath);
+            List<Expense> expenses = homeBudget.expenses.List();
+
+
+            ArrayList budgetItems = new ArrayList(homeBudget.GetBudgetItems(null, null, false, 0));
+            //budgetItems
+
+            testView.Presenter.ProcessDeleteExpense(-1, true); // wont crash/delete since that doesnt exist
+
+            // Assert
+            Assert.Equal("Showed HomeBudgetWindow", testView.Messages[1]);
+            Assert.Equal("Closed FileSelectWindow", testView.Messages[2]);
+
+            Assert.Equal(1, homeBudget.expenses.List().Count);
+            homeBudget.expenses.Delete(expenses[^1].Id); //stii gotta delete it tho after
+        }
     }
 }
