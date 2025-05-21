@@ -84,7 +84,7 @@ namespace Frontend_HomeBudget
 
                 bool result = answer == MessageBoxResult.Yes;
 
-               //_view.Presenter.ProcessDeleteExpense(expenseToDelete.ExpenseID, result);
+               _view.Presenter.ProcessDeleteExpense(expenseToDelete.ExpenseID, result);
             }
 
             RefreshFilter(sender, new RoutedEventArgs());
