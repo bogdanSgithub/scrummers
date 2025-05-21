@@ -12,6 +12,7 @@ namespace TestPresenter
         public ArrayList BudgetItems;
         public ArrayList Categories;
         public ArrayList CategoryTypes;
+        public List<string> PieChartCategories;
 
         public TestView(string filePath)
         {
@@ -99,9 +100,15 @@ namespace TestPresenter
             Messages.Add($"Refresh the ShowUpdateExpenseWindow");
         }
 
+        public void PlayNoResultsSearch()
+        {
+            Messages.Add("Played No Results Search");
+        }
+
         public void RefreshPiechart(List<Dictionary<string, object>> budgetItems, List<string> categories)
         {
             Messages.Add("Piechart was refreshed");
+            PieChartCategories = categories;
         }
     }
 }

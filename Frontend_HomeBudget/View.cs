@@ -12,6 +12,7 @@ using System.Collections;
 using System.Windows.Data;
 using System.Windows.Input;
 using System.Data.Common;
+using System.Media;
 
 namespace Frontend_HomeBudget
 {
@@ -222,6 +223,11 @@ namespace Frontend_HomeBudget
             _updateExpenseWindow.Close();
         }
 
+        public void PlayNoResultsSearch()
+        {
+            // initially it was SystemSounds.Beep.Play()
+            Task.Run(() => SystemSounds.Beep.Play());
+        }
         public void RefreshPiechart(List<Dictionary<string, object>> budgetItems, List<string> categories)
         {
             _homeBudgetWindow.DataPieChart.InitializeByCategoryAndMonthDisplay(categories);

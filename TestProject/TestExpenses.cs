@@ -99,7 +99,6 @@ namespace BudgetCodeTests
             // Assert
             Assert.Equal(numberOfExpensesInFile + 1, sizeOfList);
             Assert.Equal(descr, expensesList[sizeOfList - 1].Description);
-
         }
 
         // ========================================================================

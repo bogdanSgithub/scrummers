@@ -1,4 +1,5 @@
 ﻿using Budget;
+using System.Media;
 using System.Text;
 using System.Threading.Tasks;
 using BudgetPresenter;
@@ -7,7 +8,6 @@ using Budget;
 using System.Text.Json;
 using System.Collections;
 using System.Collections.Generic;
-
 
 namespace BudgetPresenter
 {
@@ -30,6 +30,8 @@ namespace BudgetPresenter
         private HomeBudget _homeBudget;
         private IView _view;
         private ArrayList _categories;
+
+        private ArrayList _runningBudgetItems { get; set; }
 
         /// <summary>
         /// The FilePath of the database file
@@ -261,6 +263,40 @@ namespace BudgetPresenter
                 _homeBudget.expenses.Delete(id);
                 _view.ShowCompletion("Expense was successfully deleted.");
             }
+        }
+
+        public void ProcessSearch(string searchQuery, ArrayList budgetItems, int startingIndex)
+        {
+            if (budgetItems.Count == 0)
+                return;
+            if (budgetItems[0] is not BudgetItem)
+                return;
+
+            searchQuery = searchQuery.Trim().ToLower();
+            ArrayList filteredBudgetItems = new ArrayList();
+
+            if (startingIndex < 0)
+                startingIndex = 0;
+            
+            for (int i = startingIndex; i < budgetItems.Count; i++)
+            {
+                BudgetItem item = (BudgetItem) budgetItems[i];
+                if (item.ShortDescription.ToLower().Contains(searchQuery) || item.Amount.ToString().Contains(searchQuery))
+                    filteredBudgetItems.Add(item);
+            }
+
+            for (int i = 0; i < startingIndex; i++)
+            {
+                BudgetItem item = (BudgetItem) budgetItems[i];
+                if (item.ShortDescription.ToLower().Contains(searchQuery) || item.Amount.ToString().Contains(searchQuery))
+                    filteredBudgetItems.Add(item);
+            }
+
+            if (filteredBudgetItems.Count == 0)
+                _view.PlayNoResultsSearch();
+
+            ArrayList categories = new ArrayList(_homeBudget.categories.List());
+            _view.RefreshBudgetItemsAndCategories(filteredBudgetItems, categories);
         }
 
         public void ProcessRefreshPiechart(DateTime? Start, DateTime? End, bool FilterFlag, int CategoryID)

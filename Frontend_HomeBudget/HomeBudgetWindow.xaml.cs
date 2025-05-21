@@ -1,6 +1,7 @@
 ﻿using Budget;
 using BudgetPresenter;
 using System;
+using System.Collections;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.DataVisualization.Charting;
@@ -14,6 +15,7 @@ namespace Frontend_HomeBudget
     public partial class HomeBudgetWindow : Window
     {
         private IView _view;
+        private int _selectedIndex;
         public HomeBudgetWindow(IView view)
         {
             InitializeComponent();
@@ -82,12 +84,25 @@ namespace Frontend_HomeBudget
 
                 bool result = answer == MessageBoxResult.Yes;
 
-               //_view.Presenter.ProcessDeleteExpense(expenseToDelete.ExpenseID, result);
+               _view.Presenter.ProcessDeleteExpense(expenseToDelete.ExpenseID, result);
             }
 
             RefreshFilter(sender, new RoutedEventArgs());
         }
 
+        private void SearchBox_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            _view.Presenter.ProcessRefreshBudgetItems(StartDate.SelectedDate, EndDate.SelectedDate, (bool)FilterCat.IsChecked, Categories.SelectedIndex + 1, (bool)ByMonth.IsChecked, (bool)ByCategory.IsChecked);
+            if (SearchBox.Text == "")
+                _selectedIndex = -1;
+            _view.Presenter.ProcessSearch(SearchBox.Text, new ArrayList((ICollection)BudgetItems.ItemsSource), _selectedIndex);
+        }
+
+        private void BudgetItems_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (BudgetItems.SelectedIndex != -1)
+                _selectedIndex = BudgetItems.SelectedIndex;
+        }
         private void SwitchDataView_Clicked(object sender, RoutedEventArgs e)
         {
             const int PieWidth = 1300;
