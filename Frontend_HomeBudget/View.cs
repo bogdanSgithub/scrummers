@@ -12,6 +12,7 @@ using System.Collections;
 using System.Windows.Data;
 using System.Windows.Input;
 using System.Data.Common;
+using System.Media;
 
 namespace Frontend_HomeBudget
 {
@@ -224,7 +225,8 @@ namespace Frontend_HomeBudget
 
         public void PlayNoResultsSearch()
         {
-            PlayNoResultsSearch();
+            // initially it was SystemSounds.Beep.Play()
+            Task.Run(() => SystemSounds.Beep.Play());
         }
     }
 }

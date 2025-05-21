@@ -646,7 +646,7 @@ namespace TestPresenter
         }
 
         [Fact]
-        public void Test_ProcessSearch()
+        public void Test_ProcessSearch_ValidDescription()
         {
             // Arrange
             TestView testView = new TestView(DbFilePath);
@@ -668,7 +668,6 @@ namespace TestPresenter
             // Assert
             Assert.Equal("Showed HomeBudgetWindow", testView.Messages[1]);
             Assert.Equal("Refresh the budget items and categories", testView.Messages[4]);
-            //Assert.Equal("Played No Results Search", testView.Messages[4]);
             
             for (int i = 0; i < budgetItems.Count; i++)
             {
@@ -682,7 +681,143 @@ namespace TestPresenter
             }
 
             homeBudget.expenses.Delete(expenses[^1].Id); // gotta delete it cause we are using the same database and expect there to be nothing in there
+        }
 
+        [Fact]
+        public void Test_ProcessSearch_ValidAmount()
+        {
+            // Arrange
+            TestView testView = new TestView(DbFilePath);
+
+            // Act
+            testView.OpenFileDialog();
+
+            testView.Presenter.ProcessAddExpense(DateTime.Now, 1, "5", "expense");
+
+            HomeBudget homeBudget = new HomeBudget(DbFilePath);
+            List<Expense> expenses = homeBudget.expenses.List();
+
+
+            ArrayList budgetItems = new ArrayList(homeBudget.GetBudgetItems(null, null, false, 0));
+            //budgetItems
+
+            testView.Presenter.ProcessSearch("5", budgetItems, 0); // this refreshes the budget items
+
+            // Assert
+            Assert.Equal("Showed HomeBudgetWindow", testView.Messages[1]);
+            Assert.Equal("Refresh the budget items and categories", testView.Messages[4]);
+
+            for (int i = 0; i < budgetItems.Count; i++)
+            {
+                BudgetItem goodOne = (BudgetItem)budgetItems[i];
+                BudgetItem toTest = (BudgetItem)testView.BudgetItems[i];
+                Assert.Equal(goodOne.Balance, toTest.Balance);
+                Assert.Equal(goodOne.Date, toTest.Date);
+                Assert.Equal(goodOne.Amount, toTest.Amount);
+                Assert.Equal(goodOne.Category, toTest.Category);
+                Assert.Equal(goodOne.ShortDescription, toTest.ShortDescription);
+            }
+
+            homeBudget.expenses.Delete(expenses[^1].Id); // gotta delete it cause we are using the same database and expect there to be nothing in there
+        }
+
+        [Fact]
+        public void Test_ProcessSearch_NotBudgetItem()
+        {
+            // Arrange
+            TestView testView = new TestView(DbFilePath);
+
+            // Act
+            testView.OpenFileDialog();
+
+            HomeBudget homeBudget = new HomeBudget(DbFilePath);
+            ArrayList budgetItems = new ArrayList(homeBudget.GetBudgetDictionaryByCategoryAndMonth(null, null, false, 0));
+            //budgetItems
+
+            testView.Presenter.ProcessSearch("e", budgetItems, 0); // will hit the first return since its a non budget item
+
+            Assert.Equal("Showed HomeBudgetWindow", testView.Messages[1]);
+            Assert.Equal("Closed FileSelectWindow", testView.Messages[2]);
+            Assert.Equal(3, testView.Messages.Count);
+        }
+
+        [Fact]
+        public void Test_ProcessSearch_EmptyBudgetItems()
+        {
+            // Arrange
+            TestView testView = new TestView(DbFilePath);
+
+            // Act
+            testView.OpenFileDialog();
+
+            HomeBudget homeBudget = new HomeBudget(DbFilePath);
+            ArrayList budgetItems = new ArrayList(homeBudget.GetBudgetItems(null, null, false, 0));
+
+            testView.Presenter.ProcessSearch("a", budgetItems, 0); // will hit the first return since its a non budget item
+
+            Assert.Equal("Showed HomeBudgetWindow", testView.Messages[1]);
+            Assert.Equal("Closed FileSelectWindow", testView.Messages[2]);
+            Assert.Equal(3, testView.Messages.Count);
+        }
+
+        [Fact]
+        public void Test_ProcessSearch_NoResultsDescription()
+        {   
+            // Arrange
+            TestView testView = new TestView(DbFilePath);
+
+            // Act
+            testView.OpenFileDialog();
+
+            testView.Presenter.ProcessAddExpense(DateTime.Now, 1, "5", "expense");
+
+            HomeBudget homeBudget = new HomeBudget(DbFilePath);
+            List<Expense> expenses = homeBudget.expenses.List();
+
+
+            ArrayList budgetItems = new ArrayList(homeBudget.GetBudgetItems(null, null, false, 0));
+            //budgetItems
+
+            testView.Presenter.ProcessSearch("a", budgetItems, 0); // since "expense" doesnt contain a, it wont find anything
+
+            // Assert
+            Assert.Equal("Showed HomeBudgetWindow", testView.Messages[1]);
+            Assert.Equal("Closed FileSelectWindow", testView.Messages[2]);
+            Assert.Equal("Played No Results Search", testView.Messages[4]);
+            Assert.Single(budgetItems);
+            Assert.Empty(testView.BudgetItems);
+
+            homeBudget.expenses.Delete(expenses[^1].Id); // gotta delete it cause we are using the same database and expect there to be nothing in there
+        }
+
+        [Fact]
+        public void Test_ProcessSearch_NoResultsAmount()
+        {
+            // Arrange
+            TestView testView = new TestView(DbFilePath);
+
+            // Act
+            testView.OpenFileDialog();
+
+            testView.Presenter.ProcessAddExpense(DateTime.Now, 1, "5", "expense");
+
+            HomeBudget homeBudget = new HomeBudget(DbFilePath);
+            List<Expense> expenses = homeBudget.expenses.List();
+
+
+            ArrayList budgetItems = new ArrayList(homeBudget.GetBudgetItems(null, null, false, 0));
+            //budgetItems
+
+            testView.Presenter.ProcessSearch("1", budgetItems, 0); // since "expense" nor amount doesnt contain 1, it wont find anything
+
+            // Assert
+            Assert.Equal("Showed HomeBudgetWindow", testView.Messages[1]);
+            Assert.Equal("Closed FileSelectWindow", testView.Messages[2]);
+            Assert.Equal("Played No Results Search", testView.Messages[4]);
+            Assert.Single(budgetItems); // there is a budget item but doesnt show up in filter
+            Assert.Empty(testView.BudgetItems);
+
+            homeBudget.expenses.Delete(expenses[^1].Id); // gotta delete it cause we are using the same database and expect there to be nothing in there
         }
     }
 }

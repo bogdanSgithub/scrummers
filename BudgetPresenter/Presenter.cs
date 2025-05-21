@@ -266,6 +266,8 @@ namespace BudgetPresenter
 
         public void ProcessSearch(string searchQuery, ArrayList budgetItems, int startingIndex)
         {
+            if (budgetItems.Count == 0)
+                return;
             if (budgetItems[0] is not BudgetItem)
                 return;
 
