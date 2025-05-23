@@ -116,3 +116,4 @@ jobs:
       with:
         name: MSIX Package - ${{ matrix.targetPlatform }}
         path: ${{ env.Wap_Project_Directory }}\AppPackages
+
