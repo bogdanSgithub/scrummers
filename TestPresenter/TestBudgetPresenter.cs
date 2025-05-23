@@ -14,7 +14,7 @@ namespace TestPresenter
         private const string CATEGORY_ADDED_ERROR_MESSAGE = "Showed Error: Description cannot be empty.";
         private const int NB_CATEGORIES = 16;
         private const int NB_EXPENSES = 0;
-        private string INFO_JSON_PATH = "../../../info.json";
+        private string INFO_JSON_PATH = "C:\\Users\\Public\\info.json";
 
         [Fact]
         public void Test_IsFirstTimeUser()
