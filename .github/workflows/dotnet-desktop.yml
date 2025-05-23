@@ -74,10 +74,9 @@ jobs:
       with:
         dotnet-version: 8.0.x
 
-    - name: Check PFX file exists
-      run: |
-        ls -l
-        ls -l GitHubActionsWorkflow.pfx || echo "File not found"
+    - name: List detailed directory contents
+      shell: powershell
+      run: Get-ChildItem | Format-List
     
     # Add  MSBuild to the PATH: https://github.com/microsoft/setup-msbuild
     - name: Setup MSBuild.exe
