@@ -40,9 +40,9 @@ name: .NET Core Desktop
 
 on:
   push:
-    branches: [ "main" ]
+    branches: [ "master" ]
   pull_request:
-    branches: [ "main" ]
+    branches: [ "master" ]
 
 jobs:
 
@@ -127,4 +127,3 @@ jobs:
       with:
         name: MSIX Package - ${{ matrix.targetPlatform }}
         path: ${{ env.Wap_Project_Directory }}\AppPackages
-
