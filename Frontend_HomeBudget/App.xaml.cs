@@ -7,6 +7,7 @@ namespace Frontend_HomeBudget
     /// </summary>
     public partial class App : Application
     {
+
     }
 
 }

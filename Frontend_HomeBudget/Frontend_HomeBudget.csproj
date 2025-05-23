@@ -1,26 +1,39 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <OutputType>WinExe</OutputType>
-    <TargetFramework>net8.0-windows</TargetFramework>
-    <Nullable>enable</Nullable>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <UseWPF>true</UseWPF>
-    <StartupObject>Frontend_HomeBudget.Program</StartupObject>
-  </PropertyGroup>
+	<PropertyGroup>
+		<OutputType>WinExe</OutputType>
+		<TargetFramework>net8.0-windows</TargetFramework>
+		<Nullable>enable</Nullable>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<UseWPF>true</UseWPF>
+		<StartupObject>Frontend_HomeBudget.Program</StartupObject>
 
-  <ItemGroup>
-    <PackageReference Include="DotNetProjects.WpfToolkit.DataVisualization" Version="6.1.94" />
-  </ItemGroup>
+		<RuntimeIdentifiers>win-x86;win-x64</RuntimeIdentifiers>
+	</PropertyGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\BudgetPresenter\BudgetPresenter.csproj" />
-  </ItemGroup>
+	<PropertyGroup>
+		<ErrorOnDuplicatePublishOutputFiles>false</ErrorOnDuplicatePublishOutputFiles>
+	</PropertyGroup>
 
-  <ItemGroup>
-    <Reference Include="BudgetSolution">
-      <HintPath>..\dlls\BudgetSolution.dll</HintPath>
-    </Reference>
-  </ItemGroup>
+	<ItemGroup>
+		<PackageReference Include="DotNetProjects.WpfToolkit.DataVisualization" Version="6.1.94" />
+	</ItemGroup>
 
+	<ItemGroup>
+		<ProjectReference Include="..\BudgetPresenter\BudgetPresenter.csproj" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<Reference Include="BudgetSolution">
+			<HintPath>..\dlls\BudgetSolution.dll</HintPath>
+		</Reference>
+	</ItemGroup>
+
+	<ItemGroup>
+		<None Update="Image.png">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+	</ItemGroup>
+	
 </Project>
+

@@ -1,7 +1,7 @@
 ﻿using System.Windows;
 using System.Windows.Media.Imaging;
 using BudgetPresenter;
-
+using System.IO;
 namespace Frontend_HomeBudget
 {
     /// <summary>
@@ -20,7 +20,7 @@ namespace Frontend_HomeBudget
 
             //set the selection in the combobox to 0
             CategoryTypes.SelectedIndex = 0;
-            Icon = new BitmapImage(new Uri("../../../assets/Image.png", UriKind.Relative));
+            Icon = new BitmapImage(new Uri(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Image.png")));
         }
 
         /// <summary>
