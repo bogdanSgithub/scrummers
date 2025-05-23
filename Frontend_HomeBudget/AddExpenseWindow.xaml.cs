@@ -2,6 +2,7 @@
 using System.Windows.Controls;
 using System.Windows.Media.Imaging;
 using BudgetPresenter;
+using System.IO;
 
 namespace Frontend_HomeBudget
 {
@@ -16,7 +17,7 @@ namespace Frontend_HomeBudget
         {
             InitializeComponent();
             _view = view;
-            Icon = new BitmapImage(new Uri("../../../assets/Image.png", UriKind.Relative));
+            Icon = new BitmapImage(new Uri(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Image.png")));
         }
 
         /// <summary>

@@ -6,6 +6,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.DataVisualization.Charting;
 using System.Windows.Media.Imaging;
+using System.IO;
 
 namespace Frontend_HomeBudget
 {
@@ -24,7 +25,7 @@ namespace Frontend_HomeBudget
 
             //display current used file
             CurrentFile.Text = $"Current File: {System.IO.Path.GetFileName(_view.Presenter.FilePath)}";
-            Icon = new BitmapImage(new Uri("../../../assets/Image.png", UriKind.Relative));
+            Icon = new BitmapImage(new Uri(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Image.png")));
         }
 
         private void RefreshFilter(object sender, RoutedEventArgs e)

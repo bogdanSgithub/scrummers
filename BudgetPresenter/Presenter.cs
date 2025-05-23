@@ -38,6 +38,8 @@ namespace BudgetPresenter
         /// </summary>
         public string FilePath { get; private set; }
 
+        static string InfoJSONPath = "C:\\Users\\Public\\info.json";//Path.Combine(Directory.GetCurrentDirectory(), "info.json");
+
         /// <summary>
         /// Constructor of the class.
         /// </summary>
@@ -72,7 +74,7 @@ namespace BudgetPresenter
                 string escapedFilePath = fileName.Replace("\\", "\\\\");
 
                 // write to json file
-                File.WriteAllText("../../../info.json", $"{{ \"current\": \"{escapedFilePath}\" }}");
+                File.WriteAllText(InfoJSONPath, $"{{ \"current\": \"{escapedFilePath}\" }}");
 
                 FilePath = fileName;
 
@@ -92,7 +94,7 @@ namespace BudgetPresenter
         /// </summary>
         public void GetPreviousFile()
         {
-            string jsonFileContent = File.ReadAllText("../../../info.json");
+            string jsonFileContent = File.ReadAllText(InfoJSONPath);
 
             // read the data inside of the file, and set the "current" field of the object to the "current" field of the json file
             DeserializedFileInfo data = JsonSerializer.Deserialize<DeserializedFileInfo>(jsonFileContent);
@@ -111,7 +113,7 @@ namespace BudgetPresenter
         /// <returns>whether we have an info.json or not</returns>
         public bool IsFirstTimeUser()
         {
-            return !File.Exists("../../../info.json");
+            return !File.Exists(InfoJSONPath);
         }
 
         /// <summary>

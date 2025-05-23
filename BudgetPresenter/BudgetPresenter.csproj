@@ -4,6 +4,8 @@
     <TargetFramework>net8.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
+    <Platforms>AnyCPU;x64;x86</Platforms>
+	<RuntimeIdentifiers>win-x86;win-x64</RuntimeIdentifiers>
   </PropertyGroup>
 
   <ItemGroup>
@@ -14,4 +16,9 @@
     <ProjectReference Include="..\BudgetSolution\BudgetSolution.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+		<None Update="info.json">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+  </ItemGroup>
 </Project>

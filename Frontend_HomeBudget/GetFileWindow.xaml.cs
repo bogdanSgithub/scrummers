@@ -1,7 +1,7 @@
 ﻿using BudgetPresenter;
 using System.Windows;
 using System.Windows.Media.Imaging;
-
+using System.IO;
 namespace Frontend_HomeBudget
 {
     /// <summary>
@@ -21,7 +21,7 @@ namespace Frontend_HomeBudget
             if (!_view.Presenter.IsFirstTimeUser())
                 returningUserBtn.Visibility = Visibility.Visible;
 
-            Icon = new BitmapImage(new Uri("../../../assets/Image.png", UriKind.Relative));
+            Icon = new BitmapImage(new Uri(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Image.png")));
         }
 
         /// <summary>
