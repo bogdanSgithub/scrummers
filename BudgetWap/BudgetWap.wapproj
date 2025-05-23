@@ -57,7 +57,7 @@
     <!-- AppxPackageSigningEnabled>True</AppxPackageSigningEnabled -->
     <NoWarn>$(NoWarn);NU1702</NoWarn>
     <EntryPointProjectUniqueName>..\Frontend_HomeBudget\Frontend_HomeBudget.csproj</EntryPointProjectUniqueName>
-    <PackageCertificateThumbprint>3323D9F1B1A95BFFDD62C55D127282A03510CB5C</PackageCertificateThumbprint>
+	<PackageCertificateKeyFile>BudgetWap_TemporaryKey.pfx</PackageCertificateKeyFile>
     <GenerateAppInstallerFile>True</GenerateAppInstallerFile>
     <AppxPackageSigningTimestampDigestAlgorithm>SHA256</AppxPackageSigningTimestampDigestAlgorithm>
     <AppxAutoIncrementPackageRevision>True</AppxAutoIncrementPackageRevision>
